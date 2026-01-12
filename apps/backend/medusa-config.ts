@@ -52,6 +52,10 @@ module.exports = defineConfig({
     {
       resolve: '@mercurjs/resend',
       options: {}
+    },
+    {
+      resolve: '@mercurjs/easypost',
+      options: {}
     }
   ],
   modules: [
@@ -118,6 +122,24 @@ module.exports = defineConfig({
     },
     {
       resolve: '@medusajs/index'
+    },
+    {
+      resolve: '@medusajs/medusa/fulfillment',
+      options: {
+        providers: [
+          {
+            resolve: '@medusajs/medusa/fulfillment-manual',
+            id: 'manual'
+          },
+          {
+            resolve: '@mercurjs/easypost/providers/easypost',
+            id: 'easypost',
+            options: {
+              api_key: process.env.EASYPOST_API_KEY
+            }
+          }
+        ]
+      }
     }
   ]
 })
