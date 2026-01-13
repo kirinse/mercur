@@ -1,4 +1,5 @@
 import EasyPostClient from "@easypost/api";
+import { EntityManager, Knex } from "@medusajs/framework/mikro-orm/knex";
 
 import {
   CalculateShippingOptionPriceDTO,
@@ -18,6 +19,7 @@ export type EasyPostOptions = {
 
 type InjectedDependencies = {
   logger: Logger;
+  manager: EntityManager;
 };
 
 type EasyPostClient = InstanceType<typeof EasyPostClient>;
@@ -27,12 +29,17 @@ class EasyPostProviderService extends AbstractFulfillmentProviderService {
   protected options_: EasyPostOptions;
   protected logger_: Logger;
   protected easypost_: EasyPostClient;
+  protected knex_: Knex;
 
-  constructor({ logger }: InjectedDependencies, options: EasyPostOptions) {
+  constructor(
+    { logger, manager }: InjectedDependencies,
+    options: EasyPostOptions
+  ) {
     super();
 
     this.options_ = options;
     this.logger_ = logger;
+    this.knex_ = manager.getKnex();
 
     this.easypost_ = new EasyPostClient(options.api_key);
 
@@ -139,8 +146,15 @@ class EasyPostProviderService extends AbstractFulfillmentProviderService {
       shipment = await this.createShipment(context);
     }
 
+    const cartCurrencyCode = (await this.knex_("cart")
+      .where("id", "=", context.id as string)
+      .select("currency_code")
+      .first()).currency_code as string;
+
     const rates = shipment.rates.filter(
-      (rate) => rate.carrier_account_id === optionData.id
+      (rate) =>
+        rate.carrier_account_id === optionData.id &&
+        cartCurrencyCode.toLowerCase() === rate.currency.toLowerCase()
     );
 
     if (!rates || !rates.length) {

@@ -122,24 +122,6 @@ module.exports = defineConfig({
     },
     {
       resolve: '@medusajs/index'
-    },
-    {
-      resolve: '@medusajs/medusa/fulfillment',
-      options: {
-        providers: [
-          {
-            resolve: '@medusajs/medusa/fulfillment-manual',
-            id: 'manual'
-          },
-          {
-            resolve: '@mercurjs/easypost/providers/easypost',
-            id: 'easypost',
-            options: {
-              api_key: process.env.EASYPOST_API_KEY
-            }
-          }
-        ]
-      }
     }
   ]
 })
