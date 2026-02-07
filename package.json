@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "mercur-exec": "turbo run dev",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency 11",
     "build": "turbo run build",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",

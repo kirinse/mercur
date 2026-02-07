@@ -1,8 +1,9 @@
-import { BigNumberInput } from "@medusajs/framework/types";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { BigNumberInput } from '@medusajs/framework/types';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { PayoutDTO } from "@mercurjs/framework";
-import { PAYOUT_MODULE, PayoutModuleService } from "../../../modules/payout";
+import { CreatePayoutReversalDTO, PayoutDTO } from '@mercurjs/framework';
+
+import { PAYOUT_MODULE, PayoutModuleService } from '../../../modules/payout';
 
 type CreatePayoutReversalStepInput = {
   payout_id: string | null;
@@ -11,7 +12,7 @@ type CreatePayoutReversalStepInput = {
 };
 
 export const createPayoutReversalStep = createStep(
-  "create-payout-reversal",
+  'create-payout-reversal',
   async (input: CreatePayoutReversalStepInput, { container }) => {
     const service = container.resolve<PayoutModuleService>(PAYOUT_MODULE);
 
@@ -23,15 +24,16 @@ export const createPayoutReversalStep = createStep(
     let err = false;
 
     try {
-      //@ts-expect-error We check if payout_id is not null above
-      payoutReversal = await service.createPayoutReversal(input);
+      payoutReversal = await service.createPayoutReversal(
+        input as CreatePayoutReversalDTO
+      );
     } catch {
       err = true;
     }
 
     return new StepResponse({
       payoutReversal,
-      err,
+      err
     });
   }
 );
