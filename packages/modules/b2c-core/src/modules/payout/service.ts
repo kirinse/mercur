@@ -32,6 +32,7 @@ class PayoutModuleService extends MedusaService({
   protected provider_: IPayoutProvider;
 
   constructor({ payoutProvider }: InjectedDependencies) {
+    // eslint-disable-next-line prefer-rest-params
     super(...arguments);
     this.provider_ = payoutProvider;
   }

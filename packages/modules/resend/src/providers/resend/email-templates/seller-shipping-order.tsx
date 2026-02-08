@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface EmailTemplateProps {
   data: {
     user_name: string;
