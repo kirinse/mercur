@@ -1,10 +1,10 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { OrderDTO } from "@medusajs/framework/types";
+  MedusaResponse
+} from '@medusajs/framework';
+import { OrderDTO } from '@medusajs/framework/types';
 
-import { getVendorOrdersListWorkflow } from "../../../../workflows/order/workflows";
+import { getVendorOrdersListWorkflow } from '../../../../workflows/order/workflows';
 
 /**
  * @oas [get] /vendor/orders/{id}
@@ -46,10 +46,10 @@ export const GET = async (
       fields: req.queryConfig.fields,
       variables: {
         filters: {
-          id,
-        },
-      },
-    },
+          id
+        }
+      }
+    }
   });
 
   const [order] = result as OrderDTO[];

@@ -1,7 +1,10 @@
-import { MiddlewareRoute, validateAndTransformQuery } from '@medusajs/framework'
+import {
+  MiddlewareRoute,
+  validateAndTransformQuery
+} from '@medusajs/framework';
 
-import * as QueryConfig from './query-config'
-import { VendorGetAttributesParams } from './validators'
+import * as QueryConfig from './query-config';
+import { VendorGetAttributesParams } from './validators';
 
 export const vendorAttributeMiddlewares: MiddlewareRoute[] = [
   {
@@ -25,4 +28,4 @@ export const vendorAttributeMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

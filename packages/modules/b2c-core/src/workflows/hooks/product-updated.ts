@@ -1,14 +1,14 @@
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { updateProductsWorkflow } from "@medusajs/medusa/core-flows";
+import { Link } from '@medusajs/framework/modules-sdk';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { updateProductsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { AlgoliaEvents } from "@mercurjs/framework";
+import { AlgoliaEvents } from '@mercurjs/framework';
 
-import { productsUpdatedHookHandler } from "../attribute/utils";
-import { Link } from "@medusajs/framework/modules-sdk";
-import { SECONDARY_CATEGORY_MODULE } from "../../modules/secondary_categories";
-import { getSecondaryCategories } from "./product-created";
-import SecondaryCategoryModuleService from "../../modules/secondary_categories/service";
-import secondaryCategoryProduct from "../../links/secondary-category-product";
+import secondaryCategoryProduct from '../../links/secondary-category-product';
+import { SECONDARY_CATEGORY_MODULE } from '../../modules/secondary_categories';
+import SecondaryCategoryModuleService from '../../modules/secondary_categories/service';
+import { productsUpdatedHookHandler } from '../attribute/utils';
+import { getSecondaryCategories } from './product-created';
 
 type ProductLike = { id: string };
 type SecCatEntry = {
@@ -59,7 +59,7 @@ export const updateProductSubcategories = async (
             const secondaryCategories =
               await secondaryCategoryService.listSecondaryCategories({
                 category_id: secId
-              })
+              });
 
             const {
               data: [secondaryCategoryLink]
@@ -72,7 +72,7 @@ export const updateProductSubcategories = async (
                 ),
                 product_id: product.id
               }
-            })
+            });
 
             link
               .dismiss({
@@ -82,9 +82,9 @@ export const updateProductSubcategories = async (
                     secondaryCategoryLink.secondary_category_id
                 }
               })
-              .catch(() => {})
+              .catch(() => {});
           })
-        )
+        );
       }
 
       if (confirmedAddIds.length) {
@@ -93,7 +93,7 @@ export const updateProductSubcategories = async (
             link
               .create({
                 [Modules.PRODUCT]: { product_id: product.id },
-                [SECONDARY_CATEGORY_MODULE]: { secondary_category_id: secId },
+                [SECONDARY_CATEGORY_MODULE]: { secondary_category_id: secId }
               })
               .catch(() => {})
           )
@@ -108,7 +108,7 @@ updateProductsWorkflow.hooks.productsUpdated(
     await productsUpdatedHookHandler({
       products,
       additional_data,
-      container,
+      container
     });
 
     await updateProductSubcategories(
@@ -119,7 +119,7 @@ updateProductsWorkflow.hooks.productsUpdated(
 
     await container.resolve(Modules.EVENT_BUS).emit({
       name: AlgoliaEvents.PRODUCTS_CHANGED,
-      data: { ids: products.map((product) => product.id) },
+      data: { ids: products.map((product) => product.id) }
     });
   }
 );

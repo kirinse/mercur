@@ -8,7 +8,7 @@ export const vendorCustomerGroupsFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const vendorCustomerGroupsQueryConfig = {
   list: {
@@ -19,4 +19,4 @@ export const vendorCustomerGroupsQueryConfig = {
     defaults: vendorCustomerGroupsFields,
     isList: false
   }
-}
+};

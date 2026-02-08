@@ -1,12 +1,12 @@
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys, RuleType } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys, RuleType } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils'
-import { batchVendorPromotionRulesWorkflow } from '../../../../../../workflows/promotions/workflows'
-import { VendorBatchPromotionRulesType } from '../../../validators'
+import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils';
+import { batchVendorPromotionRulesWorkflow } from '../../../../../../workflows/promotions/workflows';
+import { VendorBatchPromotionRulesType } from '../../../validators';
 
 /**
  * @oas [post] /vendor/promotions/{id}/buy-rules/batch
@@ -46,13 +46,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorBatchPromotionRulesType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const id = req.params.id
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const id = req.params.id;
 
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   await batchVendorPromotionRulesWorkflow(req.scope).run({
     input: {
@@ -64,7 +64,7 @@ export const POST = async (
       },
       seller_id: seller.id
     }
-  })
+  });
 
   const {
     data: [promotion]
@@ -74,7 +74,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ promotion })
-}
+  res.json({ promotion });
+};

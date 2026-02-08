@@ -8,7 +8,7 @@ export const adminCommissionRuleFields = [
   'created_at',
   'updated_at',
   '*rate'
-]
+];
 
 export const adminCommissionRuleQueryConfig = {
   list: {
@@ -19,7 +19,7 @@ export const adminCommissionRuleQueryConfig = {
     defaults: adminCommissionRuleFields,
     isList: false
   }
-}
+};
 
 export const adminCommissionLinesQueryConfig = {
   list: {
@@ -30,4 +30,4 @@ export const adminCommissionLinesQueryConfig = {
     defaults: [],
     isList: false
   }
-}
+};

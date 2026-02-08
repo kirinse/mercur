@@ -3,13 +3,13 @@ import {
   unlessPath,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { listProductQueryConfig } from '@medusajs/medusa/api/admin/products/query-config'
+} from '@medusajs/framework';
+import { listProductQueryConfig } from '@medusajs/medusa/api/admin/products/query-config';
 
 import {
   adminSellerOrdersQueryConfig,
   adminSellerQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   AdminGetSellerCustomerGroupsParams,
   AdminGetSellerOrdersParams,
@@ -17,7 +17,7 @@ import {
   AdminInviteSeller,
   AdminSellerParams,
   AdminUpdateSeller
-} from './validators'
+} from './validators';
 
 export const sellerMiddlewares: MiddlewareRoute[] = [
   {
@@ -101,4 +101,4 @@ export const sellerMiddlewares: MiddlewareRoute[] = [
     matcher: '/admin/sellers/invite',
     middlewares: [validateAndTransformBody(AdminInviteSeller)]
   }
-]
+];

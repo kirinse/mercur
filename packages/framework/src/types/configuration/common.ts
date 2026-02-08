@@ -6,9 +6,9 @@ export enum ConfigurationRuleType {
 }
 
 export type ConfigurationRule = {
-  id: string
-  rule_type: ConfigurationRuleType
-  is_enabled: boolean
-  created_at: Date
-  updated_at: Date
-}
+  id: string;
+  rule_type: ConfigurationRuleType;
+  is_enabled: boolean;
+  created_at: Date;
+  updated_at: Date;
+};

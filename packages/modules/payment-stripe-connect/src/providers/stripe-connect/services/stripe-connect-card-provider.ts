@@ -1,5 +1,6 @@
-import StripeConnectProvider from "../core/stripe-connect-provider";
-import { PaymentIntentOptions, PaymentProviderKeys } from "@mercurjs/framework";
+import { PaymentIntentOptions, PaymentProviderKeys } from '@mercurjs/framework';
+
+import StripeConnectProvider from '../core/stripe-connect-provider';
 
 class StripeConnectCardProviderService extends StripeConnectProvider {
   static identifier = PaymentProviderKeys.CARD;
@@ -10,7 +11,7 @@ class StripeConnectCardProviderService extends StripeConnectProvider {
 
   get paymentIntentOptions(): PaymentIntentOptions {
     return {
-      payment_method_types: ["card"],
+      payment_method_types: ['card']
     };
   }
 }

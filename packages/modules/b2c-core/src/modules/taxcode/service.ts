@@ -1,8 +1,8 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
-import { MedusaService } from "@medusajs/framework/utils";
+import { MedusaService } from '@medusajs/framework/utils';
 
-import TaxCode from "./models/taxcode";
+import TaxCode from './models/taxcode';
 
 type ModuleOptions = {
   apiKey: string;
@@ -13,7 +13,7 @@ export default class TaxCodeService extends MedusaService({ TaxCode }) {
 
   constructor(_, { apiKey }: ModuleOptions) {
     super(_);
-    this.stripe_ = new Stripe(apiKey || "sk_");
+    this.stripe_ = new Stripe(apiKey || 'sk_');
   }
 
   async getTaxCodes(): Promise<Stripe.TaxCode[]> {
@@ -24,7 +24,7 @@ export default class TaxCodeService extends MedusaService({ TaxCode }) {
       const lastId = response.data.pop()!.id;
       const currentResponse = await this.stripe_.taxCodes.list({
         limit: 100,
-        starting_after: lastId,
+        starting_after: lastId
       });
       taxCodes.push(...currentResponse.data);
       response = currentResponse;

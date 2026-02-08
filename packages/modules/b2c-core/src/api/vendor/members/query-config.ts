@@ -7,7 +7,7 @@ export const vendorMemberFields = [
   'phone',
   'photo',
   '*seller'
-]
+];
 
 export const vendorMemberQueryConfig = {
   list: {
@@ -18,4 +18,4 @@ export const vendorMemberQueryConfig = {
     defaults: vendorMemberFields,
     isList: false
   }
-}
+};

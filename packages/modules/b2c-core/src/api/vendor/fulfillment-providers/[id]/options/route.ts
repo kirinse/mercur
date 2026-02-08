@@ -1,5 +1,8 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { Modules } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { Modules } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /vendor/fulfillment-providers/{id}/options
@@ -41,12 +44,12 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const fulfillmentProviderService = req.scope.resolve(Modules.FULFILLMENT)
+  const fulfillmentProviderService = req.scope.resolve(Modules.FULFILLMENT);
 
   const fulfillment_options =
-    await fulfillmentProviderService.retrieveFulfillmentOptions(req.params.id)
+    await fulfillmentProviderService.retrieveFulfillmentOptions(req.params.id);
 
   res.json({
     fulfillment_options
-  })
-}
+  });
+};

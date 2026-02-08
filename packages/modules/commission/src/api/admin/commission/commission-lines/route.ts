@@ -1,7 +1,7 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 
-import { listCommissionLinesWorkflow } from '../../../../workflows/commission/workflows'
-import { AdminGetCommissionLinesParamsType } from '../validators'
+import { listCommissionLinesWorkflow } from '../../../../workflows/commission/workflows';
+import { AdminGetCommissionLinesParamsType } from '../validators';
 
 /**
  * @oas [get] /admin/commission/commission-lines
@@ -90,12 +90,12 @@ export async function GET(
       },
       filters: req.filterableFields
     }
-  })
+  });
 
   res.json({
     commission_lines,
     count,
     offset: req.queryConfig.pagination.skip,
     limit: req.queryConfig.pagination.take
-  })
+  });
 }

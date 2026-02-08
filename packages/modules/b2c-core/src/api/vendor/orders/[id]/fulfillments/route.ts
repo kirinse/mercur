@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { createOrderFulfillmentWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { createOrderFulfillmentWorkflow } from '@medusajs/medusa/core-flows';
 
-import { VendorCreateFulfillmentType } from '../../validators'
+import { VendorCreateFulfillmentType } from '../../validators';
 
 /**
  * @oas [post] /vendor/products/{id}/fulfillments
@@ -41,7 +44,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateFulfillmentType>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   const { result: fulfillment } = await createOrderFulfillmentWorkflow(
     req.scope
@@ -52,7 +55,7 @@ export const POST = async (
       ...req.validatedBody
     },
     throwOnError: true
-  })
+  });
 
-  res.json({ fulfillment })
-}
+  res.json({ fulfillment });
+};

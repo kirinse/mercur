@@ -2,12 +2,14 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import * as QueryConfig from '@medusajs/medusa/api/store/carts/query-config'
-import { StoreGetCartsCart, StoreAddCartShippingMethods } from '@medusajs/medusa/api/store/carts/validators'
+} from '@medusajs/framework';
+import * as QueryConfig from '@medusajs/medusa/api/store/carts/query-config';
+import {
+  StoreAddCartShippingMethods,
+  StoreGetCartsCart
+} from '@medusajs/medusa/api/store/carts/validators';
 
-
-import { StoreDeleteCartShippingMethods } from './validators'
+import { StoreDeleteCartShippingMethods } from './validators';
 
 export const storeCartsMiddlewares: MiddlewareRoute[] = [
   {
@@ -32,4 +34,4 @@ export const storeCartsMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

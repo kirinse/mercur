@@ -2,15 +2,15 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import sellerPriceList from '../../../links/seller-price-list'
+import sellerPriceList from '../../../links/seller-price-list';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { vendorProductQueryConfig } from '../products/query-config'
-import { vendorPriceListQueryConfig } from './query-config'
+} from '../../../shared/infra/http/middlewares';
+import { vendorProductQueryConfig } from '../products/query-config';
+import { vendorPriceListQueryConfig } from './query-config';
 import {
   VendorCreatePriceList,
   VendorCreatePriceListPrice,
@@ -18,7 +18,7 @@ import {
   VendorGetPriceListProductsParams,
   VendorUpdatePriceList,
   VendorUpdateProductsOnPriceList
-} from './validators'
+} from './validators';
 
 export const vendorPriceListsMiddlewares: MiddlewareRoute[] = [
   {
@@ -136,4 +136,4 @@ export const vendorPriceListsMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

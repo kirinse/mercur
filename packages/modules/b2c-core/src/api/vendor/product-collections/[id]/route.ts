@@ -1,5 +1,8 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /vendor/product-collections/{id}
@@ -39,7 +42,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [product_collection]
@@ -49,7 +52,7 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ product_collection })
-}
+  res.json({ product_collection });
+};

@@ -1,17 +1,17 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   Modules,
-  OrderWorkflowEvents,
-} from "@medusajs/framework/utils";
+  OrderWorkflowEvents
+} from '@medusajs/framework/utils';
 
-import { ResendNotificationTemplates } from "../providers/resend";
+import { Hosts, buildHostAddress, fetchStoreData } from '@mercurjs/framework';
 
-import { Hosts, buildHostAddress, fetchStoreData } from "@mercurjs/framework";
+import { ResendNotificationTemplates } from '../providers/resend';
 
 export default async function orderCreatedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{ order_ids: string[] }>) {
   const notificationService = container.resolve(Modules.NOTIFICATION);
 
@@ -21,21 +21,21 @@ export default async function orderCreatedHandler({
   for (const orderId of event.data.order_ids) {
     try {
       const {
-        data: [order],
+        data: [order]
       } = await query.graph({
-        entity: "order",
+        entity: 'order',
         fields: [
-          "*",
-          "customer.*",
-          "items.*",
-          "shipping_address.*",
-          "shipping_methods.*",
-          "summary.*",
-          "order_set.*",
+          '*',
+          'customer.*',
+          'items.*',
+          'shipping_address.*',
+          'shipping_methods.*',
+          'summary.*',
+          'order_set.*'
         ],
         filters: {
-          id: orderId,
-        },
+          id: orderId
+        }
       });
 
       if (!order) {
@@ -49,25 +49,25 @@ export default async function orderCreatedHandler({
 
       await notificationService.createNotifications({
         to: order.email,
-        channel: "email",
+        channel: 'email',
         template: ResendNotificationTemplates.BUYER_NEW_ORDER,
         content: {
-          subject: `Order Confirmation - #${order.display_id}`,
+          subject: `Order Confirmation - #${order.display_id}`
         },
         data: {
           data: {
-            user_name: order.customer?.first_name || "Customer",
+            user_name: order.customer?.first_name || 'Customer',
             order_id: order.id,
             order_address: orderUrl,
             order: {
               ...order,
               display_id: order.display_id,
-              total: order.summary?.current_order_total || 0,
+              total: order.summary?.current_order_total || 0
             },
             store_name: storeData.store_name,
-            storefront_url: storeData.storefront_url,
-          },
-        },
+            storefront_url: storeData.storefront_url
+          }
+        }
       });
     } catch (error) {
       console.error(
@@ -81,6 +81,6 @@ export default async function orderCreatedHandler({
 export const config: SubscriberConfig = {
   event: OrderWorkflowEvents.PLACED,
   context: {
-    subscriberId: "order-created-handler-resend",
-  },
+    subscriberId: 'order-created-handler-resend'
+  }
 };

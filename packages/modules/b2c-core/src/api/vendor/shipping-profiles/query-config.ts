@@ -5,7 +5,7 @@ export const defaultVendorShippingProfileFields = [
   'metadata',
   'created_at',
   'updated_at'
-]
+];
 
 export const shippingProfilesQueryConfig = {
   list: {
@@ -16,4 +16,4 @@ export const shippingProfilesQueryConfig = {
     defaults: defaultVendorShippingProfileFields,
     isList: false
   }
-}
+};

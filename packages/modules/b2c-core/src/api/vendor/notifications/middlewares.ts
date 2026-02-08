@@ -1,8 +1,8 @@
-import { validateAndTransformQuery } from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+import { validateAndTransformQuery } from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { vendorNotificationQueryConfig } from './query-config'
-import { VendorGetNotificationParams } from './validators'
+import { vendorNotificationQueryConfig } from './query-config';
+import { VendorGetNotificationParams } from './validators';
 
 export const vendorNotificationMiddlewares: MiddlewareRoute[] = [
   {
@@ -15,4 +15,4 @@ export const vendorNotificationMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

@@ -1,20 +1,21 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { OrderLineItemDTO, PriceDTO } from "@medusajs/framework/types";
+import { MedusaContainer } from '@medusajs/framework';
+import { OrderLineItemDTO, PriceDTO } from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   MathBN,
-  Modules,
-} from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+  Modules
+} from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 import {
-  CommissionModuleService,
-  COMMISSION_MODULE,
-} from "../../../modules/commission";
-import {
   CommissionRateDTO,
-  CreateCommissionLineDTO,
-} from "@mercurjs/framework";
+  CreateCommissionLineDTO
+} from '@mercurjs/framework';
+
+import {
+  COMMISSION_MODULE,
+  CommissionModuleService
+} from '../../../modules/commission';
 
 type StepInput = {
   seller_id: string;
@@ -28,7 +29,7 @@ async function calculateFlatCommission(
 ) {
   const priceService = container.resolve(Modules.PRICING);
   const priceSet = await priceService.retrievePriceSet(rate.price_set_id!, {
-    relations: ["prices"],
+    relations: ['prices']
   });
 
   const price = priceSet.prices?.find(
@@ -57,13 +58,13 @@ async function calculatePercentageCommission(
 
   const minPriceSet = rate.min_price_set_id
     ? await priceService.retrievePriceSet(rate.min_price_set_id!, {
-        relations: ["prices"],
+        relations: ['prices']
       })
     : undefined;
 
   const maxPriceSet = rate.max_price_set_id
     ? await priceService.retrievePriceSet(rate.max_price_set_id!, {
-        relations: ["prices"],
+        relations: ['prices']
       })
     : undefined;
 
@@ -84,11 +85,11 @@ async function calculateCommissionValue(
   currency: string,
   container: MedusaContainer
 ) {
-  if (rate.type === "flat") {
+  if (rate.type === 'flat') {
     return calculateFlatCommission(rate, currency, container);
   }
 
-  if (rate.type === "percentage") {
+  if (rate.type === 'percentage') {
     return calculatePercentageCommission(rate, item, currency, container);
   }
 
@@ -96,14 +97,14 @@ async function calculateCommissionValue(
 }
 
 export const calculateCommissionLinesStep = createStep(
-  "calculate-commission-lines",
+  'calculate-commission-lines',
   async ({ order_id, seller_id }: StepInput, { container }) => {
     const orderService = container.resolve(Modules.ORDER);
     const order = await orderService.retrieveOrder(order_id, {
-      relations: ["items"],
+      relations: ['items'],
       // At least one of the computed totals fields should be requested in select,
       // in order for decorateTotals to be called
-      select: ["*", "item_total"],
+      select: ['*', 'item_total']
     });
 
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
@@ -114,20 +115,20 @@ export const calculateCommissionLinesStep = createStep(
 
     for (const item of order.items!) {
       const {
-        data: [product],
+        data: [product]
       } = await query.graph({
-        entity: "product",
-        fields: ["categories.id"],
+        entity: 'product',
+        fields: ['categories.id'],
         filters: {
-          id: item.product_id,
-        },
+          id: item.product_id
+        }
       });
 
       const commissionRule =
         await commissionService.selectCommissionForProductLine({
-          product_category_id: product.categories[0]?.id || "",
-          product_type_id: item.product_type_id || "",
-          seller_id,
+          product_category_id: product.categories[0]?.id || '',
+          product_type_id: item.product_type_id || '',
+          seller_id
         });
 
       if (commissionRule) {
@@ -140,7 +141,7 @@ export const calculateCommissionLinesStep = createStep(
             container
           ),
           currency_code: order.currency_code,
-          rule_id: commissionRule.id,
+          rule_id: commissionRule.id
         });
       }
     }

@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils'
-import { recalculateOnboardingWorkflow } from '../../../../../workflows/seller/workflows'
+import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils';
+import { recalculateOnboardingWorkflow } from '../../../../../workflows/seller/workflows';
 
 /**
  * @oas [get] /vendor/sellers/me/onboarding
@@ -30,11 +33,11 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const {
     data: [onboarding]
@@ -44,10 +47,10 @@ export const GET = async (
     filters: {
       seller_id: seller.id
     }
-  })
+  });
 
-  res.json({ onboarding })
-}
+  res.json({ onboarding });
+};
 
 /**
  * @oas [post] /vendor/sellers/me/onboarding
@@ -75,16 +78,16 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   await recalculateOnboardingWorkflow.run({
     container: req.scope,
     input: seller.id
-  })
+  });
 
   const {
     data: [onboarding]
@@ -94,7 +97,7 @@ export const POST = async (
     filters: {
       seller_id: seller.id
     }
-  })
+  });
 
-  res.json({ onboarding })
-}
+  res.json({ onboarding });
+};

@@ -1,8 +1,9 @@
-import { Module } from "@medusajs/framework/utils";
-import SecondaryCategoryModuleService from "./service";
+import { Module } from '@medusajs/framework/utils';
 
-export const SECONDARY_CATEGORY_MODULE = "secondary_category";
+import SecondaryCategoryModuleService from './service';
+
+export const SECONDARY_CATEGORY_MODULE = 'secondary_category';
 
 export default Module(SECONDARY_CATEGORY_MODULE, {
-  service: SecondaryCategoryModuleService,
+  service: SecondaryCategoryModuleService
 });

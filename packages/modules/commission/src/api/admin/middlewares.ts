@@ -1,5 +1,5 @@
-import { MiddlewareRoute } from "@medusajs/framework";
+import { MiddlewareRoute } from '@medusajs/framework';
 
-import { commissionMiddlewares } from "./commission/middlewares";
+import { commissionMiddlewares } from './commission/middlewares';
 
 export const adminMiddlewares: MiddlewareRoute[] = [...commissionMiddlewares];

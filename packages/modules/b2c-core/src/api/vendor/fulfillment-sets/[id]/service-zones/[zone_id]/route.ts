@@ -1,15 +1,15 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { updateServiceZonesWorkflow } from "@medusajs/medusa/core-flows";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { updateServiceZonesWorkflow } from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from "@mercurjs/framework";
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { fetchSellerByAuthActorId } from "../../../../../../shared/infra/http/utils";
-import { deleteVendorServiceZonesWorkflow } from "../../../../../../workflows/fulfillment-set";
-import { VendorUpdateServiceZoneType } from "../../../validators";
+import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils';
+import { deleteVendorServiceZonesWorkflow } from '../../../../../../workflows/fulfillment-set';
+import { VendorUpdateServiceZoneType } from '../../../validators';
 
 /**
  * @oas [post] /vendor/fulfillment-sets/{id}/service-zones/{zone_id}
@@ -62,26 +62,26 @@ export const POST = async (
     container: req.scope,
     input: {
       selector: {
-        id: req.params.zone_id,
+        id: req.params.zone_id
       },
-      update: req.validatedBody,
-    },
+      update: req.validatedBody
+    }
   });
 
   await eventBus.emit({
     name: IntermediateEvents.SERVICE_ZONE_CHANGED,
-    data: { id: req.params.zone_id },
+    data: { id: req.params.zone_id }
   });
 
   const {
-    data: [fulfillmentSet],
+    data: [fulfillmentSet]
   } = await query.graph(
     {
-      entity: "fulfillment_set",
+      entity: 'fulfillment_set',
       fields: req.queryConfig.fields,
       filters: {
-        id: req.params.id,
-      },
+        id: req.params.id
+      }
     },
     { throwIfKeyNotFound: true }
   );
@@ -147,9 +147,9 @@ export const DELETE = async (
     container: req.scope,
     input: {
       ids: [zone_id],
-      seller_id: seller.id,
-    },
+      seller_id: seller.id
+    }
   });
 
-  res.json({ id: zone_id, object: "service_zone", deleted: true });
+  res.json({ id: zone_id, object: 'service_zone', deleted: true });
 };

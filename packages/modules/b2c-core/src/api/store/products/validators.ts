@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-export type StoreSearchProductsType = z.infer<typeof StoreSearchProductsSchema>
+export type StoreSearchProductsType = z.infer<typeof StoreSearchProductsSchema>;
 
 export const StoreSearchProductsSchema = z.object({
   query: z.string().default(''),
@@ -13,5 +13,4 @@ export const StoreSearchProductsSchema = z.object({
   region_id: z.string().optional(),
   customer_id: z.string().optional(),
   customer_group_id: z.array(z.string()).optional()
-})
-
+});

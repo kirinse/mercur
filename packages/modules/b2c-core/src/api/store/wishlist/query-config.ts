@@ -26,7 +26,7 @@ export const storeWishlistFields = [
   'updated_at',
   'deleted_at',
   'variant_id'
-]
+];
 
 export const storeWishlistQueryConfig = {
   list: {
@@ -37,4 +37,4 @@ export const storeWishlistQueryConfig = {
     defaults: storeWishlistFields,
     isList: false
   }
-}
+};

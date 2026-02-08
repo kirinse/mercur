@@ -1,5 +1,5 @@
-import { BigNumberInput } from '@medusajs/framework/types'
-import { BigNumber, MathBN } from '@medusajs/framework/utils'
+import { BigNumberInput } from '@medusajs/framework/types';
+import { BigNumber, MathBN } from '@medusajs/framework/utils';
 
 function getCurrencyMultiplier(currency) {
   const currencyMultipliers = {
@@ -22,17 +22,17 @@ function getCurrencyMultiplier(currency) {
       'XPF'
     ],
     3: ['BHD', 'IQD', 'JOD', 'KWD', 'OMR', 'TND']
-  }
+  };
 
-  currency = currency.toUpperCase()
-  let power = 2
+  currency = currency.toUpperCase();
+  let power = 2;
   for (const [key, value] of Object.entries(currencyMultipliers)) {
     if (value.includes(currency)) {
-      power = parseInt(key, 10)
-      break
+      power = parseInt(key, 10);
+      break;
     }
   }
-  return Math.pow(10, power)
+  return Math.pow(10, power);
 }
 
 /**
@@ -46,21 +46,21 @@ export function getSmallestUnit(
   amount: BigNumberInput,
   currency: string
 ): number {
-  const multiplier = getCurrencyMultiplier(currency)
+  const multiplier = getCurrencyMultiplier(currency);
 
   const amount_ =
     Math.round(new BigNumber(MathBN.mult(amount, multiplier)).numeric) /
-    multiplier
+    multiplier;
 
-  const smallestAmount = new BigNumber(MathBN.mult(amount_, multiplier))
+  const smallestAmount = new BigNumber(MathBN.mult(amount_, multiplier));
 
-  let numeric = smallestAmount.numeric
+  let numeric = smallestAmount.numeric;
   // Check if the currency requires rounding to the nearest ten
   if (multiplier === 1e3) {
-    numeric = Math.ceil(numeric / 10) * 10
+    numeric = Math.ceil(numeric / 10) * 10;
   }
 
-  return parseInt(numeric.toString().split('.').shift()!, 10)
+  return parseInt(numeric.toString().split('.').shift()!, 10);
 }
 
 /**
@@ -73,7 +73,7 @@ export function getAmountFromSmallestUnit(
   amount: BigNumberInput,
   currency: string
 ): number {
-  const multiplier = getCurrencyMultiplier(currency)
-  const standardAmount = new BigNumber(MathBN.div(amount, multiplier))
-  return standardAmount.numeric
+  const multiplier = getCurrencyMultiplier(currency);
+  const standardAmount = new BigNumber(MathBN.div(amount, multiplier));
+  return standardAmount.numeric;
 }

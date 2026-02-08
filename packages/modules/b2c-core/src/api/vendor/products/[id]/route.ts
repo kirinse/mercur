@@ -1,21 +1,22 @@
 import {
   AuthenticatedMedusaRequest,
   MedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import {
   deleteProductsWorkflow,
-  updateProductsWorkflow,
-} from "@medusajs/medusa/core-flows";
+  updateProductsWorkflow
+} from '@medusajs/medusa/core-flows';
 
-import { fetchSellerByAuthActorId } from "../../../../shared/infra/http/utils";
-import { fetchProductDetails } from "../../../../shared/infra/http/utils/products";
+import { ProductUpdateRequestUpdatedEvent } from '@mercurjs/framework';
+
+import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils';
+import { fetchProductDetails } from '../../../../shared/infra/http/utils/products';
 import {
   VendorGetProductParamsType,
-  VendorUpdateProductType,
-} from "../validators";
-import { ProductUpdateRequestUpdatedEvent } from "@mercurjs/framework";
+  VendorUpdateProductType
+} from '../validators';
 
 /**
  * @oas [get] /vendor/products/{id}
@@ -59,12 +60,12 @@ export const GET = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [product],
+    data: [product]
   } = await query.graph(
     {
-      entity: "product",
+      entity: 'product',
       fields: req.queryConfig.fields,
-      filters: { id: req.params.id },
+      filters: { id: req.params.id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -125,12 +126,12 @@ export const POST = async (
       // @ts-expect-error: updateProductsWorkflow does not support null values
       update,
       selector: { id: req.params.id },
-      additional_data,
-    },
+      additional_data
+    }
   });
 
   const productDetails = await fetchProductDetails(req.params.id, req.scope);
-  if (!["draft", "proposed"].includes(productDetails.status)) {
+  if (!['draft', 'proposed'].includes(productDetails.status)) {
     const seller = await fetchSellerByAuthActorId(
       req.auth_context.actor_id,
       req.scope
@@ -142,20 +143,20 @@ export const POST = async (
         data: {
           data: { product_id: req.params.id, title: productDetails.title },
           submitter_id: req.auth_context.actor_id,
-          type: "product_update",
+          type: 'product_update'
         },
-        seller_id: seller.id,
-      },
+        seller_id: seller.id
+      }
     });
   }
 
   const {
-    data: [product],
+    data: [product]
   } = await query.graph(
     {
-      entity: "product",
+      entity: 'product',
       fields: req.queryConfig.fields,
-      filters: { id: result[0].id },
+      filters: { id: result[0].id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -206,9 +207,9 @@ export const DELETE = async (
   const { id } = req.params;
   await deleteProductsWorkflow(req.scope).run({
     input: {
-      ids: [id],
-    },
+      ids: [id]
+    }
   });
 
-  res.json({ id, object: "product", deleted: true });
+  res.json({ id, object: 'product', deleted: true });
 };

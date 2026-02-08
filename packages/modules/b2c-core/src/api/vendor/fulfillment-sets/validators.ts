@@ -1,12 +1,12 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createSelectParams } from '@medusajs/medusa/api/utils/validators'
+import { createSelectParams } from '@medusajs/medusa/api/utils/validators';
 
 export type VendorFulfillmentSetParamsType = z.infer<
   typeof VendorFulfillmentSetParams
->
+>;
 
-export const VendorFulfillmentSetParams = createSelectParams()
+export const VendorFulfillmentSetParams = createSelectParams();
 
 /* Geo zones */
 
@@ -22,7 +22,7 @@ export const VendorFulfillmentSetParams = createSelectParams()
  */
 const geoZoneBaseSchema = z.object({
   country_code: z.string()
-})
+});
 
 /**
  * @schema GeoZoneCountry
@@ -43,7 +43,7 @@ export const geoZoneCountry = geoZoneBaseSchema.merge(
   z.object({
     type: z.literal('country')
   })
-)
+);
 
 /**
  * @schema GeoZoneProvince
@@ -69,7 +69,7 @@ export const geoZoneProvince = geoZoneBaseSchema.merge(
     type: z.literal('province'),
     province_code: z.string()
   })
-)
+);
 
 /**
  * @schema GeoZoneCity
@@ -100,7 +100,7 @@ export const geoZoneCity = geoZoneBaseSchema.merge(
     province_code: z.string(),
     city: z.string()
   })
-)
+);
 
 /**
  * @schema GeoZoneZip
@@ -136,7 +136,7 @@ export const geoZoneZip = geoZoneBaseSchema.merge(
     city: z.string(),
     postal_expression: z.record(z.unknown())
   })
-)
+);
 
 /* Service zones */
 
@@ -168,7 +168,7 @@ export const VendorCreateFulfillmentSetServiceZonesSchema = z
       )
       .optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateServiceZone
@@ -225,11 +225,11 @@ export const VendorUpdateServiceZone = z
       )
       .optional()
   })
-  .strict()
+  .strict();
 
 export type VendorCreateServiceZoneType = z.infer<
   typeof VendorCreateFulfillmentSetServiceZonesSchema
->
+>;
 export type VendorUpdateServiceZoneType = z.infer<
   typeof VendorUpdateServiceZone
->
+>;

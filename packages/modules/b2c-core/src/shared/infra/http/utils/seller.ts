@@ -1,14 +1,14 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { SellerDTO } from '@mercurjs/framework'
+import { SellerDTO } from '@mercurjs/framework';
 
 export const fetchSellerByAuthActorId = async (
   authActorId: string,
   scope: MedusaContainer,
   fields: string[] = ['id']
 ): Promise<SellerDTO> => {
-  const query = scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [seller]
@@ -20,6 +20,6 @@ export const fetchSellerByAuthActorId = async (
       }
     },
     fields
-  })
-  return seller
-}
+  });
+  return seller;
+};

@@ -1,19 +1,19 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { createShippingOptionsWorkflow } from "@medusajs/medusa/core-flows";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { createShippingOptionsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from "@mercurjs/framework";
-import { SELLER_MODULE } from "../../../modules/seller";
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import sellerShippingOption from "../../../links/seller-shipping-option";
-import { fetchSellerByAuthActorId } from "../../../shared/infra/http/utils";
+import sellerShippingOption from '../../../links/seller-shipping-option';
+import { SELLER_MODULE } from '../../../modules/seller';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
 import {
   VendorCreateShippingOptionType,
-  VendorGetShippingParamsType,
-} from "./validators";
+  VendorGetShippingParamsType
+} from './validators';
 
 /**
  * @oas [post] /vendor/shipping-options
@@ -58,34 +58,34 @@ export const POST = async (
     input: [
       {
         ...req.validatedBody,
-        price_type: "flat",
-      },
-    ],
+        price_type: 'flat'
+      }
+    ]
   });
 
   // TODO: Move this into createShippingOptionsWorkflow workflow hook
   await remoteLink.create({
     [SELLER_MODULE]: {
-      seller_id: seller.id,
+      seller_id: seller.id
     },
     [Modules.FULFILLMENT]: {
-      shipping_option_id: result[0].id,
-    },
+      shipping_option_id: result[0].id
+    }
   });
 
   const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.SHIPPING_OPTION_CHANGED,
-    data: { id: result[0].id },
+    data: { id: result[0].id }
   });
 
   const {
-    data: [shipping_option],
+    data: [shipping_option]
   } = await query.graph(
     {
-      entity: "shipping_option",
+      entity: 'shipping_option',
       fields: req.queryConfig.fields,
-      filters: { id: result[0].id },
+      filters: { id: result[0].id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -138,16 +138,16 @@ export const GET = async (
     filters: {
       ...req.filterableFields,
       deleted_at: {
-        $eq: null,
-      },
+        $eq: null
+      }
     },
-    pagination: req.queryConfig.pagination,
+    pagination: req.queryConfig.pagination
   });
 
   res.json({
     shipping_options: sellerShippingOptions.map((rel) => rel.shipping_option),
     count: metadata!.count,
     offset: metadata!.skip,
-    limit: metadata!.take,
+    limit: metadata!.take
   });
 };

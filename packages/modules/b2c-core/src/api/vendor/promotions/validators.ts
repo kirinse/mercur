@@ -1,36 +1,37 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 import {
   ApplicationMethodAllocation,
   ApplicationMethodTargetType,
   ApplicationMethodType,
   PromotionStatus,
-  PromotionType,
-} from "@medusajs/framework/utils";
+  PromotionType
+} from '@medusajs/framework/utils';
 import {
   createFindParams,
-  createSelectParams,
-} from "@medusajs/medusa/api/utils/validators";
+  createSelectParams
+} from '@medusajs/medusa/api/utils/validators';
 
-import { VendorCreateCampaign } from "../campaigns/validators";
-import { dateFilterSchema } from "../../../shared/infra/http/utils";
+import { dateFilterSchema } from '../../../shared/infra/http/utils';
+import { VendorCreateCampaign } from '../campaigns/validators';
 
 export const VendorGetPromotionsParamsFields = z.object({
   q: z.string().optional(),
   id: z.union([z.string(), z.array(z.string())]).optional(),
   code: z.union([z.string(), z.array(z.string())]).optional(),
   campaign_id: z.union([z.string(), z.array(z.string())]).optional(),
-  status: z.union([
-    z.nativeEnum(PromotionStatus),
-    z.array(z.nativeEnum(PromotionStatus))
-  ]).optional(),
+  status: z
+    .union([
+      z.nativeEnum(PromotionStatus),
+      z.array(z.nativeEnum(PromotionStatus))
+    ])
+    .optional(),
   is_automatic: z.boolean().optional(),
-  type: z.union([
-    z.nativeEnum(PromotionType),
-    z.array(z.nativeEnum(PromotionType))
-  ]).optional(),
+  type: z
+    .union([z.nativeEnum(PromotionType), z.array(z.nativeEnum(PromotionType))])
+    .optional(),
   created_at: dateFilterSchema,
-  updated_at: dateFilterSchema,
+  updated_at: dateFilterSchema
 });
 
 export type VendorGetPromotionsParamsType = z.infer<
@@ -38,7 +39,7 @@ export type VendorGetPromotionsParamsType = z.infer<
 >;
 export const VendorGetPromotionsParams = createFindParams({
   offset: 0,
-  limit: 50,
+  limit: 50
 }).merge(VendorGetPromotionsParamsFields);
 
 /**
@@ -63,10 +64,10 @@ export const VendorGetPromotionsParams = createFindParams({
  */
 export const VendorCreatePromotionRule = z
   .object({
-    operator: z.enum(["in", "eq"]),
+    operator: z.enum(['in', 'eq']),
     description: z.string().nullish(),
     attribute: z.string(),
-    values: z.union([z.string(), z.array(z.string())]),
+    values: z.union([z.string(), z.array(z.string())])
   })
   .strict();
 
@@ -117,7 +118,7 @@ export const VendorCreateApplicationMethod = z
     allocation: z.nativeEnum(ApplicationMethodAllocation),
     target_rules: z.array(VendorCreatePromotionRule).optional(),
     apply_to_quantity: z.number().nullish(),
-    buy_rules_min_quantity: z.number().nullish(),
+    buy_rules_min_quantity: z.number().nullish()
   })
   .strict();
 
@@ -163,7 +164,7 @@ export const VendorCreatePromotion = z
     campaign_id: z.string().nullish(),
     campaign: VendorCreateCampaign.optional(),
     application_method: VendorCreateApplicationMethod,
-    rules: z.array(VendorCreatePromotionRule).optional(),
+    rules: z.array(VendorCreatePromotionRule).optional()
   })
   .strict();
 
@@ -187,7 +188,7 @@ export type VendorBatchPromotionRulesType = z.infer<
 >;
 export const VendorBatchPromotionRules = z.object({
   create: z.array(VendorCreatePromotionRule).default([]),
-  delete: z.array(z.string()).default([]),
+  delete: z.array(z.string()).default([])
 });
 
 /**
@@ -223,7 +224,7 @@ export const VendorUpdateApplicationMethod = z
     max_quantity: z.number().nullish(),
     currency_code: z.string().nullish(),
     apply_to_quantity: z.number().nullish(),
-    buy_rules_min_quantity: z.number().nullish(),
+    buy_rules_min_quantity: z.number().nullish()
   })
   .strict();
 
@@ -255,7 +256,7 @@ export const VendorUpdatePromotion = z
     is_automatic: z.boolean().optional(),
     status: z.nativeEnum(PromotionStatus).optional(),
     campaign_id: z.string().nullish(),
-    application_method: VendorUpdateApplicationMethod.optional(),
+    application_method: VendorUpdateApplicationMethod.optional()
   })
   .strict();
 
@@ -264,13 +265,13 @@ export type VendorGetPromotionsRuleValueParamsType = z.infer<
 >;
 export const VendorGetPromotionsRuleValueParams = createFindParams({
   limit: 100,
-  offset: 0,
+  offset: 0
 }).merge(
   z.object({
     q: z.string().optional(),
     value: z.union([z.string(), z.array(z.string())]).optional(),
     promotion_type: z.nativeEnum(PromotionType).optional(),
-    application_method_type: z.nativeEnum(ApplicationMethodType).optional(),
+    application_method_type: z.nativeEnum(ApplicationMethodType).optional()
   })
 );
 
@@ -279,7 +280,7 @@ export type VendorGetPromotionRuleParamsType = z.infer<
 >;
 export const VendorGetPromotionRuleParams = z.object({
   promotion_type: z.nativeEnum(PromotionType).optional(),
-  application_method_type: z.nativeEnum(ApplicationMethodType).optional(),
+  application_method_type: z.nativeEnum(ApplicationMethodType).optional()
 });
 
 export type VendorGetPromotionRuleTypeParamsType = z.infer<
@@ -288,7 +289,7 @@ export type VendorGetPromotionRuleTypeParamsType = z.infer<
 export const VendorGetPromotionRuleTypeParams = createSelectParams().merge(
   z.object({
     promotion_type: z.nativeEnum(PromotionType).optional(),
-    application_method_type: z.nativeEnum(ApplicationMethodType).optional(),
+    application_method_type: z.nativeEnum(ApplicationMethodType).optional()
   })
 );
 
@@ -297,20 +298,20 @@ export const VendorRuleTypePathParam = z
   .refine(
     (val) =>
       [
-        "rules",
-        "target-rules",
-        "target_rules",
-        "buy-rules",
-        "buy_rules",
+        'rules',
+        'target-rules',
+        'target_rules',
+        'buy-rules',
+        'buy_rules'
       ].includes(val),
     {
       message:
-        "Invalid rule type. Expected 'rules' | 'target-rules' | 'buy-rules'",
+        "Invalid rule type. Expected 'rules' | 'target-rules' | 'buy-rules'"
     }
   )
-  .transform((val) => val.replace(/-/g, "_"));
+  .transform((val) => val.replace(/-/g, '_'));
 
 export const VendorGetPromotionsRuleValuePathParams = z.object({
   rule_type: VendorRuleTypePathParam,
-  rule_attribute_id: z.string(),
+  rule_attribute_id: z.string()
 });

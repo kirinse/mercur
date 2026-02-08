@@ -10,7 +10,7 @@ export const vendorPriceListPriceQueryFields = [
   'price_set.variant.id',
   'price_rules.value',
   'price_rules.attribute'
-]
+];
 
 export const vendorPriceListQueryFields = [
   'id',
@@ -26,7 +26,7 @@ export const vendorPriceListQueryFields = [
   'price_list_rules.value',
   'price_list_rules.attribute',
   ...vendorPriceListPriceQueryFields.map((field) => `prices.${field}`)
-]
+];
 
 export const vendorPriceListQueryConfig = {
   list: {
@@ -37,7 +37,7 @@ export const vendorPriceListQueryConfig = {
     defaults: vendorPriceListQueryFields,
     isList: false
   }
-}
+};
 
 export const vendorPriceListPriceQueryConfig = {
   list: {
@@ -48,4 +48,4 @@ export const vendorPriceListPriceQueryConfig = {
     defaults: vendorPriceListPriceQueryFields,
     isList: false
   }
-}
+};

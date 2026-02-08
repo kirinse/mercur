@@ -1,7 +1,7 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerStockLocationLink from "../../../links/seller-stock-location";
+import sellerStockLocationLink from '../../../links/seller-stock-location';
 
 export async function GET(
   req: MedusaRequest,
@@ -11,7 +11,7 @@ export async function GET(
 
   const { data: sellerLinks } = await query.graph({
     entity: sellerStockLocationLink.entryPoint,
-    fields: ["stock_location_id"],
+    fields: ['stock_location_id']
   });
 
   const linkedStockLocationIds = sellerLinks.map(
@@ -19,21 +19,21 @@ export async function GET(
   );
 
   const { data: stockLocations, metadata } = await query.graph({
-    entity: "stock_location",
+    entity: 'stock_location',
     fields: req.queryConfig.fields,
     filters: {
       ...req.filterableFields,
       ...(linkedStockLocationIds.length > 0 && {
-        id: { $nin: linkedStockLocationIds },
-      }),
+        id: { $nin: linkedStockLocationIds }
+      })
     },
-    pagination: req.queryConfig.pagination,
+    pagination: req.queryConfig.pagination
   });
 
   res.json({
     stock_locations: stockLocations,
     count: metadata?.count,
     offset: metadata?.skip,
-    limit: metadata?.take,
+    limit: metadata?.take
   });
 }

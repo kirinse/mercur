@@ -1,8 +1,8 @@
-import multer from 'multer'
+import multer from 'multer';
 
-import { MiddlewareRoute } from '@medusajs/framework/http'
+import { MiddlewareRoute } from '@medusajs/framework/http';
 
-const upload = multer({ storage: multer.memoryStorage() })
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const vendorUploadMiddlewares: MiddlewareRoute[] = [
   {
@@ -10,4 +10,4 @@ export const vendorUploadMiddlewares: MiddlewareRoute[] = [
     matcher: '/vendor/uploads',
     middlewares: [upload.array('files')]
   }
-]
+];

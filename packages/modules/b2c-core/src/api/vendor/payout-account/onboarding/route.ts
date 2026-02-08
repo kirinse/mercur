@@ -1,9 +1,12 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils'
-import { createOnboardingForSellerWorkflow } from '../../../../workflows/seller/workflows'
-import { VendorCreateOnboardingType } from '../validators'
+import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils';
+import { createOnboardingForSellerWorkflow } from '../../../../workflows/seller/workflows';
+import { VendorCreateOnboardingType } from '../validators';
 
 /**
  * @oas [post] /vendor/payout-account/onboarding
@@ -36,11 +39,11 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateOnboardingType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const { result } = await createOnboardingForSellerWorkflow(req.scope).run({
     context: { transactionId: seller.id },
@@ -48,7 +51,7 @@ export const POST = async (
       seller_id: seller.id,
       context: req.validatedBody.context ?? {}
     }
-  })
+  });
 
   const {
     data: [payoutAccount]
@@ -61,9 +64,9 @@ export const POST = async (
       }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
   res.status(200).json({
     payout_account: payoutAccount
-  })
-}
+  });
+};

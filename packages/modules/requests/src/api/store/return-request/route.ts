@@ -1,13 +1,14 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { SELLER_ORDER_LINK } from "@mercurjs/framework";
-import { createOrderReturnRequestWorkflow } from "../../../workflows/order-return-request/workflows";
-import { storeReturnOrderRequestFields } from "./query-config";
-import { StoreCreateReturnRequestType } from "./validators";
+import { SELLER_ORDER_LINK } from '@mercurjs/framework';
+
+import { createOrderReturnRequestWorkflow } from '../../../workflows/order-return-request/workflows';
+import { storeReturnOrderRequestFields } from './query-config';
+import { StoreCreateReturnRequestType } from './validators';
 
 /**
  * @oas [get] /store/return-request
@@ -68,20 +69,20 @@ export async function GET(
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: order_return_requests, metadata } = await query.graph({
-    entity: "order_return_request",
+    entity: 'order_return_request',
     fields: storeReturnOrderRequestFields,
     filters: {
       ...req.filterableFields,
-      customer_id: req.auth_context.actor_id,
+      customer_id: req.auth_context.actor_id
     },
-    pagination: req.queryConfig.pagination,
+    pagination: req.queryConfig.pagination
   });
 
   res.json({
     order_return_requests,
     count: metadata!.count,
     offset: metadata!.skip,
-    limit: metadata!.take,
+    limit: metadata!.take
   });
 }
 
@@ -119,13 +120,13 @@ export async function POST(
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [resource],
+    data: [resource]
   } = await query.graph({
     entity: SELLER_ORDER_LINK,
-    fields: ["seller_id"],
+    fields: ['seller_id'],
     filters: {
-      order_id: req.validatedBody.order_id,
-    },
+      order_id: req.validatedBody.order_id
+    }
   });
 
   const { result: order_return_request } =
@@ -133,8 +134,8 @@ export async function POST(
       container: req.scope,
       input: {
         data: { ...req.validatedBody, customer_id: req.auth_context.actor_id },
-        seller_id: resource.seller_id,
-      },
+        seller_id: resource.seller_id
+      }
     });
 
   res.json({ order_return_request });

@@ -1,14 +1,14 @@
 import {
   removeItemReturnActionWorkflow,
   updateReceiveItemReturnRequestWorkflow
-} from '@medusajs/core-flows'
+} from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { VendorReturnsDismissItemsActionSchemaType } from '../../../validators'
+import { VendorReturnsDismissItemsActionSchemaType } from '../../../validators';
 
 /**
  * @oas [post] /vendor/returns/{id}/dismiss-items/{action_id}
@@ -60,9 +60,9 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorReturnsDismissItemsActionSchemaType>,
   res: MedusaResponse
 ) => {
-  const { id, action_id } = req.params
+  const { id, action_id } = req.params;
 
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateReceiveItemReturnRequestWorkflow.run({
     container: req.scope,
@@ -71,7 +71,7 @@ export const POST = async (
       return_id: id,
       action_id
     }
-  })
+  });
 
   const {
     data: [result]
@@ -81,12 +81,12 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     return: result
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /vendor/returns/{id}/dismiss-items/{action_id}
@@ -133,8 +133,8 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id, action_id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id, action_id } = req.params;
 
   await removeItemReturnActionWorkflow.run({
     container: req.scope,
@@ -142,7 +142,7 @@ export const DELETE = async (
       return_id: id,
       action_id
     }
-  })
+  });
 
   const {
     data: [result]
@@ -152,9 +152,9 @@ export const DELETE = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     return: result
-  })
-}
+  });
+};

@@ -8,7 +8,7 @@ export const vendorRequestsFields = [
   'status',
   'created_at',
   'updated_at'
-]
+];
 
 export const vendorRequestsConfig = {
   list: {
@@ -19,4 +19,4 @@ export const vendorRequestsConfig = {
     defaults: vendorRequestsFields,
     isList: false
   }
-}
+};

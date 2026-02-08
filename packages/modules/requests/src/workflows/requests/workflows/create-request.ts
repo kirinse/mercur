@@ -1,25 +1,25 @@
 import {
   createRemoteLinkStep,
-  emitEventStep,
-} from "@medusajs/medusa/core-flows";
+  emitEventStep
+} from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
 import {
   CreateRequestDTO,
   RequestUpdated,
-  SELLER_MODULE,
-} from "@mercurjs/framework";
-import { REQUESTS_MODULE } from "../../../modules/requests";
+  SELLER_MODULE
+} from '@mercurjs/framework';
 
-import { createRequestStep } from "../steps";
+import { REQUESTS_MODULE } from '../../../modules/requests';
+import { createRequestStep } from '../steps';
 
 export const createRequestWorkflow = createWorkflow(
-  "create-request",
+  'create-request',
   function (input: { data: CreateRequestDTO; seller_id: string }) {
     const request = createRequestStep(input.data);
 
@@ -27,12 +27,12 @@ export const createRequestWorkflow = createWorkflow(
       return [
         {
           [SELLER_MODULE]: {
-            seller_id: input.seller_id,
+            seller_id: input.seller_id
           },
           [REQUESTS_MODULE]: {
-            request_id: request[0].id,
-          },
-        },
+            request_id: request[0].id
+          }
+        }
       ];
     });
 
@@ -40,15 +40,15 @@ export const createRequestWorkflow = createWorkflow(
 
     emitEventStep({
       eventName: RequestUpdated.CREATED,
-      data: input.data,
+      data: input.data
     });
 
-    const requestCreatedHook = createHook("requestCreated", {
+    const requestCreatedHook = createHook('requestCreated', {
       requestId: request[0].id,
-      sellerId: input.seller_id,
+      sellerId: input.seller_id
     });
     return new WorkflowResponse(request, {
-      hooks: [requestCreatedHook],
+      hooks: [requestCreatedHook]
     });
   }
 );

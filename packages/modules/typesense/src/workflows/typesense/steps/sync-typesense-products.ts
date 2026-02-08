@@ -1,12 +1,13 @@
 import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { TypesenseEvents, TypesenseIndexType } from '@mercurjs/framework';
-
 import {
   TYPESENSE_MODULE,
-  TypesenseModuleService
-} from '../../../modules/typesense';
+  TypesenseEvents,
+  TypesenseIndexType
+} from '@mercurjs/framework';
+
+import { TypesenseModuleService } from '../../../modules/typesense';
 
 const CHUNK_SIZE = 100;
 

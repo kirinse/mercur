@@ -6,7 +6,7 @@ export const adminReviewsFields = [
   'seller_note',
   'created_at',
   'updated_at'
-]
+];
 
 export const adminReviewsConfig = {
   list: {
@@ -17,4 +17,4 @@ export const adminReviewsConfig = {
     defaults: adminReviewsFields,
     isList: false
   }
-}
+};

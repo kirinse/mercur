@@ -1,15 +1,15 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   createCommissionRuleWorkflow,
   listCommissionRulesWorkflow
-} from '../../../../workflows/commission/workflows'
+} from '../../../../workflows/commission/workflows';
 import {
   AdminCreateCommissionRuleType,
   validateCommissionRate,
   validateCommissionRule
-} from '../validators'
+} from '../validators';
 
 /**
  * @oas [post] /admin/commission/rules
@@ -42,15 +42,15 @@ export async function POST(
   req: MedusaRequest<AdminCreateCommissionRuleType>,
   res: MedusaResponse
 ): Promise<void> {
-  validateCommissionRate(req.validatedBody.rate)
-  validateCommissionRule(req.validatedBody)
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  validateCommissionRate(req.validatedBody.rate);
+  validateCommissionRule(req.validatedBody);
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { result } = await createCommissionRuleWorkflow.run({
     input: req.validatedBody,
     container: req.scope,
     throwOnError: true
-  })
+  });
 
   const {
     data: [commission_rule]
@@ -60,11 +60,11 @@ export async function POST(
     filters: {
       id: result.id
     }
-  })
+  });
 
   res.status(201).json({
     commission_rule
-  })
+  });
 }
 
 /**
@@ -121,12 +121,12 @@ export async function GET(
   const { result } = await listCommissionRulesWorkflow.run({
     container: req.scope,
     input: { pagination: req.queryConfig.pagination }
-  })
+  });
 
   res.json({
     commission_rules: result.commission_rules,
     count: result.count,
     offset: req.queryConfig.pagination.skip,
     limit: req.queryConfig.pagination.take
-  })
+  });
 }

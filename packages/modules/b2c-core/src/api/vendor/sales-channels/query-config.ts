@@ -7,7 +7,7 @@ export const vendorSalesChannelFields = [
   'updated_at',
   'deleted_at',
   'metadata'
-]
+];
 
 export const vendorSalesChannelQueryConfig = {
   list: {
@@ -18,4 +18,4 @@ export const vendorSalesChannelQueryConfig = {
     defaults: vendorSalesChannelFields,
     isList: false
   }
-}
+};

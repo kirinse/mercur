@@ -8,7 +8,7 @@ export const storeReviewFields = [
   'seller_note',
   'created_at',
   'updated_at'
-]
+];
 
 export const storeReviewQueryConfig = {
   list: {
@@ -19,4 +19,4 @@ export const storeReviewQueryConfig = {
     defaults: storeReviewFields,
     isList: false
   }
-}
+};

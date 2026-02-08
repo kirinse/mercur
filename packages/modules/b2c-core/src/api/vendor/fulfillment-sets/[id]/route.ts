@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { Modules } from '@medusajs/framework/utils'
-import { deleteFulfillmentSetsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { Modules } from '@medusajs/framework/utils';
+import { deleteFulfillmentSetsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
 /**
  * @oas [delete] /vendor/fulfillment-sets/{id}
@@ -50,17 +53,17 @@ export const DELETE = async (
     input: {
       ids: [req.params.id]
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.FULFULLMENT_SET_CHANGED,
     data: { id: req.params.id }
-  })
+  });
 
   res.json({
     id: req.params.id,
     object: 'fulfillment_set',
     deleted: true
-  })
-}
+  });
+};

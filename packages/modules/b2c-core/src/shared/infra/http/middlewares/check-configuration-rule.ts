@@ -1,17 +1,18 @@
-import { NextFunction } from "express";
+import { NextFunction } from 'express';
 
 import {
   MedusaContainer,
   MedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { MedusaError } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { MedusaError } from '@medusajs/framework/utils';
 
-import { ConfigurationRuleType } from "@mercurjs/framework";
+import { ConfigurationRuleType } from '@mercurjs/framework';
+
 import {
-  ConfigurationModuleService,
   CONFIGURATION_MODULE,
-} from "../../../../modules/configuration";
+  ConfigurationModuleService
+} from '../../../../modules/configuration';
 
 export function getRuleValue(
   container: MedusaContainer,
@@ -34,7 +35,7 @@ export function checkConfigurationRule(
     if ((await getRuleValue(req.scope, rule_type)) !== expected_value) {
       res.status(403).json({
         message: `This feature is disabled!`,
-        type: MedusaError.Types.NOT_FOUND,
+        type: MedusaError.Types.NOT_FOUND
       });
       return;
     }

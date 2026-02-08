@@ -1,11 +1,11 @@
 import {
   MedusaNextFunction,
   MedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { VendorGetPromotionsRuleValuePathParams } from "../../../../api/vendor/promotions/validators";
-import "./types";
+import { VendorGetPromotionsRuleValuePathParams } from '../../../../api/vendor/promotions/validators';
+import './types';
 
 export const vendorPromotionsRuleValueOptionsPathParamsGuard = async (
   req: MedusaRequest,
@@ -15,8 +15,8 @@ export const vendorPromotionsRuleValueOptionsPathParamsGuard = async (
   const result = VendorGetPromotionsRuleValuePathParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({
-      error: "Invalid path parameters",
-      details: result.error.errors,
+      error: 'Invalid path parameters',
+      details: result.error.errors
     });
   }
   req.normalized_rule_type = result.data.rule_type;

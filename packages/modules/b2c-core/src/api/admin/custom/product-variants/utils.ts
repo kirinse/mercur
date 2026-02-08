@@ -1,7 +1,7 @@
-import type { ProductVariantDTO } from "@medusajs/framework/types";
-import { HttpTypes } from "@medusajs/framework/types";
-import { remapVariantResponse } from "@medusajs/medusa/api/admin/products/helpers";
-import type { StockLocationManagedBy } from "../../../../utils/stock-locations";
+import { HttpTypes, ProductVariantDTO } from '@medusajs/framework/types';
+import { remapVariantResponse } from '@medusajs/medusa/api/admin/products/helpers';
+
+import type { StockLocationManagedBy } from '../../../../utils/stock-locations';
 
 export type VariantCustomFilters = {
   seller_id?: string;
@@ -16,11 +16,14 @@ export type AdminVariantWithManagedBy = HttpTypes.AdminProductVariant & {
   managed_by: StockLocationManagedBy;
 };
 
-export function splitVariantFilters(
-  input: unknown
-): { custom: VariantCustomFilters; filters: Record<string, unknown> } {
+export function splitVariantFilters(input: unknown): {
+  custom: VariantCustomFilters;
+  filters: Record<string, unknown>;
+} {
   const record: Record<string, unknown> =
-    input && typeof input === "object" ? (input as Record<string, unknown>) : {};
+    input && typeof input === 'object'
+      ? (input as Record<string, unknown>)
+      : {};
 
   const {
     seller_id: seller_id_raw,
@@ -33,19 +36,19 @@ export function splitVariantFilters(
   } = record;
 
   const custom: VariantCustomFilters = {
-    seller_id: typeof seller_id_raw === "string" ? seller_id_raw : undefined,
-    has_price: typeof has_price_raw === "boolean" ? has_price_raw : undefined,
+    seller_id: typeof seller_id_raw === 'string' ? seller_id_raw : undefined,
+    has_price: typeof has_price_raw === 'boolean' ? has_price_raw : undefined,
     has_inventory:
-      typeof has_inventory_raw === "boolean" ? has_inventory_raw : undefined,
+      typeof has_inventory_raw === 'boolean' ? has_inventory_raw : undefined,
     has_stock_location:
-      typeof has_stock_location_raw === "boolean"
+      typeof has_stock_location_raw === 'boolean'
         ? has_stock_location_raw
         : undefined,
     has_admin_stock_location:
-      typeof has_admin_stock_location_raw === "boolean"
+      typeof has_admin_stock_location_raw === 'boolean'
         ? has_admin_stock_location_raw
         : undefined,
-    q: typeof q_raw === "string" ? q_raw : undefined,
+    q: typeof q_raw === 'string' ? q_raw : undefined
   };
 
   return { custom, filters };
@@ -56,12 +59,11 @@ export function remapVariantWithManagedBy(
 ): AdminVariantWithManagedBy {
   const remapped = remapVariantResponse(variant);
   const managedBy =
-    typeof (variant as unknown as { managed_by?: unknown }).managed_by === "string"
+    typeof (variant as unknown as { managed_by?: unknown }).managed_by ===
+    'string'
       ? ((variant as unknown as { managed_by?: StockLocationManagedBy })
           .managed_by as StockLocationManagedBy)
-      : "none";
+      : 'none';
 
   return { ...remapped, managed_by: managedBy };
 }
-
-

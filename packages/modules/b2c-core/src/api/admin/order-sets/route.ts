@@ -1,8 +1,8 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import orderSetOrder from '../../../links/order-set-order'
-import { getFormattedOrderSetListWorkflow } from '../../../workflows/order-set/workflows'
+import orderSetOrder from '../../../links/order-set-order';
+import { getFormattedOrderSetListWorkflow } from '../../../workflows/order-set/workflows';
 
 /**
  * @oas [get] /admin/order-sets
@@ -63,10 +63,10 @@ import { getFormattedOrderSetListWorkflow } from '../../../workflows/order-set/w
  *   - cookie_auth: []
  */
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const { filterableFields, queryConfig } = req
+  const { filterableFields, queryConfig } = req;
 
   if (filterableFields['order_id']) {
-    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
       data: [order_set]
@@ -76,10 +76,10 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       filters: {
         order_id: req.filterableFields['order_id']
       }
-    })
+    });
 
-    delete filterableFields['order_id']
-    filterableFields['id'] = order_set.order_set_id
+    delete filterableFields['order_id'];
+    filterableFields['id'] = order_set.order_set_id;
   }
 
   const {
@@ -90,12 +90,12 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       filters: filterableFields,
       pagination: queryConfig.pagination
     }
-  })
+  });
 
   res.json({
     order_sets: data,
     count: metadata!.count,
     offset: metadata!.skip,
     limit: metadata!.take
-  })
-}
+  });
+};

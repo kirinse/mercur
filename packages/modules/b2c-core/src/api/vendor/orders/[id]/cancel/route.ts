@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows'
-import { cancelOrderWorkflow } from '../../../../../workflows/order/workflows/cancel-order'
+import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows';
+import { cancelOrderWorkflow } from '../../../../../workflows/order/workflows/cancel-order';
 
 /**
  * @oas [post] /vendor/orders/{id}/cancel
@@ -36,14 +39,14 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await cancelOrderWorkflow(req.scope).run({
     input: {
       order_id: id,
       canceled_by: req.auth_context.actor_id
     }
-  })
+  });
 
   const {
     result: [order]
@@ -56,7 +59,7 @@ export const POST = async (
         }
       }
     }
-  })
+  });
 
-  res.json({ order })
-}
+  res.json({ order });
+};

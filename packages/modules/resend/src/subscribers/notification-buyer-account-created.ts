@@ -1,28 +1,29 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { ResendNotificationTemplates } from "../providers/resend";
-import { fetchStoreData } from "@mercurjs/framework";
+import { fetchStoreData } from '@mercurjs/framework';
+
+import { ResendNotificationTemplates } from '../providers/resend';
 
 export default async function buyerAccountCreatedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{ id: string }>) {
   const notificationService = container.resolve(Modules.NOTIFICATION);
   const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [customer],
+    data: [customer]
   } = await query.graph({
-    entity: "customer",
-    fields: ["id", "email", "first_name", "last_name"],
+    entity: 'customer',
+    fields: ['id', 'email', 'first_name', 'last_name'],
     filters: {
-      id: event.data.id,
-    },
+      id: event.data.id
+    }
   });
 
   if (!customer) {
-    console.error("Customer not found:", event.data.id);
+    console.error('Customer not found:', event.data.id);
     return;
   }
 
@@ -30,24 +31,24 @@ export default async function buyerAccountCreatedHandler({
 
   await notificationService.createNotifications({
     to: customer.email,
-    channel: "email",
+    channel: 'email',
     template: ResendNotificationTemplates.BUYER_ACCOUNT_CREATED,
     content: {
-      subject: `Welcome to ${storeData.store_name}, ${customer.first_name || ""}!`,
+      subject: `Welcome to ${storeData.store_name}, ${customer.first_name || ''}!`
     },
     data: {
       data: {
-        user_name: customer.first_name || "Customer",
+        user_name: customer.first_name || 'Customer',
         store_name: storeData.store_name,
-        storefront_url: storeData.storefront_url,
-      },
-    },
+        storefront_url: storeData.storefront_url
+      }
+    }
   });
 }
 
 export const config: SubscriberConfig = {
-  event: "customer.created",
+  event: 'customer.created',
   context: {
-    subscriberId: "buyer-account-created-handler-resend",
-  },
+    subscriberId: 'buyer-account-created-handler-resend'
+  }
 };

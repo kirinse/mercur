@@ -1,39 +1,39 @@
 import {
   ContainerRegistrationKeys,
-  MedusaError,
-} from "@medusajs/framework/utils";
-import { createStep } from "@medusajs/framework/workflows-sdk";
+  MedusaError
+} from '@medusajs/framework/utils';
+import { createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CreateReviewDTO } from "@mercurjs/framework";
+import { CreateReviewDTO } from '@mercurjs/framework';
 
-import orderReview from "../../../links/order-review";
+import orderReview from '../../../links/order-review';
 
 export const validateReviewStep = createStep(
-  "validate-review",
+  'validate-review',
   async (reviewToCreate: CreateReviewDTO, { container }) => {
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
-      data: [order],
+      data: [order]
     } = await query.graph({
-      entity: "order",
-      fields: ["id"],
+      entity: 'order',
+      fields: ['id'],
       filters: {
         id: reviewToCreate.order_id,
-        customer_id: reviewToCreate.customer_id,
-      },
+        customer_id: reviewToCreate.customer_id
+      }
     });
 
     if (!order) {
-      throw new MedusaError(MedusaError.Types.INVALID_DATA, "Order not found!");
+      throw new MedusaError(MedusaError.Types.INVALID_DATA, 'Order not found!');
     }
 
     const { data } = await query.graph({
       entity: orderReview.entryPoint,
-      fields: ["review.reference", "review.product.id", "review.seller.id"],
+      fields: ['review.reference', 'review.product.id', 'review.seller.id'],
       filters: {
-        order_id: reviewToCreate.order_id,
-      },
+        order_id: reviewToCreate.order_id
+      }
     });
 
     const reviews = data.map((relation) => relation.review);
@@ -47,7 +47,7 @@ export const validateReviewStep = createStep(
     ) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "Review already exists"
+        'Review already exists'
       );
     }
   }

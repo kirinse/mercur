@@ -51,7 +51,7 @@ export const adminOrderSetFields = [
   'orders.payment_collections.*',
   'orders.payment_collections.payments.*',
   'orders.payment_collections.payments.refunds.*'
-]
+];
 
 export const adminOrderSetQueryConfig = {
   list: {
@@ -62,4 +62,4 @@ export const adminOrderSetQueryConfig = {
     defaults: adminOrderSetFields,
     isList: false
   }
-}
+};

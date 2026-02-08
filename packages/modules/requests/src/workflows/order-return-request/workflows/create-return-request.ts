@@ -1,22 +1,25 @@
-import { Modules } from "@medusajs/framework/utils";
+import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
-  transform,
-} from "@medusajs/framework/workflows-sdk";
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
-
-import { CreateOrderReturnRequestDTO, SELLER_MODULE } from "@mercurjs/framework";
-import { ORDER_RETURN_MODULE } from "../../../modules/order-return-request";
+  transform
+} from '@medusajs/framework/workflows-sdk';
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 
 import {
+  CreateOrderReturnRequestDTO,
+  SELLER_MODULE
+} from '@mercurjs/framework';
+
+import { ORDER_RETURN_MODULE } from '../../../modules/order-return-request';
+import {
   createOrderReturnRequestStep,
-  validateOrderReturnRequestStep,
-} from "../steps";
+  validateOrderReturnRequestStep
+} from '../steps';
 
 export const createOrderReturnRequestWorkflow = createWorkflow(
-  "create-order-return-request",
+  'create-order-return-request',
   function (input: { data: CreateOrderReturnRequestDTO; seller_id: string }) {
     validateOrderReturnRequestStep(input.data);
     const request = createOrderReturnRequestStep(input.data);
@@ -25,31 +28,31 @@ export const createOrderReturnRequestWorkflow = createWorkflow(
     createRemoteLinkStep([
       {
         [SELLER_MODULE]: {
-          seller_id: input.seller_id,
+          seller_id: input.seller_id
         },
         [ORDER_RETURN_MODULE]: {
-          order_return_request_id: requestId,
-        },
+          order_return_request_id: requestId
+        }
       },
       {
         [ORDER_RETURN_MODULE]: {
-          order_return_request_id: requestId,
+          order_return_request_id: requestId
         },
         [Modules.ORDER]: {
-          order_id: input.data.order_id,
-        },
-      },
+          order_id: input.data.order_id
+        }
+      }
     ]);
 
     const orderReturnRequestCreatedHook = createHook(
-      "orderReturnRequestCreated",
+      'orderReturnRequestCreated',
       {
-        requestId: request.id,
+        requestId: request.id
       }
     );
 
     return new WorkflowResponse(request, {
-      hooks: [orderReturnRequestCreatedHook],
+      hooks: [orderReturnRequestCreatedHook]
     });
   }
 );

@@ -1,9 +1,9 @@
-import { cancelOrderFulfillmentWorkflow } from '@medusajs/core-flows'
+import { cancelOrderFulfillmentWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [post] /vendor/orders/{id}/fulfillments/{fulfillment_id}/cancel
@@ -44,7 +44,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await cancelOrderFulfillmentWorkflow.run({
     container: req.scope,
@@ -53,7 +53,7 @@ export const POST = async (
       fulfillment_id: req.params.fulfillment_id,
       canceled_by: req.auth_context.actor_id
     }
-  })
+  });
 
   const {
     data: [order]
@@ -63,7 +63,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ order })
-}
+  res.json({ order });
+};

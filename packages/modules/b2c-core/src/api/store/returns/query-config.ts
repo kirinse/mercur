@@ -12,7 +12,7 @@ export const storeReturnFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const storeReturnQueryConfig = {
   list: {
@@ -23,4 +23,4 @@ export const storeReturnQueryConfig = {
     defaults: [],
     isList: false
   }
-}
+};

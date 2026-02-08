@@ -1,8 +1,8 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerCustomerGroup from '../../../../../links/seller-customer-group'
-import { AdminGetSellerCustomerGroupsParamsType } from '../../validators'
+import sellerCustomerGroup from '../../../../../links/seller-customer-group';
+import { AdminGetSellerCustomerGroupsParamsType } from '../../validators';
 
 /**
  * @oas [get] /admin/sellers/{id}/customer-groups
@@ -78,7 +78,7 @@ export const GET = async (
   req: MedusaRequest<AdminGetSellerCustomerGroupsParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: sellerGroups, metadata } = await query.graph({
     entity: sellerCustomerGroup.entryPoint,
@@ -90,12 +90,12 @@ export const GET = async (
       }
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     customer_groups: sellerGroups.map((group) => group.customer_group),
     count: metadata!.count,
     offset: metadata!.skip,
     limit: metadata!.take
-  })
-}
+  });
+};

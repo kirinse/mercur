@@ -1,16 +1,17 @@
+import { z } from 'zod';
+
 import {
   applyAndAndOrOperators,
-  booleanString,
-} from "@medusajs/medusa/api/utils/common-validators/common";
+  booleanString
+} from '@medusajs/medusa/api/utils/common-validators/common';
 import {
   createFindParams,
-  createOperatorMap,
-} from "@medusajs/medusa/api/utils/validators";
-import { z } from "zod";
+  createOperatorMap
+} from '@medusajs/medusa/api/utils/validators';
 
 const stringToBoolean = z.preprocess((val) => {
-  if (val === "true") return true;
-  if (val === "false") return false;
+  if (val === 'true') return true;
+  if (val === 'false') return false;
   return undefined;
 }, z.boolean().optional());
 
@@ -26,7 +27,7 @@ const GetProductVariantsParamsFields = z.object({
   allow_backorder: booleanString().optional(),
   created_at: createOperatorMap().optional(),
   updated_at: createOperatorMap().optional(),
-  deleted_at: createOperatorMap().optional(),
+  deleted_at: createOperatorMap().optional()
 });
 
 export type AdminGetProductVariantsParamsType = z.infer<
@@ -35,7 +36,7 @@ export type AdminGetProductVariantsParamsType = z.infer<
 
 export const AdminGetProductVariantsParams = createFindParams({
   offset: 0,
-  limit: 50,
+  limit: 50
 })
   .merge(GetProductVariantsParamsFields)
   .merge(applyAndAndOrOperators(GetProductVariantsParamsFields));

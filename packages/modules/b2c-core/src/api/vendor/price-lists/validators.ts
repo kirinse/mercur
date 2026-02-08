@@ -1,17 +1,17 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { PriceListStatus, PriceListType } from '@medusajs/framework/utils'
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { PriceListStatus, PriceListType } from '@medusajs/framework/utils';
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 export const VendorGetPriceListPricesParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 export const VendorGetPriceListProductsParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /**
  * @schema VendorCreatePriceListPrice
@@ -44,7 +44,7 @@ export const VendorGetPriceListProductsParams = createFindParams({
  */
 export type VendorCreatePriceListPriceType = z.infer<
   typeof VendorCreatePriceListPrice
->
+>;
 export const VendorCreatePriceListPrice = z.object({
   currency_code: z.string(),
   amount: z.number(),
@@ -52,7 +52,7 @@ export const VendorCreatePriceListPrice = z.object({
   min_quantity: z.number().nullish(),
   max_quantity: z.number().nullish(),
   rules: z.record(z.string(), z.string()).optional()
-})
+});
 
 /**
  * @schema VendorUpdatePriceListPrice
@@ -91,7 +91,7 @@ export const VendorUpdatePriceListPrice = z.object({
   min_quantity: z.number().nullish(),
   max_quantity: z.number().nullish(),
   rules: z.record(z.string(), z.string()).optional()
-})
+});
 
 /**
  * @schema VendorCreatePriceList
@@ -134,7 +134,7 @@ export const VendorUpdatePriceListPrice = z.object({
  *     items:
  *       $ref: "#/components/schemas/VendorCreatePriceListPrice"
  */
-export type VendorCreatePriceListType = z.infer<typeof VendorCreatePriceList>
+export type VendorCreatePriceListType = z.infer<typeof VendorCreatePriceList>;
 export const VendorCreatePriceList = z.object({
   title: z.string(),
   description: z.string(),
@@ -144,7 +144,7 @@ export const VendorCreatePriceList = z.object({
   type: z.nativeEnum(PriceListType).optional(),
   rules: z.record(z.string(), z.array(z.string())).optional(),
   prices: z.array(VendorCreatePriceListPrice).optional()
-})
+});
 
 /**
  * @schema VendorUpdatePriceList
@@ -182,7 +182,7 @@ export const VendorCreatePriceList = z.object({
  *       - sale
  *       - override
  */
-export type VendorUpdatePriceListType = z.infer<typeof VendorUpdatePriceList>
+export type VendorUpdatePriceListType = z.infer<typeof VendorUpdatePriceList>;
 export const VendorUpdatePriceList = z.object({
   title: z.string().optional(),
   description: z.string().nullish(),
@@ -191,7 +191,7 @@ export const VendorUpdatePriceList = z.object({
   status: z.nativeEnum(PriceListStatus).optional(),
   type: z.nativeEnum(PriceListType).optional(),
   rules: z.record(z.string(), z.array(z.string())).optional()
-})
+});
 
 /**
  * @schema VendorRemoveProductsFromPriceList
@@ -205,9 +205,9 @@ export const VendorUpdatePriceList = z.object({
  */
 export type VendorUpdateProductsOnPriceListType = z.infer<
   typeof VendorUpdateProductsOnPriceList
->
+>;
 export const VendorUpdateProductsOnPriceList = z.object({
   remove: z.array(z.string()).optional(),
   create: z.array(VendorCreatePriceListPrice).optional(),
   update: z.array(VendorUpdatePriceListPrice).optional()
-})
+});

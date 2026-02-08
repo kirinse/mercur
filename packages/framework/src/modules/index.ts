@@ -1,1 +1,1 @@
-export const SELLER_MODULE = "seller";
+export const SELLER_MODULE = 'seller';

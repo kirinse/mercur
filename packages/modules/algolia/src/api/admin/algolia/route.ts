@@ -1,9 +1,9 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 
-import { ALGOLIA_MODULE, AlgoliaModuleService } from "../../../modules/algolia";
-import { IndexType } from "@mercurjs/framework";
+import { IndexType } from '@mercurjs/framework';
 
-import { syncAlgoliaWorkflow } from "../../../workflows/algolia/workflows/sync-algolia";
+import { ALGOLIA_MODULE, AlgoliaModuleService } from '../../../modules/algolia';
+import { syncAlgoliaWorkflow } from '../../../workflows/algolia/workflows/sync-algolia';
 
 /**
  * @oas [post] /admin/algolia
@@ -31,10 +31,10 @@ import { syncAlgoliaWorkflow } from "../../../workflows/algolia/workflows/sync-a
  */
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   await syncAlgoliaWorkflow.run({
-    container: req.scope,
+    container: req.scope
   });
 
-  res.status(200).json({ message: "Sync in progress" });
+  res.status(200).json({ message: 'Sync in progress' });
 };
 
 /**

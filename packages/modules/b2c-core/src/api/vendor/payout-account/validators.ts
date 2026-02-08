@@ -1,15 +1,15 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createSelectParams } from '@medusajs/medusa/api/utils/validators'
+import { createSelectParams } from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetPayoutAccountParamsType = z.infer<
   typeof VendorGetPayoutAccountParams
->
-export const VendorGetPayoutAccountParams = createSelectParams()
+>;
+export const VendorGetPayoutAccountParams = createSelectParams();
 
 export type VendorCreatePayoutAccountType = z.infer<
   typeof VendorCreatePayoutAccount
->
+>;
 /**
  * @schema VendorCreatePayoutAccount
  * type: object
@@ -23,9 +23,9 @@ export const VendorCreatePayoutAccount = z
   .object({
     context: z.record(z.unknown()).optional()
   })
-  .strict()
+  .strict();
 
-export type VendorCreateOnboardingType = z.infer<typeof VendorCreateOnboarding>
+export type VendorCreateOnboardingType = z.infer<typeof VendorCreateOnboarding>;
 /**
  * @schema VendorCreateOnboarding
  * type: object
@@ -39,4 +39,4 @@ export const VendorCreateOnboarding = z
   .object({
     context: z.record(z.unknown()).optional()
   })
-  .strict()
+  .strict();

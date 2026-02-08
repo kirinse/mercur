@@ -1,6 +1,9 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { HttpTypes } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { HttpTypes } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /vendor/product-tags
@@ -55,21 +58,23 @@ import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
  */
 export const GET = async (
   req: AuthenticatedMedusaRequest,
-  res: MedusaResponse<HttpTypes.PaginatedResponse<{ product_tags: HttpTypes.AdminProductTag[] }>>
+  res: MedusaResponse<
+    HttpTypes.PaginatedResponse<{ product_tags: HttpTypes.AdminProductTag[] }>
+  >
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: product_tags, metadata } = await query.graph({
     entity: 'product_tag',
     fields: req.queryConfig.fields,
     filters: req.filterableFields,
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     product_tags,
     count: metadata?.count ?? product_tags.length,
     offset: metadata?.skip ?? req.queryConfig.pagination?.skip ?? 0,
     limit: metadata?.take ?? req.queryConfig.pagination?.take ?? 0
-  })
-}
+  });
+};

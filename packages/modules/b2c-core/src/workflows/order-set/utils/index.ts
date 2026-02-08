@@ -1,1 +1,1 @@
-export * from './format-order-sets'
+export * from './format-order-sets';

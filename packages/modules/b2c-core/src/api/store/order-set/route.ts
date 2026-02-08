@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { getFormattedOrderSetListWorkflow } from '../../../workflows/order-set/workflows'
-import { defaultStoreRetrieveOrderSetFields } from './query-config'
+import { getFormattedOrderSetListWorkflow } from '../../../workflows/order-set/workflows';
+import { defaultStoreRetrieveOrderSetFields } from './query-config';
 
 /**
  * @oas [get] /store/order-set
@@ -82,7 +85,7 @@ export async function GET(
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: order_set_ids, metadata } = await query.graph({
     entity: 'order_set',
@@ -91,7 +94,7 @@ export async function GET(
       customer_id: req.auth_context.actor_id
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   const {
     result: { data: order_sets }
@@ -100,12 +103,12 @@ export async function GET(
       filters: { id: order_set_ids.map((set) => set.id) },
       fields: defaultStoreRetrieveOrderSetFields
     }
-  })
+  });
 
   res.json({
     order_sets,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
+  });
 }

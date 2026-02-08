@@ -1,9 +1,12 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { fetchPriceListPriceIdsForProduct } from '@medusajs/medusa/api/admin/price-lists/helpers'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { fetchPriceListPriceIdsForProduct } from '@medusajs/medusa/api/admin/price-lists/helpers';
 
-import { batchVendorPriceListPricesWorkflow } from '../../../../../workflows/price-list/workflows'
-import { VendorUpdateProductsOnPriceListType } from '../../validators'
+import { batchVendorPriceListPricesWorkflow } from '../../../../../workflows/price-list/workflows';
+import { VendorUpdateProductsOnPriceListType } from '../../validators';
 
 /**
  * @oas [get] /vendor/price-lists/{id}/products
@@ -67,9 +70,9 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { id } = req.params
+  const { id } = req.params;
   const {
     data: [priceList]
   } = await query.graph({
@@ -78,17 +81,17 @@ export const GET = async (
     filters: {
       id
     }
-  })
+  });
 
-  const variantIds: string[] = []
+  const variantIds: string[] = [];
 
   priceList.prices?.forEach((price) => {
-    const variantId = price.price_set?.variant?.id
+    const variantId = price.price_set?.variant?.id;
 
     if (variantId) {
-      variantIds.push(variantId)
+      variantIds.push(variantId);
     }
-  })
+  });
 
   const { data: products, metadata } = await query.graph({
     entity: 'product',
@@ -99,15 +102,15 @@ export const GET = async (
       }
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     products,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/price-lists/{id}/products
@@ -153,15 +156,15 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateProductsOnPriceListType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
-  const { remove = [], create = [], update = [] } = req.validatedBody
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
+  const { remove = [], create = [], update = [] } = req.validatedBody;
 
   const productPriceIds = await fetchPriceListPriceIdsForProduct(
     id,
     remove,
     req.scope
-  )
+  );
 
   await batchVendorPriceListPricesWorkflow.run({
     container: req.scope,
@@ -171,7 +174,7 @@ export const POST = async (
       update,
       delete: productPriceIds
     }
-  })
+  });
 
   const {
     data: [price_list]
@@ -181,7 +184,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ price_list })
-}
+  res.json({ price_list });
+};

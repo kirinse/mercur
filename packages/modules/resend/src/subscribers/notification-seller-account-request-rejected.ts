@@ -1,16 +1,17 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
-import { Modules } from "@medusajs/framework/utils";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { Modules } from '@medusajs/framework/utils';
 
 import {
   RequestDTO,
   SellerAccountRequestUpdatedEvent,
-  fetchStoreData,
-} from "@mercurjs/framework";
-import { ResendNotificationTemplates } from "../providers/resend";
+  fetchStoreData
+} from '@mercurjs/framework';
+
+import { ResendNotificationTemplates } from '../providers/resend';
 
 export default async function sellerRequestRejectedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<RequestDTO>) {
   const notificationService = container.resolve(Modules.NOTIFICATION);
   const requestData = event.data.data as {
@@ -22,23 +23,23 @@ export default async function sellerRequestRejectedHandler({
 
   await notificationService.createNotifications({
     to: requestData.provider_identity_id,
-    channel: "email",
+    channel: 'email',
     template: ResendNotificationTemplates.SELLER_ACCOUNT_UPDATES_REJECTION,
     content: {
-      subject: `${storeData.store_name} - Seller account rejected!`,
+      subject: `${storeData.store_name} - Seller account rejected!`
     },
     data: {
       data: {
         store_name: storeData.store_name,
-        storefront_url: storeData.storefront_url,
-      },
-    },
+        storefront_url: storeData.storefront_url
+      }
+    }
   });
 }
 
 export const config: SubscriberConfig = {
   event: SellerAccountRequestUpdatedEvent.REJECTED,
   context: {
-    subscriberId: "seller-account-request-rejected-handler-resend",
-  },
+    subscriberId: 'seller-account-request-rejected-handler-resend'
+  }
 };

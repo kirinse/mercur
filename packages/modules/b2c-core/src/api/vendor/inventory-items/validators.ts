@@ -1,24 +1,24 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common'
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
-import { HttpTypes } from '@medusajs/framework/types'
+import { HttpTypes } from '@medusajs/framework/types';
+import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common';
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 export const VendorGetInventoryItemsParamsFields = z.object({
   q: z.string().optional(),
   inventory_item_id: z.union([z.string(), z.array(z.string())]).optional()
-})
+});
 
 export type VendorGetInventoryItemsParamsType = z.infer<
   typeof VendorGetInventoryItemsParams
->
+>;
 export const VendorGetInventoryItemsParams = createFindParams({
   offset: 0,
   limit: 50
 })
   .merge(VendorGetInventoryItemsParamsFields)
   .merge(applyAndAndOrOperators(VendorGetInventoryItemsParamsFields))
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateInventoryLevel
@@ -34,11 +34,11 @@ export const VendorGetInventoryItemsParams = createFindParams({
  */
 export type VendorUpdateInventoryLevelType = z.infer<
   typeof VendorUpdateInventoryLevel
->
+>;
 export const VendorUpdateInventoryLevel = z.object({
   stocked_quantity: z.number().int().min(0),
   reserved_quantity: z.number().int().min(0).optional()
-})
+});
 
 /**
  * @schema VendorCreateInventoryLevel
@@ -61,14 +61,14 @@ export const VendorUpdateInventoryLevel = z.object({
  */
 export type VendorCreateInventoryLocationLevelType = z.infer<
   typeof VendorCreateInventoryLocationLevel
->
+>;
 export const VendorCreateInventoryLocationLevel = z
   .object({
     location_id: z.string(),
     stocked_quantity: z.number().int().min(0).optional(),
     reserved_quantity: z.number().int().min(0).optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateInventoryItem
@@ -134,7 +134,7 @@ export const VendorCreateInventoryLocationLevel = z
  */
 export type VendorUpdateInventoryItemType = z.infer<
   typeof VendorUpdateInventoryItem
->
+>;
 export const VendorUpdateInventoryItem = z
   .object({
     sku: z.string().nullish(),
@@ -152,7 +152,7 @@ export const VendorUpdateInventoryItem = z
     thumbnail: z.string().nullish(),
     metadata: z.record(z.unknown()).nullish()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorBatchInventoryLocationLevel
@@ -178,7 +178,7 @@ const VendorBatchInventoryLocationLevel = z
     stocked_quantity: z.number().min(0).optional(),
     incoming_quantity: z.number().min(0).optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorBatchInventoryItemLevels
@@ -202,7 +202,7 @@ const VendorBatchInventoryLocationLevel = z
  */
 export type VendorBatchInventoryItemLevelsType = z.infer<
   typeof VendorBatchInventoryItemLevels
->
+>;
 export const VendorBatchInventoryItemLevels = z
   .object({
     create: z.array(VendorBatchInventoryLocationLevel).optional(),
@@ -210,7 +210,7 @@ export const VendorBatchInventoryItemLevels = z
     delete: z.array(z.string()).optional(),
     force: z.boolean().optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorBatchInventoryItemLocationsLevel
@@ -234,12 +234,13 @@ export const VendorBatchInventoryItemLevels = z
  */
 export type VendorBatchInventoryItemLocationsLevelType = z.infer<
   typeof VendorBatchInventoryItemLocationsLevel
->
+>;
 export const VendorBatchInventoryItemLocationsLevel = z.object({
   create: z.array(VendorCreateInventoryLocationLevel).optional(),
   update: z.array(VendorBatchInventoryLocationLevel).optional(),
   delete: z.array(z.string()).optional(),
   force: z.boolean().optional()
-})
+});
 
-export type VendorInventoryLevelDeleteResponse = HttpTypes.AdminInventoryLevelDeleteResponse
+export type VendorInventoryLevelDeleteResponse =
+  HttpTypes.AdminInventoryLevelDeleteResponse;

@@ -1,10 +1,13 @@
-import { NextFunction } from 'express'
+import { NextFunction } from 'express';
 
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { StoreStatus } from '@mercurjs/framework'
+import { StoreStatus } from '@mercurjs/framework';
 
-import { fetchSellerByAuthActorId } from '../utils/seller'
+import { fetchSellerByAuthActorId } from '../utils/seller';
 
 /**
  * Middleware that checks store status and request method to determine access.
@@ -21,16 +24,16 @@ export const storeActiveGuard = async (
     req.auth_context.actor_id,
     req.scope,
     ['store_status']
-  )
+  );
 
-  const isActiveStore = seller.store_status === StoreStatus.ACTIVE
-  const isGetRequest = req.method === 'GET'
+  const isActiveStore = seller.store_status === StoreStatus.ACTIVE;
+  const isGetRequest = req.method === 'GET';
 
   if (isActiveStore || isGetRequest) {
-    return next()
+    return next();
   }
 
   return res.status(403).json({
     message: 'Operation not allowed for current store status'
-  })
-}
+  });
+};

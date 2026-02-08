@@ -1,15 +1,18 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 import {
   deleteCampaignsWorkflow,
   updateCampaignsWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { getFilteredCampaignPromotions } from '../helpers'
+import { getFilteredCampaignPromotions } from '../helpers';
 import {
   VendorGetCampaignByIdParamsType,
   VendorUpdateCampaignType
-} from '../validators'
+} from '../validators';
 
 /**
  * @oas [get] /vendor/campaigns/{id}
@@ -101,7 +104,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<{}, VendorGetCampaignByIdParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [campaign]
@@ -111,7 +114,7 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   if (campaign) {
     const promotions = await getFilteredCampaignPromotions(
@@ -120,13 +123,13 @@ export const GET = async (
       req.validatedQuery,
       req.queryConfig.fields || [],
       req.queryConfig.pagination
-    )
+    );
 
-    campaign.promotions = promotions ?? []
+    campaign.promotions = promotions ?? [];
   }
 
-  res.json({ campaign })
-}
+  res.json({ campaign });
+};
 
 /**
  * @oas [delete] /vendor/campaigns/{id}
@@ -168,15 +171,15 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await deleteCampaignsWorkflow.run({
     container: req.scope,
     input: { ids: [id] }
-  })
+  });
 
-  res.json({ id, object: 'campaign', deleted: true })
-}
+  res.json({ id, object: 'campaign', deleted: true });
+};
 
 /**
  * @oas [post] /vendor/campaigns/{id}
@@ -222,7 +225,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateCampaignType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateCampaignsWorkflow.run({
     container: req.scope,
@@ -234,7 +237,7 @@ export const POST = async (
         }
       ]
     }
-  })
+  });
 
   const {
     data: [campaign]
@@ -244,7 +247,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ campaign })
-}
+  res.json({ campaign });
+};

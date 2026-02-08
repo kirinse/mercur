@@ -1,1 +1,1 @@
-export * from "./list-filtered-product-variants";
+export * from './list-filtered-product-variants';

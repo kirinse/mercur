@@ -6,7 +6,7 @@ export const defaultVendorNotificationFields = [
   'data',
   'created_at',
   'updated_at'
-]
+];
 
 export const vendorNotificationQueryConfig = {
   list: {
@@ -17,4 +17,4 @@ export const vendorNotificationQueryConfig = {
     defaults: defaultVendorNotificationFields,
     isList: false
   }
-}
+};

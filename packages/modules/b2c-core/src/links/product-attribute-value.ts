@@ -1,15 +1,15 @@
-import { defineLink } from "@medusajs/framework/utils";
-import ProductModule from "@medusajs/medusa/product";
+import { defineLink } from '@medusajs/framework/utils';
+import ProductModule from '@medusajs/medusa/product';
 
-import AttributeModule from "../modules/attribute";
+import AttributeModule from '../modules/attribute';
 
 export default defineLink(
   {
     linkable: ProductModule.linkable.product,
-    isList: true,
+    isList: true
   },
   {
     linkable: AttributeModule.linkable.attributeValue,
-    isList: true,
+    isList: true
   }
 );

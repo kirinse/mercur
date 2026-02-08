@@ -1,9 +1,9 @@
-import { defineMiddlewares } from "@medusajs/medusa";
+import { defineMiddlewares } from '@medusajs/medusa';
 
-import { storeMiddlewares } from "./store/middlewares";
-import { vendorMiddlewares } from "./vendor/middlewares";
-import { adminMiddlewares } from "./admin/middlewares";
+import { adminMiddlewares } from './admin/middlewares';
+import { storeMiddlewares } from './store/middlewares';
+import { vendorMiddlewares } from './vendor/middlewares';
 
 export default defineMiddlewares({
-  routes: [...storeMiddlewares, ...adminMiddlewares, ...vendorMiddlewares],
+  routes: [...storeMiddlewares, ...adminMiddlewares, ...vendorMiddlewares]
 });

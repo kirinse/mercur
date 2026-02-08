@@ -1,15 +1,15 @@
 import {
   ContainerRegistrationKeys,
   MedusaError,
-  MedusaErrorTypes,
-} from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+  MedusaErrorTypes
+} from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CreateProductAttributeValueDTO } from "@mercurjs/framework";
+import { CreateProductAttributeValueDTO } from '@mercurjs/framework';
 
-import productAttributeValue from "../../../links/product-attribute-value";
+import productAttributeValue from '../../../links/product-attribute-value';
 
-export const validateAttributeValueStepId = "validate-attribute-value";
+export const validateAttributeValueStepId = 'validate-attribute-value';
 
 export const validateAttributeValueStep = createStep(
   validateAttributeValueStepId,
@@ -17,13 +17,13 @@ export const validateAttributeValueStep = createStep(
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
-      data: [attribute],
+      data: [attribute]
     } = await query.graph({
-      entity: "attribute",
-      fields: ["product_categories.id", "possible_values.value"],
+      entity: 'attribute',
+      fields: ['product_categories.id', 'possible_values.value'],
       filters: {
-        id: input.attribute_id,
-      },
+        id: input.attribute_id
+      }
     });
 
     const allowedValues = attribute.possible_values
@@ -44,13 +44,13 @@ export const validateAttributeValueStep = createStep(
     // If all attributes are global, we don't enforce for product.categories to include the attribute.product_categories, since there are none
     if (attributeCategoryIds.length) {
       const {
-        data: [product],
+        data: [product]
       } = await query.graph({
-        entity: "product",
-        fields: ["categories.id"],
+        entity: 'product',
+        fields: ['categories.id'],
         filters: {
-          id: input.product_id,
-        },
+          id: input.product_id
+        }
       });
 
       const productCategoryIds = product.categories?.map((cat) => cat.id);
@@ -68,10 +68,10 @@ export const validateAttributeValueStep = createStep(
 
     const { data: attributeValuesProduct } = await query.graph({
       entity: productAttributeValue.entryPoint,
-      fields: ["attribute_value.value", "attribute_value.attribute_id"],
+      fields: ['attribute_value.value', 'attribute_value.attribute_id'],
       filters: {
-        product_id: input.product_id,
-      },
+        product_id: input.product_id
+      }
     });
 
     const attributeValues = attributeValuesProduct

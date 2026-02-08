@@ -1,49 +1,94 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface EmailTemplateProps {
   data: {
-    order_address: string,
+    order_address: string;
     order: {
-      id: string,
-      display_id?: string,
-      items: any[]
-      item?: any
-    }
-    store_name: string
-    storefront_url: string
-  }
+      id: string;
+      display_id?: string;
+      items: any[];
+      item?: any;
+    };
+    store_name: string;
+    storefront_url: string;
+  };
 }
 
-export const BuyerCancelOrderEmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({ data }) => {
+export const BuyerCancelOrderEmailTemplate: React.FC<
+  Readonly<EmailTemplateProps>
+> = ({ data }) => {
   const { order } = data;
   const itemsArray = order.items?.flat() || [order.item].flat();
 
   return (
-    <div style={{
-      maxWidth: 600,
-      margin: '0 auto',
-      fontFamily: 'Arial, sans-serif',
-      color: '#222',
-      background: '#fff',
-      padding: 24,
-      borderRadius: 10
-    }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: 8 }}>Your order has been canceled</h1>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: '0 auto',
+        fontFamily: 'Arial, sans-serif',
+        color: '#222',
+        background: '#fff',
+        padding: 24,
+        borderRadius: 10
+      }}
+    >
+      <h1 style={{ fontSize: '2rem', marginBottom: 8 }}>
+        Your order has been canceled
+      </h1>
       <p style={{ fontSize: '1.1rem', marginBottom: 24 }}>
-        We're sorry, but your order <b>#{order.display_id || order.id}</b> has been canceled by the seller.
+        We're sorry, but your order <b>#{order.display_id || order.id}</b> has
+        been canceled by the seller.
       </p>
 
       <h3 style={{ marginTop: 32, marginBottom: 12 }}>Order items:</h3>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 32 }}>
+      <table
+        style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 32 }}
+      >
         <thead>
           <tr>
-            <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #eee' }}>Product</th>
-            <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid #eee' }}>Amount</th>
-            <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid #eee' }}>Qty</th>
-            <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid #eee' }}>Total</th>
+            <th
+              style={{
+                textAlign: 'left',
+                padding: '8px',
+                borderBottom: '1px solid #eee'
+              }}
+            >
+              Product
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '8px',
+                borderBottom: '1px solid #eee'
+              }}
+            >
+              Amount
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '8px',
+                borderBottom: '1px solid #eee'
+              }}
+            >
+              Qty
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '8px',
+                borderBottom: '1px solid #eee'
+              }}
+            >
+              Total
+            </th>
           </tr>
         </thead>
         <tbody>
           {itemsArray.map((item: any, idx: number) => (
-            <tr key={item.id || idx} style={{ borderBottom: '1px solid #f3f3f3' }}>
+            <tr
+              key={item.id || idx}
+              style={{ borderBottom: '1px solid #f3f3f3' }}
+            >
               <td style={{ padding: '12px 8px', verticalAlign: 'top' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {item.thumbnail && (
@@ -68,13 +113,31 @@ export const BuyerCancelOrderEmailTemplate: React.FC<Readonly<EmailTemplateProps
                   </div>
                 </div>
               </td>
-              <td style={{ textAlign: 'right', padding: '12px 8px', verticalAlign: 'top' }}>
+              <td
+                style={{
+                  textAlign: 'right',
+                  padding: '12px 8px',
+                  verticalAlign: 'top'
+                }}
+              >
                 {item.unit_price} eur
               </td>
-              <td style={{ textAlign: 'right', padding: '12px 8px', verticalAlign: 'top' }}>
+              <td
+                style={{
+                  textAlign: 'right',
+                  padding: '12px 8px',
+                  verticalAlign: 'top'
+                }}
+              >
                 {item.quantity}
               </td>
-              <td style={{ textAlign: 'right', padding: '12px 8px', verticalAlign: 'top' }}>
+              <td
+                style={{
+                  textAlign: 'right',
+                  padding: '12px 8px',
+                  verticalAlign: 'top'
+                }}
+              >
                 {item.unit_price * item.quantity} eur
               </td>
             </tr>
@@ -83,7 +146,8 @@ export const BuyerCancelOrderEmailTemplate: React.FC<Readonly<EmailTemplateProps
       </table>
 
       <div style={{ margin: '32px 0 16px 0', fontSize: '1rem' }}>
-        If you have any questions, please contact <b>{data.store_name} Support</b>.
+        If you have any questions, please contact{' '}
+        <b>{data.store_name} Support</b>.
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -109,8 +173,9 @@ export const BuyerCancelOrderEmailTemplate: React.FC<Readonly<EmailTemplateProps
       </div>
 
       <div style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>
-        You received this email because you made a purchase or sale on the {data.store_name} marketplace.
-        If you have any questions, please contact our support team.
+        You received this email because you made a purchase or sale on the{' '}
+        {data.store_name} marketplace. If you have any questions, please contact
+        our support team.
       </div>
 
       <div style={{ marginTop: 32 }}>

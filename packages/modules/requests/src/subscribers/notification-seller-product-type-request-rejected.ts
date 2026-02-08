@@ -1,23 +1,24 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 
-import { ProductTypeRequestUpdatedEvent } from "@mercurjs/framework";
-import { sendVendorUIRequestNotification } from "../modules/requests";
+import { ProductTypeRequestUpdatedEvent } from '@mercurjs/framework';
+
+import { sendVendorUIRequestNotification } from '../modules/requests';
 
 export default async function sellerProductTypeRequestRejectedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{ id: string }>) {
   await sendVendorUIRequestNotification({
     container,
     requestId: event.data.id,
-    requestType: "product_type",
-    template: "seller_product_type_request_rejected_notification",
+    requestType: 'product_type',
+    template: 'seller_product_type_request_rejected_notification'
   });
 }
 
 export const config: SubscriberConfig = {
   event: ProductTypeRequestUpdatedEvent.REJECTED,
   context: {
-    subscriberId: "seller-product-type-request-rejected-handler",
-  },
+    subscriberId: 'seller-product-type-request-rejected-handler'
+  }
 };

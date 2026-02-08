@@ -1,16 +1,17 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import {
-  CommissionModuleService,
-  COMMISSION_MODULE,
-} from "../../../modules/commission";
 import {
   CommissionRuleDTO,
-  UpdateCommissionRuleDTO,
-} from "@mercurjs/framework";
+  UpdateCommissionRuleDTO
+} from '@mercurjs/framework';
+
+import {
+  COMMISSION_MODULE,
+  CommissionModuleService
+} from '../../../modules/commission';
 
 export const updateCommissionRuleStep = createStep(
-  "update-commission-rule",
+  'update-commission-rule',
   async (input: UpdateCommissionRuleDTO, { container }) => {
     const service =
       container.resolve<CommissionModuleService>(COMMISSION_MODULE);
@@ -24,7 +25,7 @@ export const updateCommissionRuleStep = createStep(
     return new StepResponse(updatedCommissionRule, previousData);
   },
   async (previousData: CommissionRuleDTO, { container }) => {
-    const service = 
+    const service =
       container.resolve<CommissionModuleService>(COMMISSION_MODULE);
 
     //@ts-expect-error Incompatible type

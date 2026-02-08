@@ -1,28 +1,28 @@
-import { Resend } from 'resend'
+import { Resend } from 'resend';
 
 import {
   AbstractNotificationProviderService,
   MedusaError
-} from '@medusajs/framework/utils'
-import { ProviderSendNotificationDTO } from '@medusajs/types'
+} from '@medusajs/framework/utils';
+import { ProviderSendNotificationDTO } from '@medusajs/types';
 
-import { emailTemplates } from './email-templates'
+import { emailTemplates } from './email-templates';
 
 type ResendOptions = {
-  api_key: string
-  from: string
-}
+  api_key: string;
+  from: string;
+};
 
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
-  static identifier = 'notification-resend'
-  private resendClient: Resend
-  private options: ResendOptions
+  static identifier = 'notification-resend';
+  private resendClient: Resend;
+  private options: ResendOptions;
 
   constructor(_, options: ResendOptions) {
-    super()
-    this.validateModuleOptions(options)
-    this.resendClient = new Resend(options.api_key)
-    this.options = options
+    super();
+    this.validateModuleOptions(options);
+    this.resendClient = new Resend(options.api_key);
+    this.options = options;
   }
 
   validateModuleOptions(options: ResendOptions) {
@@ -31,7 +31,7 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
           `No ${key} was provided in the ${ResendNotificationProviderService.identifier} options. Please add one.`
-        )
+        );
       }
     }
   }
@@ -42,21 +42,21 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       to: notification.to,
       subject: notification.content?.subject as string,
       react: emailTemplates[notification.template](notification.data)
-    })
+    });
 
     if (error) {
-      throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, error.message)
+      throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, error.message);
     }
 
     if (!data) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,
         'No data returned by resend client'
-      )
+      );
     }
 
-    return data
+    return data;
   }
 }
 
-export default ResendNotificationProviderService
+export default ResendNotificationProviderService;

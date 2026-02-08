@@ -1,26 +1,26 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ProductDTO } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import { MedusaContainer } from '@medusajs/framework';
+import { ProductDTO } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { AttributeDTO } from '@mercurjs/framework'
+import { AttributeDTO } from '@mercurjs/framework';
 
-import categoryAttribute from '../../../../links/category-attribute'
+import categoryAttribute from '../../../../links/category-attribute';
 
 export const fetchProductDetails = async (
   product_id: string,
   scope: MedusaContainer
 ): Promise<ProductDTO> => {
-  const service = scope.resolve(Modules.PRODUCT)
-  const product = await service.retrieveProduct(product_id)
-  return product
-}
+  const service = scope.resolve(Modules.PRODUCT);
+  const product = await service.retrieveProduct(product_id);
+  return product;
+};
 
 export async function getApplicableAttributes(
   container: MedusaContainer,
   product_id: string,
   fields: string[]
 ): Promise<AttributeDTO[]> {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [product]
@@ -30,14 +30,14 @@ export async function getApplicableAttributes(
     filters: {
       id: product_id
     }
-  })
-  const categoryIds = product.categories.map((category) => category.id)
+  });
+  const categoryIds = product.categories.map((category) => category.id);
 
   const { data: attributes } = await query.graph({
     entity: categoryAttribute.entryPoint,
     fields: ['attribute_id']
-  })
-  const attributeIds = attributes.map((attribute) => attribute.attribute_id)
+  });
+  const attributeIds = attributes.map((attribute) => attribute.attribute_id);
 
   const { data: globalAttributes } = await query.graph({
     entity: 'attribute',
@@ -50,7 +50,7 @@ export async function getApplicableAttributes(
         $eq: null
       }
     }
-  })
+  });
 
   const { data: categoryAttributes } = await query.graph({
     entity: categoryAttribute.entryPoint,
@@ -61,10 +61,10 @@ export async function getApplicableAttributes(
         $eq: null
       }
     }
-  })
+  });
 
   return [
     ...globalAttributes,
     ...categoryAttributes.map((rel) => rel.attribute)
-  ]
+  ];
 }

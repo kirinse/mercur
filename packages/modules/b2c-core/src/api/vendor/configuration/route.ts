@@ -1,7 +1,7 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { ConfigurationRuleDefaults } from "../../../modules/configuration";
+import { ConfigurationRuleDefaults } from '../../../modules/configuration';
 
 /**
  * @oas [get] /vendor/configuration
@@ -36,8 +36,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   });
 
   const { data: configuration_rules } = await query.graph({
-    entity: "configuration_rule",
-    fields: ["rule_type", "is_enabled"],
+    entity: 'configuration_rule',
+    fields: ['rule_type', 'is_enabled']
   });
 
   configuration_rules.forEach(({ rule_type, is_enabled }) => {
@@ -45,6 +45,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   });
 
   res.json({
-    configuration_rules: rules,
+    configuration_rules: rules
   });
 };

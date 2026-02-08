@@ -1,17 +1,17 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
 import {
   listCommissionRulesWorkflow,
   upsertDefaultCommissionRuleWorkflow
-} from '../../../../workflows/commission/workflows'
+} from '../../../../workflows/commission/workflows';
 import {
   AdminUpsertDefaultCommissionRuleType,
   validateCommissionRate
-} from '../validators'
+} from '../validators';
 
 /**
  * @oas [post] /admin/commission/default
@@ -44,13 +44,13 @@ export async function POST(
   req: MedusaRequest<AdminUpsertDefaultCommissionRuleType>,
   res: MedusaResponse
 ): Promise<void> {
-  validateCommissionRate(req.validatedBody.rate)
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  validateCommissionRate(req.validatedBody.rate);
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await upsertDefaultCommissionRuleWorkflow.run({
     container: req.scope,
     input: req.validatedBody
-  })
+  });
 
   const {
     data: [default_rule]
@@ -60,7 +60,7 @@ export async function POST(
     filters: {
       reference: 'site'
     }
-  })
+  });
 
   const {
     result: {
@@ -71,11 +71,11 @@ export async function POST(
     input: {
       ids: [default_rule.id]
     }
-  })
+  });
 
   res.json({
     commission_rule
-  })
+  });
 }
 
 /**
@@ -104,7 +104,7 @@ export async function GET(
   req: MedusaRequest,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [default_rule]
@@ -114,10 +114,10 @@ export async function GET(
     filters: {
       reference: 'site'
     }
-  })
+  });
 
   if (!default_rule) {
-    throw new MedusaError(MedusaError.Types.NOT_FOUND, 'Rule not found!')
+    throw new MedusaError(MedusaError.Types.NOT_FOUND, 'Rule not found!');
   }
 
   const {
@@ -129,9 +129,9 @@ export async function GET(
     input: {
       ids: [default_rule.id]
     }
-  })
+  });
 
   res.json({
     commission_rule
-  })
+  });
 }

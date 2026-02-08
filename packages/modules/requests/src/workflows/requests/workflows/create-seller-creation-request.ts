@@ -1,42 +1,42 @@
 import {
   WorkflowResponse,
   createHook,
-  createWorkflow,
-} from "@medusajs/workflows-sdk";
+  createWorkflow
+} from '@medusajs/workflows-sdk';
 
 import {
   CreateRequestDTO,
   RequestUpdated,
   SellerRequest,
-  emitMultipleEventsStep,
-} from "@mercurjs/framework";
+  emitMultipleEventsStep
+} from '@mercurjs/framework';
 
-import { createRequestStep } from "../steps";
+import { createRequestStep } from '../steps';
 
 export const createSellerCreationRequestWorkflow = createWorkflow(
-  "create-seller-creation-request",
+  'create-seller-creation-request',
   function (input: CreateRequestDTO) {
     const request = createRequestStep(input);
 
     emitMultipleEventsStep([
       {
         name: SellerRequest.CREATED,
-        data: input,
+        data: input
       },
       {
         name: RequestUpdated.CREATED,
-        data: input,
-      },
+        data: input
+      }
     ]);
 
     const sellerCreationRequestCreatedHook = createHook(
-      "sellerCreationRequestCreated",
+      'sellerCreationRequestCreated',
       {
-        requestId: request[0].id,
+        requestId: request[0].id
       }
     );
     return new WorkflowResponse(request, {
-      hooks: [sellerCreationRequestCreatedHook],
+      hooks: [sellerCreationRequestCreatedHook]
     });
   }
 );

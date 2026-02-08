@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { beginReceiveReturnWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { beginReceiveReturnWorkflow } from '@medusajs/medusa/core-flows';
 
-import { VendorReceiveReturnSchemaType } from '../../validators'
+import { VendorReceiveReturnSchemaType } from '../../validators';
 
 /**
  * @oas [post] /vendor/returns/{id}/receive
@@ -50,8 +53,8 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorReceiveReturnSchemaType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   await beginReceiveReturnWorkflow.run({
     container: req.scope,
@@ -59,7 +62,7 @@ export const POST = async (
       ...req.validatedBody,
       return_id: id
     }
-  })
+  });
 
   const {
     data: [result]
@@ -69,9 +72,9 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     return: result
-  })
-}
+  });
+};

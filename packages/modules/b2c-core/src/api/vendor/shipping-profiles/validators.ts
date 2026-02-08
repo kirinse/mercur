@@ -1,12 +1,12 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-import { dateFilterSchema } from '../../../shared/infra/http/utils/zod'
+import { dateFilterSchema } from '../../../shared/infra/http/utils/zod';
 
 export type VendorGetShippingProfilesParamsType = z.infer<
   typeof VendorGetShippingProfilesParams
->
+>;
 export const VendorGetShippingProfilesParams = createFindParams({
   limit: 20,
   offset: 0
@@ -19,7 +19,7 @@ export const VendorGetShippingProfilesParams = createFindParams({
     created_at: dateFilterSchema,
     updated_at: dateFilterSchema
   })
-)
+);
 
 /**
  * @schema VendorCreateShippingProfile
@@ -41,14 +41,14 @@ export const VendorGetShippingProfilesParams = createFindParams({
  */
 export type VendorCreateShippingProfileType = z.infer<
   typeof VendorCreateShippingProfile
->
+>;
 export const VendorCreateShippingProfile = z
   .object({
     name: z.string(),
     type: z.string(),
     metadata: z.record(z.unknown()).nullish()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateShippingProfile
@@ -67,11 +67,11 @@ export const VendorCreateShippingProfile = z
  */
 export type VendorUpdateShippingProfileType = z.infer<
   typeof VendorUpdateShippingProfile
->
+>;
 export const VendorUpdateShippingProfile = z
   .object({
     name: z.string().optional(),
     type: z.string().optional(),
     metadata: z.record(z.unknown()).nullish()
   })
-  .strict()
+  .strict();

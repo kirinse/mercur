@@ -1,11 +1,11 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
-export const deleteAttributeValueStepId = "delete-attribute-value";
+export const deleteAttributeValueStepId = 'delete-attribute-value';
 
 export const deleteAttributeValueStep = createStep(
   deleteAttributeValueStepId,

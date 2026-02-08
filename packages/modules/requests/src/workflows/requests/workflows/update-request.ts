@@ -1,22 +1,22 @@
-import { emitEventStep } from "@medusajs/medusa/core-flows";
+import { emitEventStep } from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
-import { UpdateRequestDTO } from "@mercurjs/framework";
+import { UpdateRequestDTO } from '@mercurjs/framework';
 
-import { updateRelatedProductStatusStep, updateRequestStep } from "../steps";
+import { updateRelatedProductStatusStep, updateRequestStep } from '../steps';
 
 export const updateRequestWorkflow = createWorkflow(
-  "update-request",
+  'update-request',
   function (input: UpdateRequestDTO) {
     const request = updateRequestStep(input);
 
-    const requestUpdatedHook = createHook("requestUpdated", {
-      id: input.id,
+    const requestUpdatedHook = createHook('requestUpdated', {
+      id: input.id
     });
 
     updateRelatedProductStatusStep(transform(input, (input) => input.id));
@@ -24,7 +24,7 @@ export const updateRequestWorkflow = createWorkflow(
       eventName: transform(request, (request) => {
         return `requests.${request.type}.${request.status}`;
       }),
-      data: request,
+      data: request
     });
     return new WorkflowResponse(request, { hooks: [requestUpdatedHook] });
   }

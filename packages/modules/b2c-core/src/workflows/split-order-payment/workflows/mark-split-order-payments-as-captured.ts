@@ -2,10 +2,10 @@ import {
   WorkflowResponse,
   createWorkflow,
   transform
-} from '@medusajs/framework/workflows-sdk'
-import { useQueryGraphStep } from '@medusajs/medusa/core-flows'
+} from '@medusajs/framework/workflows-sdk';
+import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 
-import { updateSplitOrderPaymentsStep } from '../steps'
+import { updateSplitOrderPaymentsStep } from '../steps';
 
 export const markSplitOrderPaymentsAsCapturedWorkflow = createWorkflow(
   {
@@ -18,18 +18,18 @@ export const markSplitOrderPaymentsAsCapturedWorkflow = createWorkflow(
       filters: {
         payment_collection_id
       }
-    })
+    });
 
     const updatePayload = transform(payments, (payments) => {
-      const entities = payments.data
+      const entities = payments.data;
       return entities.map((p) => ({
         id: p.id,
         status: 'captured',
         captured_amount: p.authorized_amount
-      }))
-    })
+      }));
+    });
 
-    const splitOrderPayments = updateSplitOrderPaymentsStep(updatePayload)
-    return new WorkflowResponse(splitOrderPayments)
+    const splitOrderPayments = updateSplitOrderPaymentsStep(updatePayload);
+    return new WorkflowResponse(splitOrderPayments);
   }
-)
+);

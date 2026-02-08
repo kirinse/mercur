@@ -1,16 +1,17 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 
 import {
-  checkConfigurationRule,
   ConfigurationRuleType,
   CreateRequestDTO,
   ProductUpdateRequestUpdatedEvent,
-} from "@mercurjs/framework";
-import { createProductUpdateRequestWorkflow } from "../workflows/requests/workflows/create-product-update-request";
+  checkConfigurationRule
+} from '@mercurjs/framework';
+
+import { createProductUpdateRequestWorkflow } from '../workflows/requests/workflows/create-product-update-request';
 
 export default async function productUpdateRequestToCreateHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{
   data: CreateRequestDTO;
   seller_id: string;
@@ -26,7 +27,7 @@ export default async function productUpdateRequestToCreateHandler({
   ) {
     await createProductUpdateRequestWorkflow.run({
       container,
-      input,
+      input
     });
   }
 }
@@ -34,6 +35,6 @@ export default async function productUpdateRequestToCreateHandler({
 export const config: SubscriberConfig = {
   event: ProductUpdateRequestUpdatedEvent.TO_CREATE,
   context: {
-    subscriberId: "product-update-request-to-create",
-  },
+    subscriberId: 'product-update-request-to-create'
+  }
 };

@@ -1,4 +1,4 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
 export const SplitOrderPayment = model.define('split_order_payment', {
   id: model.id({ prefix: 'sp_ord_pay' }).primaryKey(),
@@ -8,4 +8,4 @@ export const SplitOrderPayment = model.define('split_order_payment', {
   captured_amount: model.bigNumber().default(0),
   refunded_amount: model.bigNumber().default(0),
   payment_collection_id: model.text()
-})
+});

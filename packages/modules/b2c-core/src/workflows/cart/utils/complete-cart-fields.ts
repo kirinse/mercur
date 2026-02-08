@@ -69,4 +69,4 @@ export const completeCartFields = [
   'items.variant.inventory_items.inventory.location_levels.stock_locations.name',
   'items.variant.inventory_items.inventory.location_levels.stock_locations.sales_channels.id',
   'items.variant.inventory_items.inventory.location_levels.stock_locations.sales_channels.name'
-]
+];

@@ -4,14 +4,9 @@
   "tabWidth": 2,
   "printWidth": 80,
   "trailingComma": "none",
-  "importOrder": [
-    "^@medusajs/(.*)$",
-    "^@mercurjs/(.*)$",
-    "^[./]"
-  ],
+  "importOrder": ["^@medusajs/(.*)$", "^@mercurjs/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "plugins": [
-    "@trivago/prettier-plugin-sort-imports"
-  ]
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
 }

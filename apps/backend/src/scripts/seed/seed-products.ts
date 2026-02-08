@@ -1,4 +1,4 @@
-import { ProductStatus } from '@medusajs/framework/utils'
+import { ProductStatus } from '@medusajs/framework/utils';
 
 export const productsToInsert = [
   {
@@ -598,4 +598,4 @@ export const productsToInsert = [
       }
     ]
   }
-]
+];

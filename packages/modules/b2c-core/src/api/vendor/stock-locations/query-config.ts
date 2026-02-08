@@ -13,7 +13,7 @@ export const vendorStockLocationFields = [
   'address.metadata',
   '*fulfillment_sets',
   '*fulfillment_providers'
-]
+];
 
 export const vendorStockLocationQueryConfig = {
   list: {
@@ -24,4 +24,4 @@ export const vendorStockLocationQueryConfig = {
     defaults: vendorStockLocationFields,
     isList: false
   }
-}
+};

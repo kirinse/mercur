@@ -1,8 +1,8 @@
-import { validateAndTransformQuery } from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+import { validateAndTransformQuery } from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { vendorFulfillmentProvidersQueryConfig } from './query-config'
-import { VendorGetFulfillmentProvidersParams } from './validators'
+import { vendorFulfillmentProvidersQueryConfig } from './query-config';
+import { VendorGetFulfillmentProvidersParams } from './validators';
 
 export const vendorFulfillmentProvidersMiddlewares: MiddlewareRoute[] = [
   {
@@ -15,4 +15,4 @@ export const vendorFulfillmentProvidersMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

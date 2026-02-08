@@ -1,5 +1,8 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /vendor/price-preferences
@@ -95,19 +98,19 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: price_preferences, metadata } = await query.graph({
     entity: 'price_preference',
     fields: req.queryConfig.fields,
     pagination: req.queryConfig.pagination,
     filters: req.filterableFields
-  })
+  });
 
   res.json({
     price_preferences,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};

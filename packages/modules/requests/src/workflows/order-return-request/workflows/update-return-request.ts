@@ -1,32 +1,32 @@
+import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
   transform,
-  when,
-} from "@medusajs/framework/workflows-sdk";
+  when
+} from '@medusajs/framework/workflows-sdk';
+import {
+  createRemoteLinkStep,
+  useQueryGraphStep
+} from '@medusajs/medusa/core-flows';
 
 import {
   AdminUpdateOrderReturnRequestDTO,
-  VendorUpdateOrderReturnRequestDTO,
   SELLER_MODULE,
-} from "@mercurjs/framework";
+  VendorUpdateOrderReturnRequestDTO
+} from '@mercurjs/framework';
 
-import { updateOrderReturnRequestStep } from "../steps";
-import { proceedReturnRequestWorkflow } from "./proceed-return-request";
-import {
-  createRemoteLinkStep,
-  useQueryGraphStep,
-} from "@medusajs/medusa/core-flows";
-import returnRequestOrder from "../../../links/return-request-order";
-import { Modules } from "@medusajs/framework/utils";
+import returnRequestOrder from '../../../links/return-request-order';
+import { updateOrderReturnRequestStep } from '../steps';
+import { proceedReturnRequestWorkflow } from './proceed-return-request';
 
 export const updateOrderReturnRequestWorkflow = createWorkflow(
-  "update-order-return-request",
+  'update-order-return-request',
   function (
     input: VendorUpdateOrderReturnRequestDTO | AdminUpdateOrderReturnRequestDTO
   ) {
-    when(input, (input) => input.status === "refunded").then(() => {
+    when(input, (input) => input.status === 'refunded').then(() => {
       proceedReturnRequestWorkflow.runAsStep({ input });
     });
 
@@ -35,10 +35,10 @@ export const updateOrderReturnRequestWorkflow = createWorkflow(
     const requestId = transform(request, (request) => request.id);
     const order = useQueryGraphStep({
       entity: returnRequestOrder.entryPoint,
-      fields: ["order.returns.id", "order_return_request.seller.id"],
+      fields: ['order.returns.id', 'order_return_request.seller.id'],
       filters: {
-        order_return_request_id: requestId,
-      },
+        order_return_request_id: requestId
+      }
     });
 
     const links = transform(order, (order) => {
@@ -49,11 +49,11 @@ export const updateOrderReturnRequestWorkflow = createWorkflow(
       return toLink.map((r) => {
         return {
           [SELLER_MODULE]: {
-            seller_id: seller,
+            seller_id: seller
           },
           [Modules.ORDER]: {
-            return_id: r.id,
-          },
+            return_id: r.id
+          }
         };
       });
     });
@@ -61,13 +61,13 @@ export const updateOrderReturnRequestWorkflow = createWorkflow(
     createRemoteLinkStep(links);
 
     const orderReturnRequestUpdatedHook = createHook(
-      "orderReturnRequestUpdated",
+      'orderReturnRequestUpdated',
       {
-        requestId,
+        requestId
       }
     );
     return new WorkflowResponse(request, {
-      hooks: [orderReturnRequestUpdatedHook],
+      hooks: [orderReturnRequestUpdatedHook]
     });
   }
 );

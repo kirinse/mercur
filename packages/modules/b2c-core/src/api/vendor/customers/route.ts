@@ -1,11 +1,10 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { selectSellerCustomers } from "../../../modules/seller";
-
-import { fetchSellerByAuthActorId } from "../../../shared/infra/http/utils";
+import { selectSellerCustomers } from '../../../modules/seller';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
 
 /**
  * @oas [get] /vendor/customers
@@ -70,7 +69,7 @@ export const GET = async (
     seller.id,
     {
       skip: req.queryConfig.pagination.skip,
-      take: req.queryConfig.pagination.take || 50,
+      take: req.queryConfig.pagination.take || 50
     },
     req.queryConfig.fields
   );
@@ -79,6 +78,6 @@ export const GET = async (
     customers,
     count,
     offset: req.queryConfig.pagination.skip,
-    limit: req.queryConfig.pagination.take,
+    limit: req.queryConfig.pagination.take
   });
 };

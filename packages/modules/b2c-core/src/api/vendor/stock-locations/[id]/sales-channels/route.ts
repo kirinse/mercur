@@ -1,10 +1,10 @@
-import { linkSalesChannelsToStockLocationWorkflow } from '@medusajs/core-flows'
+import { linkSalesChannelsToStockLocationWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { LinkMethodRequest } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { LinkMethodRequest } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [post] /vendor/stock-locations/{id}/sales-channels
@@ -60,19 +60,19 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<LinkMethodRequest>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const { add, remove } = req.validatedBody
+  const { id } = req.params;
+  const { add, remove } = req.validatedBody;
 
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const workflow = linkSalesChannelsToStockLocationWorkflow(req.scope)
+  const workflow = linkSalesChannelsToStockLocationWorkflow(req.scope);
   await workflow.run({
     input: {
       id,
       add,
       remove
     }
-  })
+  });
 
   const {
     data: [stockLocation]
@@ -82,7 +82,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.status(200).json({ stock_location: stockLocation })
-}
+  res.status(200).json({ stock_location: stockLocation });
+};

@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { storeReturnOrderRequestFields } from '../query-config'
+import { storeReturnOrderRequestFields } from '../query-config';
 
 /**
  * @oas [get] /store/return-request/{id}
@@ -42,7 +45,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [order_return_request]
@@ -53,7 +56,7 @@ export const GET = async (
       id: req.params.id,
       customer_id: req.auth_context.actor_id
     }
-  })
+  });
 
-  res.json({ order_return_request })
-}
+  res.json({ order_return_request });
+};

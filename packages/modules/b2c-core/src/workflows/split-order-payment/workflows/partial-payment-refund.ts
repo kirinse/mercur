@@ -1,65 +1,65 @@
 import {
   ContainerRegistrationKeys,
   MathBN,
-  MedusaError,
-} from "@medusajs/framework/utils";
+  MedusaError
+} from '@medusajs/framework/utils';
 import {
   StepResponse,
   WorkflowResponse,
   createStep,
   createWorkflow,
-  transform,
-} from "@medusajs/framework/workflows-sdk";
+  transform
+} from '@medusajs/framework/workflows-sdk';
 import {
   addOrderTransactionStep,
-  refundPaymentsStep,
-} from "@medusajs/medusa/core-flows";
+  refundPaymentsStep
+} from '@medusajs/medusa/core-flows';
 
-import { RefundSplitOrderPaymentsDTO } from "@mercurjs/framework";
+import { RefundSplitOrderPaymentsDTO } from '@mercurjs/framework';
 
-import orderSplitOrderPayment from "../../../links/order-split-order-payment";
+import orderSplitOrderPayment from '../../../links/order-split-order-payment';
 
 export const selectAndValidatePaymentRefundStep = createStep(
-  "select-and-validate-payment-refund-step",
+  'select-and-validate-payment-refund-step',
   async function (input: RefundSplitOrderPaymentsDTO, { container }) {
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
     const {
-      data: [splitPayment],
+      data: [splitPayment]
     } = await query.graph({
       entity: orderSplitOrderPayment.entryPoint,
-      fields: ["*", "split_order_payment.payment_collection_id"],
+      fields: ['*', 'split_order_payment.payment_collection_id'],
       filters: {
-        split_order_payment_id: input.id,
-      },
+        split_order_payment_id: input.id
+      }
     });
 
     const {
-      data: [payment_collection],
+      data: [payment_collection]
     } = await query.graph({
-      entity: "payment_collection",
-      fields: ["payments.id"],
+      entity: 'payment_collection',
+      fields: ['payments.id'],
       filters: {
-        id: splitPayment.split_order_payment.payment_collection_id,
-      },
+        id: splitPayment.split_order_payment.payment_collection_id
+      }
     });
 
     const payment_id = payment_collection.payments[0].id;
 
     const {
-      data: [payment],
+      data: [payment]
     } = await query.graph({
-      entity: "payment",
+      entity: 'payment',
       fields: [
-        "id",
-        "currency_code",
-        "refunds.id",
-        "refunds.amount",
-        "captures.id",
-        "captures.amount",
+        'id',
+        'currency_code',
+        'refunds.id',
+        'refunds.amount',
+        'captures.id',
+        'captures.amount'
       ],
       filters: {
-        id: payment_id,
-      },
+        id: payment_id
+      }
     });
 
     const capturedAmount = (payment.captures || []).reduce(
@@ -85,14 +85,14 @@ export const selectAndValidatePaymentRefundStep = createStep(
       payment_id: payment.id,
       currency_code: payment.currency_code,
       amount: input.amount,
-      order_id: splitPayment.order_id,
+      order_id: splitPayment.order_id
     });
   }
 );
 
 export const partialPaymentRefundWorkflow = createWorkflow(
   {
-    name: "partial-payment-refund",
+    name: 'partial-payment-refund'
   },
   function (input: RefundSplitOrderPaymentsDTO) {
     const paymentToRefund = selectAndValidatePaymentRefundStep(input);
@@ -102,8 +102,8 @@ export const partialPaymentRefundWorkflow = createWorkflow(
         return [
           {
             payment_id: paymentToRefund.payment_id,
-            amount: input.amount,
-          },
+            amount: input.amount
+          }
         ];
       })
     );
@@ -115,7 +115,7 @@ export const partialPaymentRefundWorkflow = createWorkflow(
         amount: MathBN.mult(paymentToRefund.amount, -1),
         currency_code: paymentToRefund.currency_code,
         reference_id: paymentToRefund.payment_id,
-        reference: "refund",
+        reference: 'refund'
       })
     );
 

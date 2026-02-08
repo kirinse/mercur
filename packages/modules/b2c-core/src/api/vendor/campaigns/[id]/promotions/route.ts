@@ -1,14 +1,14 @@
-import { addOrRemoveCampaignPromotionsWorkflow } from "@medusajs/core-flows"
+import { addOrRemoveCampaignPromotionsWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework/http"
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+  MedusaResponse
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   VendorAssignCampaignPromotionsType,
-  VendorGetCampaignsParamsType,
-} from "../../validators"
+  VendorGetCampaignsParamsType
+} from '../../validators';
 
 /**
  * @oas [post] /vendor/campaigns/{id}/promotions
@@ -68,23 +68,23 @@ export const POST = async (
   >,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
-  const { add = [], remove = [] } = req.validatedBody
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
+  const { add = [], remove = [] } = req.validatedBody;
 
   await addOrRemoveCampaignPromotionsWorkflow(req.scope).run({
-    input: { id, add, remove },
-  })
+    input: { id, add, remove }
+  });
 
   const {
-    data: [campaign],
+    data: [campaign]
   } = await query.graph({
-    entity: "campaign",
+    entity: 'campaign',
     fields: req.queryConfig.fields,
     filters: {
-      id: req.params.id,
-    },
-  })
+      id: req.params.id
+    }
+  });
 
-  res.status(200).json({ campaign })
-}
+  res.status(200).json({ campaign });
+};

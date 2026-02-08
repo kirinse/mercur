@@ -1,14 +1,14 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework/http";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { IntermediateEvents } from "@mercurjs/framework";
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { fetchSellerByAuthActorId } from "../../../../../shared/infra/http/utils";
-import { createLocationFulfillmentSetAndAssociateWithSellerWorkflow } from "../../../../../workflows/fulfillment-set";
-import { VendorCreateStockLocationFulfillmentSetType } from "../../validators";
+import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils';
+import { createLocationFulfillmentSetAndAssociateWithSellerWorkflow } from '../../../../../workflows/fulfillment-set';
+import { VendorCreateStockLocationFulfillmentSetType } from '../../validators';
 
 /**
  * @oas [post] /vendor/stock-locations/{id}/fulfillment-sets
@@ -67,27 +67,27 @@ export const POST = async (
       location_id: req.params.id,
       fulfillment_set_data: {
         name: req.validatedBody.name,
-        type: req.validatedBody.type,
+        type: req.validatedBody.type
       },
-      seller_id: seller.id,
-    },
+      seller_id: seller.id
+    }
   });
 
   const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.STOCK_LOCATION_CHANGED,
-    data: { id: req.params.id },
+    data: { id: req.params.id }
   });
 
   const {
-    data: [stockLocation],
+    data: [stockLocation]
   } = await query.graph(
     {
-      entity: "stock_location",
+      entity: 'stock_location',
       fields: req.queryConfig.fields,
       filters: {
-        id: req.params.id,
-      },
+        id: req.params.id
+      }
     },
     { throwIfKeyNotFound: true }
   );

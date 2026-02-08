@@ -1,10 +1,14 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CreateOrderSetDTO } from "@mercurjs/framework";
-import { MARKETPLACE_MODULE, MarketplaceModuleService } from "../../../modules/marketplace";
+import { CreateOrderSetDTO } from '@mercurjs/framework';
+
+import {
+  MARKETPLACE_MODULE,
+  MarketplaceModuleService
+} from '../../../modules/marketplace';
 
 export const createOrderSetStep = createStep(
-  "create-order-set",
+  'create-order-set',
   async (input: CreateOrderSetDTO, { container }) => {
     const service =
       container.resolve<MarketplaceModuleService>(MARKETPLACE_MODULE);

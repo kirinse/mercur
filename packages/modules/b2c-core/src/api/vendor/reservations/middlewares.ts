@@ -6,24 +6,24 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError,
   OrderStatus
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
-import sellerInventoryItem from '../../../links/seller-inventory-item'
-import sellerStockLocation from '../../../links/seller-stock-location'
-import { filterBySellerId } from '../../../shared/infra/http/middlewares'
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
-import { vendorReservationQueryConfig } from './query-config'
+import sellerInventoryItem from '../../../links/seller-inventory-item';
+import sellerStockLocation from '../../../links/seller-stock-location';
+import { filterBySellerId } from '../../../shared/infra/http/middlewares';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { vendorReservationQueryConfig } from './query-config';
 import {
   VendorCreateReservation,
   VendorCreateReservationType,
   VendorGetReservationParams,
   VendorUpdateReservation
-} from './validators'
+} from './validators';
 
 const checkReservationOwnership = () => {
   return async (
@@ -31,7 +31,7 @@ const checkReservationOwnership = () => {
     res: MedusaResponse,
     next: NextFunction
   ) => {
-    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
       data: [reservation]
@@ -41,14 +41,14 @@ const checkReservationOwnership = () => {
       filters: {
         id: req.params.id
       }
-    })
+    });
 
     if (!reservation) {
       res.status(404).json({
         message: `Entity not found`,
         type: MedusaError.Types.NOT_FOUND
-      })
-      return
+      });
+      return;
     }
 
     const {
@@ -59,24 +59,24 @@ const checkReservationOwnership = () => {
       filters: {
         inventory_item_id: reservation.inventory_item_id
       }
-    })
+    });
 
     const seller = await fetchSellerByAuthActorId(
       req.auth_context.actor_id,
       req.scope
-    )
+    );
 
     if (!seller || !relation || seller.id !== relation.seller_id) {
       res.status(403).json({
         message: 'You are not allowed to perform this action',
         type: MedusaError.Types.NOT_ALLOWED
-      })
-      return
+      });
+      return;
     }
 
-    next()
-  }
-}
+    next();
+  };
+};
 
 const canCreateReservation = () => {
   return async (
@@ -84,12 +84,12 @@ const canCreateReservation = () => {
     res: MedusaResponse,
     next: NextFunction
   ) => {
-    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
     const seller = await fetchSellerByAuthActorId(
       req.auth_context.actor_id,
       req.scope
-    )
+    );
 
     const {
       data: [item]
@@ -100,7 +100,7 @@ const canCreateReservation = () => {
         inventory_item_id: req.validatedBody.inventory_item_id,
         seller_id: seller.id
       }
-    })
+    });
 
     const {
       data: [location]
@@ -111,19 +111,19 @@ const canCreateReservation = () => {
         stock_location_id: req.validatedBody.location_id,
         seller_id: seller.id
       }
-    })
+    });
 
     if (!seller || !item || !location) {
       res.status(403).json({
         message: 'You are not allowed to perform this action',
         type: MedusaError.Types.NOT_ALLOWED
-      })
-      return
+      });
+      return;
     }
 
-    next()
-  }
-}
+    next();
+  };
+};
 
 export const canDeleteReservation = () => {
   return async (
@@ -131,7 +131,7 @@ export const canDeleteReservation = () => {
     res: MedusaResponse,
     next: NextFunction
   ) => {
-    const knex = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+    const knex = req.scope.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
     const order = await knex('order')
       .select('order.id', 'order.status')
@@ -142,19 +142,19 @@ export const canDeleteReservation = () => {
         'reservation_item.line_item_id'
       )
       .where('reservation_item.id', req.params.id)
-      .first()
+      .first();
 
     if (order && order.status !== OrderStatus.CANCELED) {
       res.status(403).json({
         message: 'Cancel order first to delete reservation.',
         type: MedusaError.Types.NOT_ALLOWED
-      })
-      return
+      });
+      return;
     }
 
-    next()
-  }
-}
+    next();
+  };
+};
 
 export const vendorReservationsMiddlewares: MiddlewareRoute[] = [
   {
@@ -208,4 +208,4 @@ export const vendorReservationsMiddlewares: MiddlewareRoute[] = [
       checkReservationOwnership()
     ]
   }
-]
+];

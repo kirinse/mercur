@@ -1,14 +1,14 @@
-import { useQueryGraphStep } from '@medusajs/medusa/core-flows'
+import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createWorkflow,
   transform,
   when
-} from '@medusajs/workflows-sdk'
+} from '@medusajs/workflows-sdk';
 
-import { CreateCommissionRuleDTO } from '@mercurjs/framework'
+import { CreateCommissionRuleDTO } from '@mercurjs/framework';
 
-import { createCommissionRuleStep, deleteCommissionRuleStep } from '../steps'
+import { createCommissionRuleStep, deleteCommissionRuleStep } from '../steps';
 
 export const upsertDefaultCommissionRuleWorkflow = createWorkflow(
   'upsert-default-commission-rule',
@@ -19,18 +19,18 @@ export const upsertDefaultCommissionRuleWorkflow = createWorkflow(
       filters: {
         reference: 'site'
       }
-    })
+    });
 
     when(existingRule, (existingRule) => !!existingRule.data.length).then(
       () => {
         const id = transform(
           existingRule,
           (existingRule) => existingRule.data[0]
-        ).id
-        deleteCommissionRuleStep(id)
+        ).id;
+        deleteCommissionRuleStep(id);
       }
-    )
+    );
 
-    return new WorkflowResponse(createCommissionRuleStep(input))
+    return new WorkflowResponse(createCommissionRuleStep(input));
   }
-)
+);

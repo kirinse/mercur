@@ -1,6 +1,6 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
-import { OrderReturnRequestLineItem } from './return-request-line-item'
+import { OrderReturnRequestLineItem } from './return-request-line-item';
 
 export const OrderReturnRequest = model.define('order_return_request', {
   id: model.id({ prefix: 'oretreq' }).primaryKey(),
@@ -19,4 +19,4 @@ export const OrderReturnRequest = model.define('order_return_request', {
   status: model
     .enum(['pending', 'refunded', 'withdrawn', 'escalated', 'canceled'])
     .default('pending')
-})
+});

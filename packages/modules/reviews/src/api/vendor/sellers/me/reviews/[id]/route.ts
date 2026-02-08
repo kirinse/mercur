@@ -1,9 +1,12 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerReview from '../../../../../../links/seller-review'
-import { updateReviewWorkflow } from '../../../../../../workflows/review/workflows'
-import { VendorUpdateReviewType } from '../../../validators'
+import sellerReview from '../../../../../../links/seller-review';
+import { updateReviewWorkflow } from '../../../../../../workflows/review/workflows';
+import { VendorUpdateReviewType } from '../../../validators';
 
 /**
  * @oas [get] /vendor/sellers/me/reviews/{id}
@@ -44,8 +47,8 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const { id } = req.params;
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [review]
@@ -55,12 +58,12 @@ export const GET = async (
     filters: {
       id
     }
-  })
+  });
 
   res.json({
     review
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/sellers/me/reviews/{id}
@@ -107,13 +110,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateReviewType>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const { id } = req.params;
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateReviewWorkflow.run({
     container: req.scope,
     input: { id, ...req.validatedBody }
-  })
+  });
 
   const {
     data: [review]
@@ -123,9 +126,9 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
   res.json({
     review
-  })
-}
+  });
+};

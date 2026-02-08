@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerPromotion from '../../../links/seller-promotion'
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
-import { createVendorPromotionWorkflow } from '../../../workflows/promotions/workflows'
-import { VendorCreatePromotionType } from './validators'
+import sellerPromotion from '../../../links/seller-promotion';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { createVendorPromotionWorkflow } from '../../../workflows/promotions/workflows';
+import { VendorCreatePromotionType } from './validators';
 
 /**
  * @oas [get] /vendor/promotions
@@ -146,9 +149,9 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { seller_id, q, ...promotionFilters } = req.filterableFields
+  const { seller_id, q, ...promotionFilters } = req.filterableFields;
 
   const { data: sellerPromotions } = await query.graph({
     entity: sellerPromotion.entryPoint,
@@ -159,9 +162,9 @@ export const GET = async (
         $eq: null
       }
     }
-  })
+  });
 
-  const promotionIds = sellerPromotions.map((rel) => rel.promotion_id)
+  const promotionIds = sellerPromotions.map((rel) => rel.promotion_id);
 
   if (promotionIds.length === 0) {
     return res.json({
@@ -169,7 +172,7 @@ export const GET = async (
       count: 0,
       offset: req.queryConfig.pagination?.skip ?? 0,
       limit: req.queryConfig.pagination?.take ?? 50
-    })
+    });
   }
 
   const filters: Record<string, unknown> = {
@@ -178,10 +181,10 @@ export const GET = async (
     deleted_at: {
       $eq: null
     }
-  }
+  };
 
   if (q) {
-    filters.code = { $ilike: `%${q}%` }
+    filters.code = { $ilike: `%${q}%` };
   }
 
   const { data: promotions, metadata } = await query.graph({
@@ -189,15 +192,15 @@ export const GET = async (
     fields: req.queryConfig.fields,
     filters,
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     promotions,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/promotions
@@ -230,16 +233,16 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreatePromotionType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context?.actor_id,
     req.scope
-  )
+  );
 
   const { result } = await createVendorPromotionWorkflow.run({
     container: req.scope,
     input: { promotion: req.validatedBody, seller_id: seller.id }
-  })
+  });
 
   const {
     data: [promotion]
@@ -249,7 +252,7 @@ export const POST = async (
     filters: {
       id: result[0].id
     }
-  })
+  });
 
-  res.status(201).json({ promotion })
-}
+  res.status(201).json({ promotion });
+};

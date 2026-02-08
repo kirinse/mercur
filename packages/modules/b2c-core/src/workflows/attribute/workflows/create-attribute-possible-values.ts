@@ -1,23 +1,23 @@
 import {
   WorkflowResponse,
   createWorkflow
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 
-import { CreateAttributeValueDTO } from '@mercurjs/framework'
+import { CreateAttributeValueDTO } from '@mercurjs/framework';
 
-import { createAttributePossibleValuesStep } from '../steps/create-attribute-possible-values'
+import { createAttributePossibleValuesStep } from '../steps/create-attribute-possible-values';
 
 const createAttributePossibleValuesWorkflowId =
-  'create-attribute-possible-values'
+  'create-attribute-possible-values';
 
 export type CreateAttributePossibleValuesWorkflowInput =
-  CreateAttributeValueDTO[]
+  CreateAttributeValueDTO[];
 
 export const createAttributePossibleValuesWorkflow = createWorkflow(
   createAttributePossibleValuesWorkflowId,
   (input: CreateAttributePossibleValuesWorkflowInput) => {
-    const createdValues = createAttributePossibleValuesStep(input)
+    const createdValues = createAttributePossibleValuesStep(input);
 
-    return new WorkflowResponse(createdValues)
+    return new WorkflowResponse(createdValues);
   }
-)
+);

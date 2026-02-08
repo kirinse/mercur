@@ -1,13 +1,17 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
-import { AuthWorkflowEvents, Modules } from "@medusajs/framework/utils";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { AuthWorkflowEvents, Modules } from '@medusajs/framework/utils';
 
-import { ResendNotificationTemplates } from "../providers/resend";
+import {
+  actorTypeToHost,
+  buildResetPasswordUrl,
+  fetchStoreData
+} from '@mercurjs/framework';
 
-import { actorTypeToHost, buildResetPasswordUrl, fetchStoreData } from "@mercurjs/framework";
+import { ResendNotificationTemplates } from '../providers/resend';
 
 export default async function passwordResetHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{ entity_id: string; actor_type: string; token: string }>) {
   const notificationService = container.resolve(Modules.NOTIFICATION);
 
@@ -20,24 +24,24 @@ export default async function passwordResetHandler({
 
   await notificationService.createNotifications({
     to: event.data.entity_id,
-    channel: "email",
+    channel: 'email',
     template: ResendNotificationTemplates.FORGOT_PASSWORD,
     content: {
-      subject: `${storeData.store_name} - Reset password request`,
+      subject: `${storeData.store_name} - Reset password request`
     },
     data: {
       data: {
         url: buildResetPasswordUrl(hostType, event.data.token).toString(),
         store_name: storeData.store_name,
-        storefront_url: storeData.storefront_url,
-      },
-    },
+        storefront_url: storeData.storefront_url
+      }
+    }
   });
 }
 
 export const config: SubscriberConfig = {
   event: AuthWorkflowEvents.PASSWORD_RESET,
   context: {
-    subscriberId: "password-reset-handler-resend",
-  },
+    subscriberId: 'password-reset-handler-resend'
+  }
 };

@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerInventoryItemLink from '../../../links/seller-inventory-item'
-import { VendorGetProductParamsType } from '../products/validators'
+import sellerInventoryItemLink from '../../../links/seller-inventory-item';
+import { VendorGetProductParamsType } from '../products/validators';
 
 /**
  * @oas [get] /vendor/inventory-items
@@ -23,7 +26,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<VendorGetProductParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: inventory_items, metadata } = await query.graph({
     entity: sellerInventoryItemLink.entryPoint,
@@ -35,12 +38,12 @@ export const GET = async (
       }
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     inventory_items: inventory_items.map((relation) => relation.inventory_item),
     count: metadata!.count,
     offset: metadata!.skip,
     limit: metadata!.take
-  })
-}
+  });
+};

@@ -1,13 +1,14 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { UpdateConfigurationRuleDTO } from '@mercurjs/framework';
 
 import {
   CONFIGURATION_MODULE,
-  ConfigurationModuleService,
-} from "../../../modules/configuration";
-import { UpdateConfigurationRuleDTO } from "@mercurjs/framework";
+  ConfigurationModuleService
+} from '../../../modules/configuration';
 
 export const updateConfigurationRuleStep = createStep(
-  "update-configuration-rule",
+  'update-configuration-rule',
   async (input: UpdateConfigurationRuleDTO, { container }) => {
     const service =
       container.resolve<ConfigurationModuleService>(CONFIGURATION_MODULE);

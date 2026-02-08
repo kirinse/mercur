@@ -1,12 +1,12 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from "../../../../../shared/infra/http/utils";
-import { createVendorServiceZonesWorkflow } from "../../../../../workflows/fulfillment-set";
-import { VendorCreateServiceZoneType } from "../../validators";
+import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils';
+import { createVendorServiceZonesWorkflow } from '../../../../../workflows/fulfillment-set';
+import { VendorCreateServiceZoneType } from '../../validators';
 
 /**
  * @oas [post] /vendor/fulfillment-sets/{id}/service-zones
@@ -56,19 +56,19 @@ export const POST = async (
   await createVendorServiceZonesWorkflow(req.scope).run({
     input: {
       data: [{ fulfillment_set_id: req.params.id, ...req.validatedBody }],
-      seller_id: seller.id,
-    },
+      seller_id: seller.id
+    }
   });
 
   const {
-    data: [fulfillmentSet],
+    data: [fulfillmentSet]
   } = await query.graph(
     {
-      entity: "fulfillment_set",
+      entity: 'fulfillment_set',
       fields: req.queryConfig.fields,
       filters: {
-        id: req.params.id,
-      },
+        id: req.params.id
+      }
     },
     { throwIfKeyNotFound: true }
   );

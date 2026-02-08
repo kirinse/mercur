@@ -1,5 +1,5 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /store/seller
@@ -53,18 +53,18 @@ import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
  *   - cookie_auth: []
  */
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: sellers, metadata } = await query.graph({
     entity: 'seller',
     fields: req.queryConfig.fields,
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     sellers,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};

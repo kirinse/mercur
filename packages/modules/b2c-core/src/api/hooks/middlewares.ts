@@ -1,4 +1,4 @@
-import { MiddlewareRoute } from '@medusajs/framework'
+import { MiddlewareRoute } from '@medusajs/framework';
 
 export const hooksMiddlewares: MiddlewareRoute[] = [
   {
@@ -6,4 +6,4 @@ export const hooksMiddlewares: MiddlewareRoute[] = [
     matcher: '/hooks/payouts',
     bodyParser: { preserveRawBody: true }
   }
-]
+];

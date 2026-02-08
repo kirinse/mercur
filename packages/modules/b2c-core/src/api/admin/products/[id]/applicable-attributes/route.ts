@@ -1,6 +1,9 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { getApplicableAttributes } from '../../../../../shared/infra/http/utils/products'
+import { getApplicableAttributes } from '../../../../../shared/infra/http/utils/products';
 
 /**
  * @oas [get] /admin/products/{id}/applicable-attributes
@@ -58,7 +61,7 @@ export const GET = async (
     req.scope,
     req.params.id,
     req.queryConfig.fields
-  )
+  );
 
-  res.json({ attributes })
-}
+  res.json({ attributes });
+};

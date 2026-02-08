@@ -1,11 +1,11 @@
-import { createOrderShipmentWorkflow } from '@medusajs/core-flows'
+import { createOrderShipmentWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { VendorOrderCreateShipmentType } from '../../../../validators'
+import { VendorOrderCreateShipmentType } from '../../../../validators';
 
 /**
  * @oas [post] /vendor/orders/{id}/fulfillments/{fulfillment_id}/shipments
@@ -51,7 +51,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorOrderCreateShipmentType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await createOrderShipmentWorkflow.run({
     container: req.scope,
@@ -61,7 +61,7 @@ export const POST = async (
       fulfillment_id: req.params.fulfillment_id,
       labels: req.validatedBody.labels ?? []
     }
-  })
+  });
 
   const {
     data: [order]
@@ -71,7 +71,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ order })
-}
+  res.json({ order });
+};

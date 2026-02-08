@@ -6,14 +6,14 @@ import {
   SearchParams,
   SearchResponse,
   algoliasearch
-} from 'algoliasearch'
+} from 'algoliasearch';
 
-import { AlgoliaEntity, IndexType } from '@mercurjs/framework'
+import { AlgoliaEntity, IndexType } from '@mercurjs/framework';
 
 type ModuleOptions = {
-  appId: string
-  apiKey: string
-}
+  appId: string;
+  apiKey: string;
+};
 
 export const defaultProductSettings: IndexSettings = {
   searchableAttributes: [
@@ -25,36 +25,36 @@ export const defaultProductSettings: IndexSettings = {
     'collection.title',
     'variants.title'
   ]
-}
+};
 
 export const defaultReviewSettings: IndexSettings = {
   attributesForFaceting: ['filterOnly(reference_id)', 'filterOnly(reference)']
-}
+};
 
 class AlgoliaModuleService {
-  private options_: ModuleOptions
-  private algolia_: Algoliasearch
+  private options_: ModuleOptions;
+  private algolia_: Algoliasearch;
 
   constructor(_, options: ModuleOptions) {
-    this.options_ = options
-    this.algolia_ = algoliasearch(this.options_.appId, this.options_.apiKey)
+    this.options_ = options;
+    this.algolia_ = algoliasearch(this.options_.appId, this.options_.apiKey);
   }
 
   getAppId() {
-    return this.options_.appId
+    return this.options_.appId;
   }
 
   checkIndex(index: IndexType) {
     return this.algolia_.indexExists({
       indexName: index
-    })
+    });
   }
 
   updateSettings(index: IndexType, settings: IndexSettings) {
     return this.algolia_.setSettings({
       indexName: index,
       indexSettings: settings
-    })
+    });
   }
 
   batch(type: IndexType, toAdd: AlgoliaEntity[], toDelete: string[]) {
@@ -63,25 +63,25 @@ class AlgoliaModuleService {
         action: 'addObject' as Action,
         objectID: entity.id,
         body: entity
-      }
-    })
+      };
+    });
 
     const deleteRequests: BatchRequest[] = toDelete.map((id) => {
       return {
         action: 'deleteObject' as Action,
         objectID: id,
         body: {}
-      }
-    })
+      };
+    });
 
-    const requests = [...addRequests, ...deleteRequests]
+    const requests = [...addRequests, ...deleteRequests];
 
     return this.algolia_.batch({
       indexName: type,
       batchWriteParams: {
         requests
       }
-    })
+    });
   }
 
   batchUpsert(type: IndexType, entities: AlgoliaEntity[]) {
@@ -93,10 +93,10 @@ class AlgoliaModuleService {
             action: 'addObject',
             objectID: entity.id,
             body: entity
-          }
+          };
         })
       }
-    })
+    });
   }
 
   batchDelete(type: IndexType, ids: string[]) {
@@ -108,10 +108,10 @@ class AlgoliaModuleService {
             action: 'deleteObject',
             objectID: id,
             body: {}
-          }
+          };
         })
       }
-    })
+    });
   }
 
   upsert(type: IndexType, entity: AlgoliaEntity) {
@@ -119,14 +119,14 @@ class AlgoliaModuleService {
       indexName: type,
       objectID: entity.id,
       body: entity
-    })
+    });
   }
 
   delete(type: IndexType, id: string) {
     return this.algolia_.deleteObject({
       indexName: type,
       objectID: id
-    })
+    });
   }
 
   partialUpdate(
@@ -137,7 +137,7 @@ class AlgoliaModuleService {
       indexName: type,
       objectID: entity.id,
       attributesToUpdate: { ...entity }
-    })
+    });
   }
 
   search<T = Record<string, unknown>>(
@@ -147,8 +147,8 @@ class AlgoliaModuleService {
     return this.algolia_.searchSingleIndex<T>({
       indexName,
       searchParams: params
-    })
+    });
   }
 }
 
-export default AlgoliaModuleService
+export default AlgoliaModuleService;

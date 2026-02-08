@@ -1,8 +1,8 @@
-import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework'
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 
-import { PayoutWorkflowEvents } from '@mercurjs/framework'
+import { PayoutWorkflowEvents } from '@mercurjs/framework';
 
-import { processPayoutForOrderWorkflow } from '../workflows/order/workflows'
+import { processPayoutForOrderWorkflow } from '../workflows/order/workflows';
 
 export default async function payoutOrderHandler({
   event,
@@ -15,7 +15,7 @@ export default async function payoutOrderHandler({
     context: {
       transactionId: event.data.order_id
     }
-  })
+  });
 }
 
 export const config: SubscriberConfig = {
@@ -23,4 +23,4 @@ export const config: SubscriberConfig = {
   context: {
     subscriberId: 'payout-order-handler'
   }
-}
+};

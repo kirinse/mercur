@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const IdAssociation = z.object({
   id: z.string()
-})
+});
 
 /**
  * Schema for date filtering with operator support.
@@ -13,12 +13,12 @@ export const dateFilterSchema = z
     (val) => {
       if (typeof val === 'string') {
         try {
-          return JSON.parse(val)
+          return JSON.parse(val);
         } catch {
-          return val
+          return val;
         }
       }
-      return val
+      return val;
     },
     z
       .object({
@@ -31,4 +31,4 @@ export const dateFilterSchema = z
       })
       .optional()
   )
-  .optional()
+  .optional();

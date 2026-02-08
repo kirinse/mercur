@@ -1,7 +1,7 @@
-import { InviteWorkflowEvents } from "@medusajs/framework/utils";
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/medusa";
+import { InviteWorkflowEvents } from '@medusajs/framework/utils';
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/medusa';
 
-import adminUserInviteCreatedHandler from "./notification-admin-user-invite-created";
+import adminUserInviteCreatedHandler from './notification-admin-user-invite-created';
 
 export default async function adminUserInviteResentHandler(
   input: SubscriberArgs<{ id: string }>
@@ -12,6 +12,6 @@ export default async function adminUserInviteResentHandler(
 export const config: SubscriberConfig = {
   event: InviteWorkflowEvents.RESENT,
   context: {
-    subscriberId: "admin-user-invite-resend",
-  },
+    subscriberId: 'admin-user-invite-resend'
+  }
 };

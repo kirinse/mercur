@@ -1,16 +1,16 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   RequestDTO,
-  SellerAccountRequestUpdatedEvent,
-} from "@mercurjs/framework";
+  SellerAccountRequestUpdatedEvent
+} from '@mercurjs/framework';
 
-import { createSellerWorkflow } from "../workflows";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { createSellerWorkflow } from '../workflows';
 
 export default async function sellerCreationRequestAcceptedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<RequestDTO>) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
   const request = event.data;
@@ -20,8 +20,8 @@ export default async function sellerCreationRequestAcceptedHandler({
     input: {
       member: request.data.member as any,
       seller: request.data.seller as any,
-      auth_identity_id: request.data.auth_identity_id as string,
-    },
+      auth_identity_id: request.data.auth_identity_id as string
+    }
   });
 
   logger.info(
@@ -32,6 +32,6 @@ export default async function sellerCreationRequestAcceptedHandler({
 export const config: SubscriberConfig = {
   event: SellerAccountRequestUpdatedEvent.ACCEPTED,
   context: {
-    subscriberId: "seller-creation-request-accepted-handler",
-  },
+    subscriberId: 'seller-creation-request-accepted-handler'
+  }
 };

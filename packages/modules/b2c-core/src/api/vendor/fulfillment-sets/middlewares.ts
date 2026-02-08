@@ -2,18 +2,18 @@ import {
   MedusaRequest,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import sellerFulfillmentSetLink from '../../../links/seller-fulfillment-set'
-import sellerServiceZoneLink from '../../../links/seller-service-zone'
-import { checkResourceOwnershipByResourceId } from '../../../shared/infra/http/middlewares'
-import { vendorFulfillmentSetQueryConfig } from './query-config'
+import sellerFulfillmentSetLink from '../../../links/seller-fulfillment-set';
+import sellerServiceZoneLink from '../../../links/seller-service-zone';
+import { checkResourceOwnershipByResourceId } from '../../../shared/infra/http/middlewares';
+import { vendorFulfillmentSetQueryConfig } from './query-config';
 import {
   VendorCreateFulfillmentSetServiceZonesSchema,
   VendorFulfillmentSetParams,
   VendorUpdateServiceZone
-} from './validators'
+} from './validators';
 
 export const vendorFulfillmentSetsMiddlewares: MiddlewareRoute[] = [
   /* Fulfillment Set */
@@ -79,4 +79,4 @@ export const vendorFulfillmentSetsMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

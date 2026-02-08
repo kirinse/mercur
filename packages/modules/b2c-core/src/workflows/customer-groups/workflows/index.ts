@@ -1,1 +1,1 @@
-export * from './create-seller-customer-group'
+export * from './create-seller-customer-group';

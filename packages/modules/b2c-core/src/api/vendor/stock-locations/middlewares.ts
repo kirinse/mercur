@@ -2,21 +2,21 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { createLinkBody } from '@medusajs/medusa/api/utils/validators'
+} from '@medusajs/framework';
+import { createLinkBody } from '@medusajs/medusa/api/utils/validators';
 
-import sellerStockLocationLink from '../../../links/seller-stock-location'
+import sellerStockLocationLink from '../../../links/seller-stock-location';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { vendorStockLocationQueryConfig } from './query-config'
+} from '../../../shared/infra/http/middlewares';
+import { vendorStockLocationQueryConfig } from './query-config';
 import {
   VendorCreateStockLocation,
   VendorCreateStockLocationFulfillmentSet,
   VendorGetStockLocationParams,
   VendorUpdateStockLocation
-} from './validators'
+} from './validators';
 
 export const vendorStockLocationsMiddlewares: MiddlewareRoute[] = [
   /* Stock Location */
@@ -117,4 +117,4 @@ export const vendorStockLocationsMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

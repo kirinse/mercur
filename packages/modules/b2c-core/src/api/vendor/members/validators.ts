@@ -1,12 +1,12 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-export type VendorGetMemberParamsType = z.infer<typeof VendorGetMemberParams>
+export type VendorGetMemberParamsType = z.infer<typeof VendorGetMemberParams>;
 export const VendorGetMemberParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /**
  * @schema VendorUpdateMember
@@ -28,7 +28,7 @@ export const VendorGetMemberParams = createFindParams({
  *     nullable: true
  *     description: URL to the member's photo.
  */
-export type VendorUpdateMemberType = z.infer<typeof VendorUpdateMember>
+export type VendorUpdateMemberType = z.infer<typeof VendorUpdateMember>;
 export const VendorUpdateMember = z
   .object({
     name: z.string().optional(),
@@ -36,4 +36,4 @@ export const VendorUpdateMember = z
     phone: z.string().optional(),
     photo: z.string().optional()
   })
-  .strict()
+  .strict();

@@ -1,5 +1,5 @@
-import { OrderDetailDTO } from '@medusajs/framework/types'
-import { MathBN, isDefined } from '@medusajs/framework/utils'
+import { OrderDetailDTO } from '@medusajs/framework/types';
+import { MathBN, isDefined } from '@medusajs/framework/utils';
 
 export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
   const FulfillmentStatus = {
@@ -11,12 +11,12 @@ export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
     DELIVERED: 'delivered',
     PARTIALLY_DELIVERED: 'partially_delivered',
     CANCELED: 'canceled'
-  }
+  };
 
-  const fulfillmentStatus = {}
+  const fulfillmentStatus = {};
 
   for (const status in FulfillmentStatus) {
-    fulfillmentStatus[FulfillmentStatus[status]] = 0
+    fulfillmentStatus[FulfillmentStatus[status]] = 0;
   }
 
   const statusMap = {
@@ -24,27 +24,27 @@ export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
     delivered_at: FulfillmentStatus.DELIVERED,
     shipped_at: FulfillmentStatus.SHIPPED,
     packed_at: FulfillmentStatus.FULFILLED
-  }
+  };
 
   for (const fulfillmentCollection of order.fulfillments) {
     for (const key in statusMap) {
       if (fulfillmentCollection[key]) {
-        fulfillmentStatus[statusMap[key]] += 1
-        break
+        fulfillmentStatus[statusMap[key]] += 1;
+        break;
       }
     }
   }
 
-  const totalFulfillments = order.fulfillments.length
+  const totalFulfillments = order.fulfillments.length;
   const totalFulfillmentsExceptCanceled =
-    totalFulfillments - fulfillmentStatus[FulfillmentStatus.CANCELED]
+    totalFulfillments - fulfillmentStatus[FulfillmentStatus.CANCELED];
 
   const hasUnfulfilledItems =
     (order.items || [])?.filter(
       (i) =>
         isDefined(i?.detail?.raw_fulfilled_quantity) &&
         MathBN.lt(i.detail.raw_fulfilled_quantity, i.raw_quantity)
-    ).length > 0
+    ).length > 0;
 
   if (fulfillmentStatus[FulfillmentStatus.DELIVERED] > 0) {
     if (
@@ -52,10 +52,10 @@ export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
         totalFulfillmentsExceptCanceled &&
       !hasUnfulfilledItems
     ) {
-      return FulfillmentStatus.DELIVERED
+      return FulfillmentStatus.DELIVERED;
     }
 
-    return FulfillmentStatus.PARTIALLY_DELIVERED
+    return FulfillmentStatus.PARTIALLY_DELIVERED;
   }
 
   if (fulfillmentStatus[FulfillmentStatus.SHIPPED] > 0) {
@@ -64,10 +64,10 @@ export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
         totalFulfillmentsExceptCanceled &&
       !hasUnfulfilledItems
     ) {
-      return FulfillmentStatus.SHIPPED
+      return FulfillmentStatus.SHIPPED;
     }
 
-    return FulfillmentStatus.PARTIALLY_SHIPPED
+    return FulfillmentStatus.PARTIALLY_SHIPPED;
   }
 
   if (fulfillmentStatus[FulfillmentStatus.FULFILLED] > 0) {
@@ -76,18 +76,18 @@ export const getLastFulfillmentStatus = (order: OrderDetailDTO) => {
         totalFulfillmentsExceptCanceled &&
       !hasUnfulfilledItems
     ) {
-      return FulfillmentStatus.FULFILLED
+      return FulfillmentStatus.FULFILLED;
     }
 
-    return FulfillmentStatus.PARTIALLY_FULFILLED
+    return FulfillmentStatus.PARTIALLY_FULFILLED;
   }
 
   if (
     fulfillmentStatus[FulfillmentStatus.CANCELED] > 0 &&
     fulfillmentStatus[FulfillmentStatus.CANCELED] === totalFulfillments
   ) {
-    return FulfillmentStatus.CANCELED
+    return FulfillmentStatus.CANCELED;
   }
 
-  return FulfillmentStatus.NOT_FULFILLED
-}
+  return FulfillmentStatus.NOT_FULFILLED;
+};

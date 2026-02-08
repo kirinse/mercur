@@ -1,6 +1,6 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
-import { Seller } from './seller'
+import { Seller } from './seller';
 
 export const SellerOnboarding = model.define('seller_onboarding', {
   id: model.id({ prefix: 'sel_onb' }).primaryKey(),
@@ -9,4 +9,4 @@ export const SellerOnboarding = model.define('seller_onboarding', {
   locations_shipping: model.boolean().default(false),
   products: model.boolean().default(false),
   seller: model.belongsTo(() => Seller, { mappedBy: 'onboarding' })
-})
+});

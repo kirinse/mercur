@@ -1,17 +1,18 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { CreateProductAttributeValueDTO } from '@mercurjs/framework';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
-import { CreateProductAttributeValueDTO } from "@mercurjs/framework";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
-export const createAttributeValueStepId = "create-attribute-value";
+export const createAttributeValueStepId = 'create-attribute-value';
 
 export const createAttributeValueStep = createStep(
   createAttributeValueStepId,
   async (
-    input: Omit<CreateProductAttributeValueDTO, "product_id">,
+    input: Omit<CreateProductAttributeValueDTO, 'product_id'>,
     { container }
   ) => {
     const attributeModuleService =
@@ -19,7 +20,7 @@ export const createAttributeValueStep = createStep(
 
     const created = await attributeModuleService.createAttributeValues({
       ...input,
-      rank: 0,
+      rank: 0
     });
 
     return new StepResponse(created, created.id);

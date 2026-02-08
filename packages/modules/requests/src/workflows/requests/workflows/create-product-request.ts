@@ -1,31 +1,31 @@
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
 import {
   CreateRequestDTO,
   ProductRequestUpdatedEvent,
   RequestUpdated,
   SELLER_MODULE,
-  emitMultipleEventsStep,
-} from "@mercurjs/framework";
-import { REQUESTS_MODULE } from "../../../modules/requests";
+  emitMultipleEventsStep
+} from '@mercurjs/framework';
 
-import { createRequestStep } from "../steps";
+import { REQUESTS_MODULE } from '../../../modules/requests';
+import { createRequestStep } from '../steps';
 
 export const createProductRequestWorkflow = createWorkflow(
-  "create-product-request",
+  'create-product-request',
   function ({
     data,
-    seller_id,
+    seller_id
   }: {
     data: CreateRequestDTO;
     seller_id: string;
-    additional_data?: any;
+    additional_data?: unknown;
   }) {
     const request = createRequestStep(data);
 
@@ -33,12 +33,12 @@ export const createProductRequestWorkflow = createWorkflow(
       return [
         {
           [SELLER_MODULE]: {
-            seller_id,
+            seller_id
           },
           [REQUESTS_MODULE]: {
-            request_id: request[0].id,
-          },
-        },
+            request_id: request[0].id
+          }
+        }
       ];
     });
 
@@ -47,20 +47,20 @@ export const createProductRequestWorkflow = createWorkflow(
     emitMultipleEventsStep([
       {
         name: RequestUpdated.CREATED,
-        data: { ...data, sellerId: seller_id },
+        data: { ...data, sellerId: seller_id }
       },
       {
         name: ProductRequestUpdatedEvent.CREATED,
-        data: { id: request[0].id },
-      },
+        data: { id: request[0].id }
+      }
     ]);
 
-    const productRequestCreatedHook = createHook("productRequestCreated", {
+    const productRequestCreatedHook = createHook('productRequestCreated', {
       requestId: request[0].id,
-      sellerId: seller_id,
+      sellerId: seller_id
     });
     return new WorkflowResponse(request, {
-      hooks: [productRequestCreatedHook],
+      hooks: [productRequestCreatedHook]
     });
   }
 );

@@ -1,9 +1,9 @@
-import { MedusaService } from '@medusajs/framework/utils'
+import { MedusaService } from '@medusajs/framework/utils';
 
-import { OrderSet } from './models'
+import { OrderSet } from './models';
 
 class MarketplaceModuleService extends MedusaService({
   OrderSet
 }) {}
 
-export default MarketplaceModuleService
+export default MarketplaceModuleService;

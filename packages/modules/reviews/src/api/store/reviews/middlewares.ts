@@ -1,65 +1,66 @@
 import {
   validateAndTransformBody,
-  validateAndTransformQuery,
-} from "@medusajs/framework";
-import { MiddlewareRoute } from "@medusajs/medusa";
+  validateAndTransformQuery
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import customerReview from "../../../links/customer-review";
-import { checkCustomerResourceOwnershipByResourceId } from "@mercurjs/framework";
-import { storeReviewQueryConfig } from "./query-config";
+import { checkCustomerResourceOwnershipByResourceId } from '@mercurjs/framework';
+
+import customerReview from '../../../links/customer-review';
+import { storeReviewQueryConfig } from './query-config';
 import {
   StoreCreateReview,
   StoreGetReviewsParams,
-  StoreUpdateReview,
-} from "./validators";
+  StoreUpdateReview
+} from './validators';
 
 export const storeReviewMiddlewares: MiddlewareRoute[] = [
   {
-    method: ["GET"],
-    matcher: "/store/reviews",
+    method: ['GET'],
+    matcher: '/store/reviews',
     middlewares: [
       validateAndTransformQuery(
         StoreGetReviewsParams,
         storeReviewQueryConfig.list
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/store/reviews",
+    method: ['POST'],
+    matcher: '/store/reviews',
     middlewares: [
       validateAndTransformQuery(
         StoreGetReviewsParams,
         storeReviewQueryConfig.retrieve
       ),
-      validateAndTransformBody(StoreCreateReview),
-    ],
+      validateAndTransformBody(StoreCreateReview)
+    ]
   },
   {
-    method: ["GET"],
-    matcher: "/store/reviews/:id",
+    method: ['GET'],
+    matcher: '/store/reviews/:id',
     middlewares: [
       validateAndTransformQuery(
         StoreGetReviewsParams,
         storeReviewQueryConfig.retrieve
       ),
       checkCustomerResourceOwnershipByResourceId({
-        entryPoint: customerReview.entryPoint,
-      }),
-    ],
+        entryPoint: customerReview.entryPoint
+      })
+    ]
   },
   {
-    method: ["DELETE"],
-    matcher: "/store/reviews/:id",
+    method: ['DELETE'],
+    matcher: '/store/reviews/:id',
     middlewares: [
       checkCustomerResourceOwnershipByResourceId({
-        entryPoint: customerReview.entryPoint,
-      }),
-    ],
+        entryPoint: customerReview.entryPoint
+      })
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/store/reviews/:id",
+    method: ['POST'],
+    matcher: '/store/reviews/:id',
     middlewares: [
       validateAndTransformQuery(
         StoreGetReviewsParams,
@@ -67,8 +68,8 @@ export const storeReviewMiddlewares: MiddlewareRoute[] = [
       ),
       validateAndTransformBody(StoreUpdateReview),
       checkCustomerResourceOwnershipByResourceId({
-        entryPoint: customerReview.entryPoint,
-      }),
-    ],
-  },
+        entryPoint: customerReview.entryPoint
+      })
+    ]
+  }
 ];

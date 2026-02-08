@@ -1,12 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
 import {
-  ContainerRegistrationKeys,
-} from '@medusajs/framework/utils'
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
-import { createSellerCustomerGroupWorkflow } from '../../../workflows/customer-groups/workflows'
-import { VendorCreateCustomerGroupType } from './validators'
-import sellerCustomerGroup from '../../../links/seller-customer-group'
+import sellerCustomerGroup from '../../../links/seller-customer-group';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { createSellerCustomerGroupWorkflow } from '../../../workflows/customer-groups/workflows';
+import { VendorCreateCustomerGroupType } from './validators';
 
 /**
  * @oas [get] /vendor/customer-groups
@@ -70,16 +71,16 @@ export const GET = async (
     filters: {
       ...req.filterableFields,
       deleted_at: {
-        $eq: null,
-      },
-    },
+        $eq: null
+      }
+    }
   });
 
   res.json({
     customer_groups,
     count: metadata?.count,
     offset: metadata?.skip,
-    limit: metadata?.take,
+    limit: metadata?.take
   });
 };
 
@@ -117,7 +118,7 @@ export const POST = async (
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const { result: customer_group } =
     await createSellerCustomerGroupWorkflow.run({
@@ -127,9 +128,9 @@ export const POST = async (
         created_by: req.auth_context.actor_id,
         seller_id: seller.id
       }
-    })
+    });
 
   res.status(201).json({
     customer_group
-  })
-}
+  });
+};

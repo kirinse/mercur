@@ -1,18 +1,18 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
-  checkConfigurationRule,
   ConfigurationRuleType,
   ProductRequestUpdatedEvent,
-} from "@mercurjs/framework";
-import { REQUESTS_MODULE, RequestsModuleService } from "../modules/requests";
+  checkConfigurationRule
+} from '@mercurjs/framework';
 
-import { acceptProductRequestWorkflow } from "../workflows/requests/workflows";
+import { REQUESTS_MODULE, RequestsModuleService } from '../modules/requests';
+import { acceptProductRequestWorkflow } from '../workflows/requests/workflows';
 
 export default async function productRequestCreatedHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{ id: string }>) {
   const { id } = event.data;
   const service = container.resolve<RequestsModuleService>(REQUESTS_MODULE);
@@ -22,7 +22,7 @@ export default async function productRequestCreatedHandler({
   const request = await service.retrieveRequest(id);
 
   if (
-    request.status !== "draft" &&
+    request.status !== 'draft' &&
     !(await checkConfigurationRule(
       container,
       ConfigurationRuleType.REQUIRE_PRODUCT_APPROVAL
@@ -34,10 +34,10 @@ export default async function productRequestCreatedHandler({
       input: {
         data: request.data,
         id: request.id,
-        reviewer_id: "system",
-        reviewer_note: "auto accepted",
-        status: "accepted",
-      },
+        reviewer_id: 'system',
+        reviewer_note: 'auto accepted',
+        status: 'accepted'
+      }
     });
   }
 }
@@ -45,6 +45,6 @@ export default async function productRequestCreatedHandler({
 export const config: SubscriberConfig = {
   event: ProductRequestUpdatedEvent.CREATED,
   context: {
-    subscriberId: "product-request-created",
-  },
+    subscriberId: 'product-request-created'
+  }
 };

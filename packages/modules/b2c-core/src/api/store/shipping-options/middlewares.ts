@@ -2,16 +2,16 @@ import {
   MiddlewareRoute,
   authenticate,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
 import {
   listTransformQueryConfig,
   storeGetReturnShippingOptionsQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   StoreGetReturnShippingOptions,
   StoreGetShippingOptions
-} from './validators'
+} from './validators';
 
 export const storeShippingOptionRoutesMiddlewares: MiddlewareRoute[] = [
   {
@@ -35,4 +35,4 @@ export const storeShippingOptionRoutesMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

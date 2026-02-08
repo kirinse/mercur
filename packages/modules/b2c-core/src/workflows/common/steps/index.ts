@@ -1,1 +1,1 @@
-export * from './emit-multiple-events-step'
+export * from './emit-multiple-events-step';

@@ -7,7 +7,7 @@ export const vendorFulfillmentSetFields = [
   'deleted_at',
   '*service_zones',
   '*service_zones.geo_zones'
-]
+];
 
 export const vendorFulfillmentSetQueryConfig = {
   list: {
@@ -18,4 +18,4 @@ export const vendorFulfillmentSetQueryConfig = {
     defaults: vendorFulfillmentSetFields,
     isList: false
   }
-}
+};

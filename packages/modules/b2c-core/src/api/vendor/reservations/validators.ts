@@ -1,19 +1,19 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-import { dateFilterSchema } from '../../../shared/infra/http/utils'
+import { dateFilterSchema } from '../../../shared/infra/http/utils';
 
 export type VendorGetReservationParamsType = z.infer<
   typeof VendorGetReservationParams
->
+>;
 export const VendorGetReservationParams = createFindParams({
   offset: 0,
   limit: 50
 }).extend({
   location_id: z.string().optional(),
   created_at: dateFilterSchema
-})
+});
 
 /**
  * @schema VendorUpdateReservation
@@ -31,14 +31,14 @@ export const VendorGetReservationParams = createFindParams({
  */
 export type VendorUpdateReservationType = z.infer<
   typeof VendorUpdateReservation
->
+>;
 export const VendorUpdateReservation = z
   .object({
     location_id: z.string().optional(),
     quantity: z.number().optional(),
     description: z.string().nullish()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorCreateReservation
@@ -62,7 +62,7 @@ export const VendorUpdateReservation = z
  */
 export type VendorCreateReservationType = z.infer<
   typeof VendorCreateReservation
->
+>;
 export const VendorCreateReservation = z
   .object({
     line_item_id: z.string().nullish(),
@@ -71,4 +71,4 @@ export const VendorCreateReservation = z
     quantity: z.number(),
     description: z.string().nullish()
   })
-  .strict()
+  .strict();

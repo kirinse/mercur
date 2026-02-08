@@ -1,11 +1,14 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 import {
   deleteCustomerGroupsWorkflow,
   updateCustomerGroupsWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { VendorCreateCustomerGroupType } from '../validators'
+import { VendorCreateCustomerGroupType } from '../validators';
 
 /**
  * @oas [get] /vendor/customer-groups/{id}
@@ -45,7 +48,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [customer_group]
@@ -55,12 +58,12 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     customer_group
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/customer-groups/{id}
@@ -100,7 +103,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateCustomerGroupType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateCustomerGroupsWorkflow.run({
     input: {
@@ -109,7 +112,7 @@ export const POST = async (
       },
       update: { ...req.validatedBody }
     }
-  })
+  });
 
   const {
     data: [customer_group]
@@ -119,12 +122,12 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     customer_group
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /vendor/customer-groups/{id}
@@ -166,16 +169,16 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const id = req.params.id
+  const id = req.params.id;
 
   await deleteCustomerGroupsWorkflow.run({
     container: req.scope,
     input: { ids: [id] }
-  })
+  });
 
   res.json({
     id,
     object: 'customer_group',
     deleted: true
-  })
-}
+  });
+};

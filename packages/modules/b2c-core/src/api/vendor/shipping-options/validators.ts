@@ -1,16 +1,16 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { RuleOperator } from '@medusajs/framework/utils'
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { RuleOperator } from '@medusajs/framework/utils';
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetShippingParamsType = z.infer<
   typeof VendorGetShippingFindParams
->
+>;
 
 export const VendorGetShippingFindParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /* Shipping options */
 
@@ -33,7 +33,7 @@ const CreateShippingOptionPriceWithCurrency = z
     currency_code: z.string(),
     amount: z.number()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema CreateShippingOptionPriceWithRegion
@@ -54,7 +54,7 @@ export const CreateShippingOptionPriceWithRegion = z
     region_id: z.string(),
     amount: z.number()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema CreateShippingOptionTypeObject
@@ -80,7 +80,7 @@ const CreateShippingOptionTypeObject = z
     description: z.string(),
     code: z.string()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorCreateShippingOptionRule
@@ -106,7 +106,7 @@ const VendorCreateShippingOptionRule = z
     attribute: z.string(),
     value: z.string().or(z.array(z.string()))
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorCreateShippingOption
@@ -143,7 +143,7 @@ const VendorCreateShippingOptionRule = z
  */
 export type VendorCreateShippingOptionType = z.infer<
   typeof VendorCreateShippingOption
->
+>;
 export const VendorCreateShippingOption = z
   .object({
     name: z.string(),
@@ -157,7 +157,7 @@ export const VendorCreateShippingOption = z
     type: CreateShippingOptionTypeObject,
     rules: VendorCreateShippingOptionRule.array().optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateShippingOption
@@ -188,7 +188,7 @@ export const VendorCreateShippingOption = z
  */
 export type VendorUpdateShippingOptionType = z.infer<
   typeof VendorUpdateShippingOption
->
+>;
 export const VendorUpdateShippingOption = z
   .object({
     data: z.record(z.unknown()).optional(),
@@ -203,4 +203,4 @@ export const VendorUpdateShippingOption = z
     type: CreateShippingOptionTypeObject.optional(),
     rules: VendorCreateShippingOptionRule.array().optional()
   })
-  .strict()
+  .strict();

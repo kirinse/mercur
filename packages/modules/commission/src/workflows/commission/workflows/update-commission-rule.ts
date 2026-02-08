@@ -1,12 +1,12 @@
-import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk'
+import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk';
 
-import { UpdateCommissionRuleDTO } from '@mercurjs/framework'
+import { UpdateCommissionRuleDTO } from '@mercurjs/framework';
 
-import { updateCommissionRuleStep } from '../steps'
+import { updateCommissionRuleStep } from '../steps';
 
 export const updateCommissionRuleWorkflow = createWorkflow(
   'update-commission-rule',
   function (input: UpdateCommissionRuleDTO) {
-    return new WorkflowResponse(updateCommissionRuleStep(input))
+    return new WorkflowResponse(updateCommissionRuleStep(input));
   }
-)
+);

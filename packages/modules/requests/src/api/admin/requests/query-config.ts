@@ -9,7 +9,7 @@ export const adminRequestsFields = [
   'seller.*',
   'created_at',
   'updated_at'
-]
+];
 
 export const adminRequestsConfig = {
   list: {
@@ -20,4 +20,4 @@ export const adminRequestsConfig = {
     defaults: adminRequestsFields,
     isList: false
   }
-}
+};

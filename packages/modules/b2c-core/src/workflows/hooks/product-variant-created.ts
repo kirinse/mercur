@@ -1,9 +1,9 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { LinkDefinition } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { createProductVariantsWorkflow } from "@medusajs/medusa/core-flows";
+import { MedusaContainer } from '@medusajs/framework';
+import { LinkDefinition } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { createProductVariantsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { SELLER_MODULE } from "../../modules/seller";
+import { SELLER_MODULE } from '../../modules/seller';
 
 const getVariantInventoryItemIds = async (
   variantId: string,
@@ -11,11 +11,11 @@ const getVariantInventoryItemIds = async (
 ) => {
   const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const items = await query.graph({
-    entity: "product_variant",
-    fields: ["inventory_items.inventory_item_id"],
+    entity: 'product_variant',
+    fields: ['inventory_items.inventory_item_id'],
     filters: {
-      id: variantId,
-    },
+      id: variantId
+    }
   });
 
   return items.data
@@ -41,11 +41,11 @@ createProductVariantsWorkflow.hooks.productVariantsCreated(
         inventoryItemIds.forEach((inventory_item_id) => {
           remoteLinks.push({
             [SELLER_MODULE]: {
-              seller_id: additional_data.seller_id,
+              seller_id: additional_data.seller_id
             },
             [Modules.INVENTORY]: {
-              inventory_item_id,
-            },
+              inventory_item_id
+            }
           });
         });
       }

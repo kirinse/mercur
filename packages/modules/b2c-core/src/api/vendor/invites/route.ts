@@ -1,14 +1,14 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { SellerTeamInviteEvent } from "@mercurjs/framework";
+import { SellerTeamInviteEvent } from '@mercurjs/framework';
 
-import { fetchSellerByAuthActorId } from "../../../shared/infra/http/utils";
-import { inviteMemberWorkflow } from "../../../workflows/seller/workflows";
-import { VendorInviteMemberType } from "./validators";
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { inviteMemberWorkflow } from '../../../workflows/seller/workflows';
+import { VendorInviteMemberType } from './validators';
 
 /**
  * @oas [post] /vendor/invites
@@ -46,34 +46,34 @@ export const POST = async (
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope,
-    ["id", "name"]
+    ['id', 'name']
   );
 
   const { result: created } = await inviteMemberWorkflow(req.scope).run({
     input: {
       ...req.validatedBody,
-      seller_id: seller.id,
-    },
+      seller_id: seller.id
+    }
   });
 
   const {
-    data: [invite],
+    data: [invite]
   } = await query.graph(
     {
-      entity: "member_invite",
+      entity: 'member_invite',
       fields: req.queryConfig.fields,
-      filters: { id: created.id },
+      filters: { id: created.id }
     },
     { throwIfKeyNotFound: true }
   );
 
   const {
-    data: [member],
+    data: [member]
   } = await query.graph(
     {
-      entity: "member",
+      entity: 'member',
       fields: req.queryConfig.fields,
-      filters: { id: req.auth_context.actor_id },
+      filters: { id: req.auth_context.actor_id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -86,8 +86,8 @@ export const POST = async (
       store_name: seller.name,
       token: created.token,
       id: invite.id,
-      email: invite.email,
-    },
+      email: invite.email
+    }
   });
   res.status(201).json({ invite });
 };
@@ -153,18 +153,18 @@ export const GET = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: invites, metadata } = await query.graph({
-    entity: "member_invite",
+    entity: 'member_invite',
     fields: req.queryConfig.fields,
     filters: req.filterableFields,
     pagination: {
-      ...req.queryConfig.pagination,
-    },
+      ...req.queryConfig.pagination
+    }
   });
 
   res.json({
     invites,
     count: metadata!.count,
     offset: metadata!.skip,
-    limit: metadata!.take,
+    limit: metadata!.take
   });
 };

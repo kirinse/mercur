@@ -1,14 +1,15 @@
-import { MathBN, MedusaError } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { MathBN, MedusaError } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { RefundSplitOrderPaymentsDTO } from "@mercurjs/framework";
+import { RefundSplitOrderPaymentsDTO } from '@mercurjs/framework';
+
 import {
   SPLIT_ORDER_PAYMENT_MODULE,
-  SplitOrderPaymentModuleService,
-} from "../../../modules/split-order-payment";
+  SplitOrderPaymentModuleService
+} from '../../../modules/split-order-payment';
 
 export const validateRefundSplitOrderPaymentStep = createStep(
-  "validate-refund-split-order-payments",
+  'validate-refund-split-order-payments',
   async (input: RefundSplitOrderPaymentsDTO, { container }) => {
     const service = container.resolve<SplitOrderPaymentModuleService>(
       SPLIT_ORDER_PAYMENT_MODULE
@@ -25,19 +26,19 @@ export const validateRefundSplitOrderPaymentStep = createStep(
       .plus(payment.refunded_amount)
       .toNumber();
 
-    const status = MathBN.gt(amountLeft, 0) ? "partially_refunded" : "refunded";
+    const status = MathBN.gt(amountLeft, 0) ? 'partially_refunded' : 'refunded';
 
     if (input.amount <= 0 || MathBN.lt(amountLeft, 0)) {
       throw new MedusaError(
         MedusaError.Types.NOT_ALLOWED,
-        "Invalid refund amount!"
+        'Invalid refund amount!'
       );
     }
 
     return new StepResponse({
       id: input.id,
       refunded_amount: refundedAmount,
-      status,
+      status
     });
   }
 );

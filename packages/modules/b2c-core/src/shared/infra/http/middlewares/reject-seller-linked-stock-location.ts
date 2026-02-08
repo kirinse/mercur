@@ -1,21 +1,24 @@
-import { NextFunction } from "express"
+import { NextFunction } from 'express';
 
-import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework"
-import { MedusaError } from "@medusajs/framework/utils"
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { MedusaError } from '@medusajs/framework/utils';
 
-import { getSellerLinkedStockLocationIdSet } from "../../../../utils/stock-locations"
+import { getSellerLinkedStockLocationIdSet } from '../../../../utils/stock-locations';
 
 type RejectSellerLinkedStockLocationOptions<Body> = {
   /**
    * Extract stock_location_id from request. If it resolves to a falsy value,
    * the middleware will no-op and call next().
    */
-  resourceId: (req: AuthenticatedMedusaRequest<Body>) => string | undefined
+  resourceId: (req: AuthenticatedMedusaRequest<Body>) => string | undefined;
   /**
    * Error message override.
    */
-  message?: string
-}
+  message?: string;
+};
 
 /**
  * For admin flows where using a seller-linked stock location must be forbidden.
@@ -23,31 +26,29 @@ type RejectSellerLinkedStockLocationOptions<Body> = {
  */
 export const rejectSellerLinkedStockLocation = <Body>({
   resourceId,
-  message = "You are not allowed to use a seller-linked stock location",
+  message = 'You are not allowed to use a seller-linked stock location'
 }: RejectSellerLinkedStockLocationOptions<Body>) => {
   return async (
     req: AuthenticatedMedusaRequest<Body>,
     res: MedusaResponse,
     next: NextFunction
   ) => {
-    const id = resourceId(req)
+    const id = resourceId(req);
 
     if (!id) {
-      return next()
+      return next();
     }
 
-    const linked = await getSellerLinkedStockLocationIdSet(req.scope, [id])
+    const linked = await getSellerLinkedStockLocationIdSet(req.scope, [id]);
 
     if (linked.has(id)) {
       res.status(403).json({
         message,
-        type: MedusaError.Types.NOT_ALLOWED,
-      })
-      return
+        type: MedusaError.Types.NOT_ALLOWED
+      });
+      return;
     }
 
-    return next()
-  }
-}
-
-
+    return next();
+  };
+};

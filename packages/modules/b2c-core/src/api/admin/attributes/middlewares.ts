@@ -2,9 +2,9 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import * as QueryConfig from './query-config'
+import * as QueryConfig from './query-config';
 import {
   AdminCreateAttribute,
   AdminCreateAttributeValue,
@@ -14,7 +14,7 @@ import {
   AdminGetAttributesParams,
   AdminUpdateAttribute,
   AdminUpdateAttributeValue
-} from './validators'
+} from './validators';
 
 export const attributeMiddlewares: MiddlewareRoute[] = [
   {
@@ -101,4 +101,4 @@ export const attributeMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

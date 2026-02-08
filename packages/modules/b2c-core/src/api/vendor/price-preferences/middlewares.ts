@@ -1,7 +1,10 @@
-import { MiddlewareRoute, validateAndTransformQuery } from '@medusajs/framework'
+import {
+  MiddlewareRoute,
+  validateAndTransformQuery
+} from '@medusajs/framework';
 
-import { listPricePreferenceQueryConfig } from './query-config'
-import { VendorGetPricePreferencesParams } from './validators'
+import { listPricePreferenceQueryConfig } from './query-config';
+import { VendorGetPricePreferencesParams } from './validators';
 
 export const vendorPricePreferencesRoutesMiddlewares: MiddlewareRoute[] = [
   {
@@ -14,4 +17,4 @@ export const vendorPricePreferencesRoutesMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

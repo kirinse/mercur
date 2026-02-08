@@ -1,12 +1,12 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from "../../../../../shared/infra/http/utils";
-import { createVendorPriceListPricesWorkflow } from "../../../../../workflows/price-list/workflows";
-import { VendorCreatePriceListPriceType } from "../../validators";
+import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils';
+import { createVendorPriceListPricesWorkflow } from '../../../../../workflows/price-list/workflows';
+import { VendorCreatePriceListPriceType } from '../../validators';
 
 /**
  * @oas [post] /vendor/price-lists/{id}/prices
@@ -65,16 +65,16 @@ export const POST = async (
     input: {
       price_list_id: id,
       prices: [req.validatedBody],
-      seller_id: seller.id,
-    },
+      seller_id: seller.id
+    }
   });
 
   const { data: price_list } = await query.graph({
-    entity: "price_list",
+    entity: 'price_list',
     fields: req.queryConfig.fields,
     filters: {
-      id: req.params.id,
-    },
+      id: req.params.id
+    }
   });
 
   res.status(201).json({ price_list });

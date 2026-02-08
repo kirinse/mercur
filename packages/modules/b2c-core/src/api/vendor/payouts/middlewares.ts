@@ -1,9 +1,9 @@
-import { validateAndTransformQuery } from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+import { validateAndTransformQuery } from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { filterBySellerId } from '../../../shared/infra/http/middlewares'
-import { vendorPayoutQueryConfig } from './query-config'
-import { VendorGetPayoutParams } from './validators'
+import { filterBySellerId } from '../../../shared/infra/http/middlewares';
+import { vendorPayoutQueryConfig } from './query-config';
+import { VendorGetPayoutParams } from './validators';
 
 export const vendorPayoutMiddlewares: MiddlewareRoute[] = [
   {
@@ -17,4 +17,4 @@ export const vendorPayoutMiddlewares: MiddlewareRoute[] = [
       filterBySellerId()
     ]
   }
-]
+];

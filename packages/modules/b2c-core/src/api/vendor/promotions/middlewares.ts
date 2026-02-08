@@ -2,19 +2,21 @@ import {
   MiddlewareRoute,
   unlessPath,
   validateAndTransformBody,
-  validateAndTransformQuery,
-} from "@medusajs/framework";
+  validateAndTransformQuery
+} from '@medusajs/framework';
 
-import sellerPromotion from "../../../links/seller-promotion";
+import sellerPromotion from '../../../links/seller-promotion';
 import {
   checkResourceOwnershipByResourceId,
-  filterBySellerId,
-} from "../../../shared/infra/http/middlewares";
+  filterBySellerId
+} from '../../../shared/infra/http/middlewares';
+import { vendorPromotionsRuleAttributeOptionsPathParamsGuard } from '../../../shared/infra/http/middlewares/vendor-promotions-rule-attribute-options-path-params-guard';
+import { vendorPromotionsRuleValueOptionsPathParamsGuard } from '../../../shared/infra/http/middlewares/vendor-promotions-rule-value-options-path-params-guard';
 import {
   listRuleValueTransformQueryConfig,
   vendorPromotionQueryConfig,
-  vendorRuleTransformQueryConfig,
-} from "./query-config";
+  vendorRuleTransformQueryConfig
+} from './query-config';
 import {
   VendorBatchPromotionRules,
   VendorCreatePromotion,
@@ -22,26 +24,24 @@ import {
   VendorGetPromotionRuleTypeParams,
   VendorGetPromotionsParams,
   VendorGetPromotionsRuleValueParams,
-  VendorUpdatePromotion,
-} from "./validators";
-import { vendorPromotionsRuleValueOptionsPathParamsGuard } from "../../../shared/infra/http/middlewares/vendor-promotions-rule-value-options-path-params-guard";
-import { vendorPromotionsRuleAttributeOptionsPathParamsGuard } from "../../../shared/infra/http/middlewares/vendor-promotions-rule-attribute-options-path-params-guard";
+  VendorUpdatePromotion
+} from './validators';
 
 export const vendorPromotionsMiddlewares: MiddlewareRoute[] = [
   {
-    method: ["GET"],
-    matcher: "/vendor/promotions",
+    method: ['GET'],
+    matcher: '/vendor/promotions',
     middlewares: [
       validateAndTransformQuery(
         VendorGetPromotionsParams,
         vendorPromotionQueryConfig.list
       ),
-      filterBySellerId(),
-    ],
+      filterBySellerId()
+    ]
   },
   {
-    method: ["GET"],
-    matcher: "/vendor/promotions/:id",
+    method: ['GET'],
+    matcher: '/vendor/promotions/:id',
     middlewares: [
       validateAndTransformQuery(
         VendorGetPromotionsParams,
@@ -49,13 +49,13 @@ export const vendorPromotionsMiddlewares: MiddlewareRoute[] = [
       ),
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
-      }),
-    ],
+        filterField: 'promotion_id'
+      })
+    ]
   },
   {
-    method: ["GET"],
-    matcher: "/vendor/promotions/:id/:rule_type",
+    method: ['GET'],
+    matcher: '/vendor/promotions/:id/:rule_type',
     middlewares: [
       unlessPath(
         /.*\/promotions\/rule-attribute-options/,
@@ -66,13 +66,13 @@ export const vendorPromotionsMiddlewares: MiddlewareRoute[] = [
       ),
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
-      }),
-    ],
+        filterField: 'promotion_id'
+      })
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/vendor/promotions/:id",
+    method: ['POST'],
+    matcher: '/vendor/promotions/:id',
     middlewares: [
       validateAndTransformBody(VendorUpdatePromotion),
       validateAndTransformQuery(
@@ -81,97 +81,97 @@ export const vendorPromotionsMiddlewares: MiddlewareRoute[] = [
       ),
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
-      }),
-    ],
+        filterField: 'promotion_id'
+      })
+    ]
   },
   {
-    method: ["DELETE"],
-    matcher: "/vendor/promotions/:id",
+    method: ['DELETE'],
+    matcher: '/vendor/promotions/:id',
     middlewares: [
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
-      }),
-    ],
+        filterField: 'promotion_id'
+      })
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/vendor/promotions",
+    method: ['POST'],
+    matcher: '/vendor/promotions',
     middlewares: [
       validateAndTransformBody(VendorCreatePromotion),
       validateAndTransformQuery(
         VendorGetPromotionsParams,
         vendorPromotionQueryConfig.retrieve
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/vendor/promotions/:id/buy-rules/batch",
+    method: ['POST'],
+    matcher: '/vendor/promotions/:id/buy-rules/batch',
     middlewares: [
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
+        filterField: 'promotion_id'
       }),
       validateAndTransformBody(VendorBatchPromotionRules),
       validateAndTransformQuery(
         VendorGetPromotionsParams,
         vendorPromotionQueryConfig.retrieve
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/vendor/promotions/:id/rules/batch",
+    method: ['POST'],
+    matcher: '/vendor/promotions/:id/rules/batch',
     middlewares: [
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
+        filterField: 'promotion_id'
       }),
       validateAndTransformBody(VendorBatchPromotionRules),
       validateAndTransformQuery(
         VendorGetPromotionsParams,
         vendorPromotionQueryConfig.retrieve
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/vendor/promotions/:id/target-rules/batch",
+    method: ['POST'],
+    matcher: '/vendor/promotions/:id/target-rules/batch',
     middlewares: [
       checkResourceOwnershipByResourceId({
         entryPoint: sellerPromotion.entryPoint,
-        filterField: "promotion_id",
+        filterField: 'promotion_id'
       }),
       validateAndTransformBody(VendorBatchPromotionRules),
       validateAndTransformQuery(
         VendorGetPromotionsParams,
         vendorPromotionQueryConfig.retrieve
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["GET"],
+    method: ['GET'],
     matcher:
-      "/vendor/promotions/rule-value-options/:rule_type/:rule_attribute_id",
+      '/vendor/promotions/rule-value-options/:rule_type/:rule_attribute_id',
     middlewares: [
       vendorPromotionsRuleValueOptionsPathParamsGuard,
       validateAndTransformQuery(
         VendorGetPromotionsRuleValueParams,
         listRuleValueTransformQueryConfig
-      ),
-    ],
+      )
+    ]
   },
   {
-    method: ["GET"],
-    matcher: "/vendor/promotions/rule-attribute-options/:rule_type",
+    method: ['GET'],
+    matcher: '/vendor/promotions/rule-attribute-options/:rule_type',
     middlewares: [
       vendorPromotionsRuleAttributeOptionsPathParamsGuard,
       validateAndTransformQuery(
         VendorGetPromotionRuleParams,
         vendorRuleTransformQueryConfig.list
-      ),
-    ],
-  },
+      )
+    ]
+  }
 ];

@@ -1,26 +1,25 @@
-import { CreatePromotionDTO, LinkDefinition } from "@medusajs/framework/types";
-import { Modules } from "@medusajs/framework/utils";
+import { CreatePromotionDTO, LinkDefinition } from '@medusajs/framework/types';
+import { Modules } from '@medusajs/framework/utils';
 import {
   createPromotionsWorkflow,
-  createRemoteLinkStep,
-} from "@medusajs/medusa/core-flows";
+  createRemoteLinkStep
+} from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
-import { SELLER_MODULE } from "../../../modules/seller";
-
+import { SELLER_MODULE } from '../../../modules/seller';
 import {
-  verifyVendorTargetPromotionRulesStep,
+  injectSellerProductRuleStep,
   verifyVendorCampaignStep,
   verifyVendorPromotionStep,
-  injectSellerProductRuleStep,
-} from "../steps";
+  verifyVendorTargetPromotionRulesStep
+} from '../steps';
 
 export const createVendorPromotionWorkflow = createWorkflow(
-  "create-vendor-promotion",
+  'create-vendor-promotion',
   function (input: { promotion: CreatePromotionDTO; seller_id: string }) {
     verifyVendorCampaignStep(input);
     verifyVendorPromotionStep(input);
@@ -28,7 +27,7 @@ export const createVendorPromotionWorkflow = createWorkflow(
     verifyVendorTargetPromotionRulesStep(
       transform(input, (input) => ({
         rules: input.promotion.application_method?.target_rules,
-        seller_id: input.seller_id,
+        seller_id: input.seller_id
       }))
     );
 
@@ -36,8 +35,8 @@ export const createVendorPromotionWorkflow = createWorkflow(
 
     const promotions = createPromotionsWorkflow.runAsStep({
       input: {
-        promotionsData: [promotionWithDefaultRule],
-      },
+        promotionsData: [promotionWithDefaultRule]
+      }
     });
 
     const links = transform({ input, promotions }, ({ input, promotions }) => {
@@ -45,22 +44,22 @@ export const createVendorPromotionWorkflow = createWorkflow(
       const link: LinkDefinition[] = [
         {
           [SELLER_MODULE]: {
-            seller_id: input.seller_id,
+            seller_id: input.seller_id
           },
           [Modules.PROMOTION]: {
-            promotion_id: promo.id,
-          },
-        },
+            promotion_id: promo.id
+          }
+        }
       ];
 
       if (promo.campaign) {
         link.push({
           [SELLER_MODULE]: {
-            seller_id: input.seller_id,
+            seller_id: input.seller_id
           },
           [Modules.PROMOTION]: {
-            campaign_id: promo.campaign.id,
-          },
+            campaign_id: promo.campaign.id
+          }
         });
       }
       return link;

@@ -1,10 +1,11 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { fetchSellerByAuthActorId } from "@mercurjs/framework";
-import { listCommissionLinesWorkflow } from "../../../workflows/commission/workflows";
+import { fetchSellerByAuthActorId } from '@mercurjs/framework';
+
+import { listCommissionLinesWorkflow } from '../../../workflows/commission/workflows';
 
 /**
  * @oas [get] /vendor/commission
@@ -98,25 +99,25 @@ export const GET = async (
   );
 
   const {
-    result: { lines: commission_lines, count },
+    result: { lines: commission_lines, count }
   } = await listCommissionLinesWorkflow(req.scope).run({
     input: {
       expand: true,
       pagination: {
         skip: req.queryConfig.pagination.skip,
-        take: req.queryConfig.pagination.take || 20,
+        take: req.queryConfig.pagination.take || 20
       },
       filters: {
         ...req.filterableFields,
-        seller_id: seller.id,
-      },
-    },
+        seller_id: seller.id
+      }
+    }
   });
 
   res.json({
     commission_lines,
     count,
     offset: req.queryConfig.pagination.skip,
-    limit: req.queryConfig.pagination.take,
+    limit: req.queryConfig.pagination.take
   });
 };

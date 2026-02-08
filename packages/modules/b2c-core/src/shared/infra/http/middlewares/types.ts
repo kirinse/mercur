@@ -1,7 +1,7 @@
 /**
  * Extend MedusaRequest with custom properties used by vendor promotions middleware
  */
-declare module "@medusajs/framework" {
+declare module '@medusajs/framework' {
   interface MedusaRequest {
     /**
      * Normalized rule_type value set by vendor promotion middleware.
@@ -11,4 +11,3 @@ declare module "@medusajs/framework" {
     normalized_rule_type?: string;
   }
 }
-

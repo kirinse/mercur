@@ -1,6 +1,6 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
-import { Payout } from './payout'
+import { Payout } from './payout';
 
 export const PayoutReversal = model.define('payout_reversal', {
   id: model.id({ prefix: 'prev' }).primaryKey(),
@@ -10,4 +10,4 @@ export const PayoutReversal = model.define('payout_reversal', {
   payout: model.belongsTo(() => Payout, {
     mappedBy: 'reversals'
   })
-})
+});

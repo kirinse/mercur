@@ -1,10 +1,10 @@
-import { createWorkflow } from '@medusajs/workflows-sdk'
+import { createWorkflow } from '@medusajs/workflows-sdk';
 
-import { deleteSellerStep } from '../steps'
+import { deleteSellerStep } from '../steps';
 
 export const deleteSellerWorkflow = createWorkflow(
   'delete-seller',
   function (id: string) {
-    deleteSellerStep(id)
+    deleteSellerStep(id);
   }
-)
+);

@@ -44,7 +44,7 @@ export const vendorOrderFields = [
   '*fulfillments',
   '*fulfillments.items',
   '*fulfillments.labels'
-]
+];
 
 export const vendorOrderQueryConfig = {
   list: {
@@ -55,7 +55,7 @@ export const vendorOrderQueryConfig = {
     defaults: vendorOrderFields,
     isList: false
   }
-}
+};
 
 export const vendorOrderChangesFields = [
   'id',
@@ -82,7 +82,7 @@ export const vendorOrderChangesFields = [
   'canceled_at',
   'created_at',
   'updated_at'
-]
+];
 
 export const vendorOrderChangesQueryConfig = {
   list: {
@@ -93,4 +93,4 @@ export const vendorOrderChangesQueryConfig = {
     defaults: vendorOrderChangesFields,
     isList: false
   }
-}
+};

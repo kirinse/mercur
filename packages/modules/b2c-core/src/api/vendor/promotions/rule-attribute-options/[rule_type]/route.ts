@@ -1,10 +1,11 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 
-import "../../../../../shared/infra/http/middlewares/types"; // Import type augmentation
-import { getRuleAttributesMap } from "../../utils";
+import '../../../../../shared/infra/http/middlewares/types';
+// Import type augmentation
+import { getRuleAttributesMap } from '../../utils';
 
 /**
  * @oas [get] /vendor/promotions/rule-attribute-options/{rule_type}
@@ -76,12 +77,12 @@ export const GET = async (
 
   const ruleAttributesMap = getRuleAttributesMap({
     promotionType: req.query.promotion_type as string,
-    applicationMethodType: req.query.application_method_type as string,
+    applicationMethodType: req.query.application_method_type as string
   });
 
   const attributes = ruleAttributesMap[ruleType] || [];
 
   res.json({
-    attributes,
+    attributes
   });
 };

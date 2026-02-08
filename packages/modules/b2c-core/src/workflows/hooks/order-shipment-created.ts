@@ -1,13 +1,13 @@
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 import {
   completeOrderWorkflow,
   createOrderShipmentWorkflow,
   getOrderDetailWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
 createOrderShipmentWorkflow.hooks.shipmentCreated(
   async ({ shipment }, { container }) => {
-    const query = container.resolve(ContainerRegistrationKeys.QUERY)
+    const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
       data: [fulfillment]
@@ -17,9 +17,9 @@ createOrderShipmentWorkflow.hooks.shipmentCreated(
       filters: {
         id: shipment.id
       }
-    })
+    });
 
-    const order_id = fulfillment.order.id
+    const order_id = fulfillment.order.id;
 
     const { result: order } = await getOrderDetailWorkflow.run({
       container,
@@ -27,7 +27,7 @@ createOrderShipmentWorkflow.hooks.shipmentCreated(
         order_id,
         fields: ['payment_status']
       }
-    })
+    });
 
     if (order.payment_status === 'captured') {
       await completeOrderWorkflow.run({
@@ -35,7 +35,7 @@ createOrderShipmentWorkflow.hooks.shipmentCreated(
         input: {
           orderIds: [order_id]
         }
-      })
+      });
     }
   }
-)
+);

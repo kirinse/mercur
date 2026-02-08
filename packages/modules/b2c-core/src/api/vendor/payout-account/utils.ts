@@ -1,14 +1,14 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerPayoutAccountLink from '../../../links/seller-payout-account'
+import sellerPayoutAccountLink from '../../../links/seller-payout-account';
 
 export const refetchPayoutAccount = async (
   container: MedusaContainer,
   fields: string[],
   filters: Record<string, unknown>
 ) => {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [sellerPayoutAccount]
@@ -19,7 +19,7 @@ export const refetchPayoutAccount = async (
       filters
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
-  return sellerPayoutAccount
-}
+  return sellerPayoutAccount;
+};

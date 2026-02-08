@@ -1,9 +1,9 @@
-import { MedusaService } from '@medusajs/framework/utils'
+import { MedusaService } from '@medusajs/framework/utils';
 
-import { SplitOrderPayment } from './models/split-order-payment'
+import { SplitOrderPayment } from './models/split-order-payment';
 
 class SplitOrderPaymentModuleService extends MedusaService({
   SplitOrderPayment
 }) {}
 
-export default SplitOrderPaymentModuleService
+export default SplitOrderPaymentModuleService;

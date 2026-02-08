@@ -2,17 +2,17 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
 import {
   vendorCustomerOrdersQueryConfig,
   vendorCustomerQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   VendorGetCustomerOrdersParams,
   VendorGetCustomersParams,
   VendorUpdateCustomerGroups
-} from './validators'
+} from './validators';
 
 export const vendorCustomersMiddlewares: MiddlewareRoute[] = [
   {
@@ -56,4 +56,4 @@ export const vendorCustomersMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

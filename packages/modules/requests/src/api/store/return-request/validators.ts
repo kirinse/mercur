@@ -1,14 +1,14 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 export type StoreGetOrderReturnRequestParamsType = z.infer<
   typeof StoreGetOrderReturnRequestParams
->
+>;
 export const StoreGetOrderReturnRequestParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /**
  * @schema StoreCreateOrderReturnRequest
@@ -42,7 +42,7 @@ export const StoreGetOrderReturnRequestParams = createFindParams({
  */
 export type StoreCreateReturnRequestType = z.infer<
   typeof StoreCreateReturnRequest
->
+>;
 export const StoreCreateReturnRequest = z
   .object({
     order_id: z.string(),
@@ -56,4 +56,4 @@ export const StoreCreateReturnRequest = z
     ),
     customer_note: z.string()
   })
-  .strict()
+  .strict();

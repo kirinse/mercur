@@ -1,9 +1,9 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { PAYOUT_MODULE, PayoutModuleService } from "../../../modules/payout";
+import { PAYOUT_MODULE, PayoutModuleService } from '../../../modules/payout';
 
 export const syncStripeAccountStep = createStep(
-  "sync-stripe-account",
+  'sync-stripe-account',
   async (account_id: string, { container }) => {
     const service = container.resolve<PayoutModuleService>(PAYOUT_MODULE);
 

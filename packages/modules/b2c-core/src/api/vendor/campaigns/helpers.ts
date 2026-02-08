@@ -1,16 +1,20 @@
-import { AuthenticatedMedusaRequest, MedusaRequest } from '@medusajs/framework'
-import type { MedusaContainer, PromotionDTO } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { VendorGetCampaignByIdParamsType } from './validators'
+import { AuthenticatedMedusaRequest, MedusaRequest } from '@medusajs/framework';
+import type { MedusaContainer, PromotionDTO } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+
+import { VendorGetCampaignByIdParamsType } from './validators';
 
 export async function getFilteredCampaignPromotions(
   container: MedusaContainer,
   campaignId: string,
-  filters: AuthenticatedMedusaRequest<{}, VendorGetCampaignByIdParamsType>['validatedQuery'],
+  filters: AuthenticatedMedusaRequest<
+    {},
+    VendorGetCampaignByIdParamsType
+  >['validatedQuery'],
   fields: string[],
   pagination?: MedusaRequest['queryConfig']['pagination']
 ): Promise<PromotionDTO[]> {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const shouldIncludePromotions =
     fields.includes('*') ||
@@ -19,26 +23,26 @@ export async function getFilteredCampaignPromotions(
         field === '*promotions' ||
         field === 'promotions' ||
         field.startsWith('promotions.')
-    )
+    );
 
   if (!shouldIncludePromotions) {
-    return []
+    return [];
   }
 
-  const promotionFilters: Record<string, any> = {
+  const promotionFilters: Record<string, unknown> = {
     campaign_id: campaignId
-  }
+  };
 
   if (filters.created_at) {
-    promotionFilters.created_at = filters.created_at
+    promotionFilters.created_at = filters.created_at;
   }
 
   if (filters.updated_at) {
-    promotionFilters.updated_at = filters.updated_at
+    promotionFilters.updated_at = filters.updated_at;
   }
 
   if (filters?.q && filters?.q?.length > 0) {
-    promotionFilters.code = { $ilike: `%${filters.q}%` }
+    promotionFilters.code = { $ilike: `%${filters.q}%` };
   }
 
   const { data: promotions } = await query.graph({
@@ -46,8 +50,7 @@ export async function getFilteredCampaignPromotions(
     fields: ['*'],
     filters: promotionFilters,
     pagination
-  })
+  });
 
-  return promotions || []
+  return promotions || [];
 }
-

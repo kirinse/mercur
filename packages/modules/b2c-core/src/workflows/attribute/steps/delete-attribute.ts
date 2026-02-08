@@ -1,12 +1,12 @@
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/workflows-sdk";
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/workflows-sdk';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
-export const deleteAttributeStepId = "delete-attribute-step";
+export const deleteAttributeStepId = 'delete-attribute-step';
 
 type DeleteAttributeStepInput = {
   id: string;
@@ -23,8 +23,8 @@ export const deleteAttributeStep = createStep(
     await attributeModuleService.softDeleteAttributes(id);
     await link.delete({
       [ATTRIBUTE_MODULE]: {
-        attribute_id: id,
-      },
+        attribute_id: id
+      }
     });
     return new StepResponse(undefined, id);
   },
@@ -41,8 +41,8 @@ export const deleteAttributeStep = createStep(
     await attributeModuleService.restoreAttributes(id);
     await link.restore({
       [ATTRIBUTE_MODULE]: {
-        attribute_id: id,
-      },
+        attribute_id: id
+      }
     });
   }
 );

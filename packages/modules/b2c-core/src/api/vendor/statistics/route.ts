@@ -1,14 +1,13 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 
 import {
   selectCustomersChartData,
-  selectOrdersChartData,
-} from "../../../modules/seller";
-
-import { fetchSellerByAuthActorId } from "../../../shared/infra/http/utils";
+  selectOrdersChartData
+} from '../../../modules/seller';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
 
 /**
  * @oas [get] /vendor/statistics
@@ -58,11 +57,11 @@ export const GET = async (
 
   const orders = await selectOrdersChartData(req.scope, seller.id, [
     (req.validatedQuery.time_from as Date).toISOString(),
-    (req.validatedQuery.time_to as Date).toISOString(),
+    (req.validatedQuery.time_to as Date).toISOString()
   ]);
   const customers = await selectCustomersChartData(req.scope, seller.id, [
     (req.validatedQuery.time_from as Date).toISOString(),
-    (req.validatedQuery.time_to as Date).toISOString(),
+    (req.validatedQuery.time_to as Date).toISOString()
   ]);
 
   res.json({ orders, customers });

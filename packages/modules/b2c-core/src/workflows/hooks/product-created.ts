@@ -1,17 +1,17 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { LinkDefinition, ProductDTO } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { createProductsWorkflow } from "@medusajs/medusa/core-flows";
-import { StepResponse, WorkflowData } from "@medusajs/workflows-sdk";
+import { MedusaContainer } from '@medusajs/framework';
+import { LinkDefinition, ProductDTO } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { createProductsWorkflow } from '@medusajs/medusa/core-flows';
+import { StepResponse, WorkflowData } from '@medusajs/workflows-sdk';
 
-import { AlgoliaEvents } from "@mercurjs/framework";
-import { SELLER_MODULE } from "../../modules/seller";
+import { AlgoliaEvents } from '@mercurjs/framework';
 
-import sellerShippingProfile from "../../links/seller-shipping-profile";
-import { productsCreatedHookHandler } from "../attribute/utils";
-import { SECONDARY_CATEGORY_MODULE } from "../../modules/secondary_categories";
-import SecondaryCategoryModuleService from "../../modules/secondary_categories/service";
-import { ISecondaryCategory } from "../../modules/secondary_categories/types/ISecondaryCategory";
+import sellerShippingProfile from '../../links/seller-shipping-profile';
+import { SECONDARY_CATEGORY_MODULE } from '../../modules/secondary_categories';
+import SecondaryCategoryModuleService from '../../modules/secondary_categories/service';
+import { ISecondaryCategory } from '../../modules/secondary_categories/types/ISecondaryCategory';
+import { SELLER_MODULE } from '../../modules/seller';
+import { productsCreatedHookHandler } from '../attribute/utils';
 
 const getVariantInventoryItemIds = async (
   variantId: string,
@@ -19,11 +19,11 @@ const getVariantInventoryItemIds = async (
 ) => {
   const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const items = await query.graph({
-    entity: "product_variant",
-    fields: ["inventory_items.inventory_item_id"],
+    entity: 'product_variant',
+    fields: ['inventory_items.inventory_item_id'],
     filters: {
-      id: variantId,
-    },
+      id: variantId
+    }
   });
 
   return items.data
@@ -40,13 +40,13 @@ const assignDefaultSellerShippingProfile = async (
   const link = container.resolve(ContainerRegistrationKeys.LINK);
 
   const {
-    data: [existingLink],
+    data: [existingLink]
   } = await query.graph({
-    entity: "product_shipping_profile",
-    fields: ["*"],
+    entity: 'product_shipping_profile',
+    fields: ['*'],
     filters: {
-      product_id,
-    },
+      product_id
+    }
   });
 
   if (existingLink) {
@@ -55,14 +55,14 @@ const assignDefaultSellerShippingProfile = async (
 
   const { data: shippingProfiles } = await query.graph({
     entity: sellerShippingProfile.entryPoint,
-    fields: ["shipping_profile.id", "shipping_profile.type"],
+    fields: ['shipping_profile.id', 'shipping_profile.type'],
     filters: {
-      seller_id,
-    },
+      seller_id
+    }
   });
 
   const [profile] = shippingProfiles.filter(
-    (relation) => relation.shipping_profile.type === "default"
+    (relation) => relation.shipping_profile.type === 'default'
   );
 
   if (!profile) {
@@ -71,11 +71,11 @@ const assignDefaultSellerShippingProfile = async (
 
   await link.create({
     [Modules.PRODUCT]: {
-      product_id,
+      product_id
     },
     [Modules.FULFILLMENT]: {
-      shipping_profile_id: profile.shipping_profile.id,
-    },
+      shipping_profile_id: profile.shipping_profile.id
+    }
   });
 };
 
@@ -88,7 +88,7 @@ export const getSecondaryCategories = async (
 
   const existingCategories =
     await secondaryCategoryService.listSecondaryCategories({
-      category_id: secondaryCategoriesIds,
+      category_id: secondaryCategoriesIds
     });
 
   const existingMap = new Map<string, ISecondaryCategory>(
@@ -102,7 +102,7 @@ export const getSecondaryCategories = async (
       results.push(existingMap.get(id)!);
     } else {
       const created = await secondaryCategoryService.createSecondaryCategories({
-        category_id: id,
+        category_id: id
       });
       results.push(created);
     }
@@ -137,11 +137,11 @@ const createSecondaryCategories = async (
       mappedSecondaryCategories.map((secondaryCategory) => {
         links.push({
           [Modules.PRODUCT]: {
-            product_id: product.id,
+            product_id: product.id
           },
           [SECONDARY_CATEGORY_MODULE]: {
-            secondary_category_id: secondaryCategory.id,
-          },
+            secondary_category_id: secondaryCategory.id
+          }
         });
       });
 
@@ -156,7 +156,7 @@ createProductsWorkflow.hooks.productsCreated(
   async (
     {
       products,
-      additional_data,
+      additional_data
     }: {
       products: WorkflowData<ProductDTO[]>;
       additional_data: {
@@ -172,7 +172,7 @@ createProductsWorkflow.hooks.productsCreated(
     await productsCreatedHookHandler({
       products,
       additional_data,
-      container,
+      container
     });
 
     const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK);
@@ -186,11 +186,11 @@ createProductsWorkflow.hooks.productsCreated(
     const remoteLinks: LinkDefinition[] = products.map((product) => {
       return {
         [SELLER_MODULE]: {
-          seller_id: additional_data.seller_id,
+          seller_id: additional_data.seller_id
         },
         [Modules.PRODUCT]: {
-          product_id: product.id,
-        },
+          product_id: product.id
+        }
       };
     });
 
@@ -204,11 +204,11 @@ createProductsWorkflow.hooks.productsCreated(
         inventoryItemIds.forEach((inventory_item_id) => {
           remoteLinks.push({
             [SELLER_MODULE]: {
-              seller_id: additional_data.seller_id,
+              seller_id: additional_data.seller_id
             },
             [Modules.INVENTORY]: {
-              inventory_item_id,
-            },
+              inventory_item_id
+            }
           });
         });
       }
@@ -234,7 +234,7 @@ createProductsWorkflow.hooks.productsCreated(
 
     await container.resolve(Modules.EVENT_BUS).emit({
       name: AlgoliaEvents.PRODUCTS_CHANGED,
-      data: { ids: products.map((product) => product.id) },
+      data: { ids: products.map((product) => product.id) }
     });
 
     return new StepResponse(
@@ -252,8 +252,8 @@ createProductsWorkflow.hooks.productsCreated(
     await remoteLink.dismiss(
       productIds.map((productId) => ({
         [Modules.PRODUCT]: {
-          product_id: productId,
-        },
+          product_id: productId
+        }
       }))
     );
   }

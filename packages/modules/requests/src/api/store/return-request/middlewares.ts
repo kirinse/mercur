@@ -3,16 +3,16 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import { checkCustomerResourceOwnershipByResourceId } from '@mercurjs/framework'
+import { checkCustomerResourceOwnershipByResourceId } from '@mercurjs/framework';
 
-import { storeReturnOrderRequestQueryConfig } from './query-config'
+import { storeReturnOrderRequestQueryConfig } from './query-config';
 import {
   StoreCreateReturnRequest,
   StoreCreateReturnRequestType,
   StoreGetOrderReturnRequestParams
-} from './validators'
+} from './validators';
 
 export const storeOrderReturnRequestsMiddlewares: MiddlewareRoute[] = [
   {
@@ -35,7 +35,7 @@ export const storeOrderReturnRequestsMiddlewares: MiddlewareRoute[] = [
         resourceId: (
           req: AuthenticatedMedusaRequest<StoreCreateReturnRequestType>
         ) => {
-          return req.validatedBody.order_id
+          return req.validatedBody.order_id;
         }
       })
     ]
@@ -53,4 +53,4 @@ export const storeOrderReturnRequestsMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

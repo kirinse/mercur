@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 
-import { listSellerReturnShippingOptionsForOrderWorkflow } from '../../../../workflows/cart/workflows'
-import { StoreGetReturnShippingOptionsParamsType } from '../validators'
+import { listSellerReturnShippingOptionsForOrderWorkflow } from '../../../../workflows/cart/workflows';
+import { StoreGetReturnShippingOptionsParamsType } from '../validators';
 
 /**
  * @oas [get] /store/shipping-options/return
@@ -54,7 +57,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<StoreGetReturnShippingOptionsParamsType>,
   res: MedusaResponse
 ) => {
-  const { order_id } = req.validatedQuery
+  const { order_id } = req.validatedQuery;
 
   const { result: shippingOptions } =
     await listSellerReturnShippingOptionsForOrderWorkflow.run({
@@ -62,9 +65,9 @@ export const GET = async (
       input: {
         order_id
       }
-    })
+    });
 
   res.json({
     shipping_options: shippingOptions
-  })
-}
+  });
+};

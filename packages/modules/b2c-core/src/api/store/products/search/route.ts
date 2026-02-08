@@ -1,19 +1,20 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   QueryContext
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
+
 import {
   ALGOLIA_MODULE,
   IAlgoliaModuleService,
   IndexType
-} from '@mercurjs/framework'
+} from '@mercurjs/framework';
 
-import { StoreSearchProductsType } from '../validators'
+import { StoreSearchProductsType } from '../validators';
 
 type AlgoliaHit = {
-  id: string
-}
+  id: string;
+};
 
 /**
  * @oas [post] /store/products/search
@@ -97,8 +98,9 @@ export const POST = async (
   req: MedusaRequest<StoreSearchProductsType>,
   res: MedusaResponse
 ) => {
-  const algoliaService = req.scope.resolve<IAlgoliaModuleService>(ALGOLIA_MODULE)
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const algoliaService =
+    req.scope.resolve<IAlgoliaModuleService>(ALGOLIA_MODULE);
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     query: searchQuery,
@@ -111,7 +113,7 @@ export const POST = async (
     region_id,
     customer_id,
     customer_group_id
-  } = req.validatedBody
+  } = req.validatedBody;
 
   const searchParams: Record<string, unknown> = {
     query: searchQuery,
@@ -119,24 +121,24 @@ export const POST = async (
     hitsPerPage,
     attributesToRetrieve: ['id'],
     attributesToHighlight: []
-  }
+  };
 
   if (filters) {
-    searchParams.filters = filters
+    searchParams.filters = filters;
   }
   if (facets) {
-    searchParams.facets = facets
+    searchParams.facets = facets;
   }
   if (maxValuesPerFacet) {
-    searchParams.maxValuesPerFacet = maxValuesPerFacet
+    searchParams.maxValuesPerFacet = maxValuesPerFacet;
   }
 
   const algoliaResult = await algoliaService.search<AlgoliaHit>(
     IndexType.PRODUCT,
     searchParams
-  )
+  );
 
-  const productIds = algoliaResult.hits.map((hit) => hit.id)
+  const productIds = algoliaResult.hits.map((hit) => hit.id);
 
   if (productIds.length === 0) {
     return res.json({
@@ -149,13 +151,13 @@ export const POST = async (
       facets_stats: algoliaResult.facets_stats,
       processingTimeMS: algoliaResult.processingTimeMS,
       query: algoliaResult.query
-    })
+    });
   }
 
   const hasPricingContext =
-    currency_code || region_id || customer_id || customer_group_id
+    currency_code || region_id || customer_id || customer_group_id;
 
-  const contextParams: Record<string, unknown> = {}
+  const contextParams: Record<string, unknown> = {};
   if (hasPricingContext) {
     contextParams.variants = {
       calculated_price: QueryContext({
@@ -164,7 +166,7 @@ export const POST = async (
         ...(customer_id && { customer_id }),
         ...(customer_group_id && { customer_group_id })
       })
-    }
+    };
   }
 
   const { data: products } = await query.graph({
@@ -188,12 +190,12 @@ export const POST = async (
       id: productIds
     },
     ...(Object.keys(contextParams).length > 0 && { context: contextParams })
-  })
+  });
 
-  const productMap = new Map(products.map((p) => [p.id, p]))
+  const productMap = new Map(products.map((p) => [p.id, p]));
   const orderedProducts = productIds
     .map((id) => productMap.get(id))
-    .filter(Boolean)
+    .filter(Boolean);
 
   res.json({
     products: orderedProducts,
@@ -205,6 +207,5 @@ export const POST = async (
     facets_stats: algoliaResult.facets_stats,
     processingTimeMS: algoliaResult.processingTimeMS,
     query: algoliaResult.query
-  })
-}
-
+  });
+};

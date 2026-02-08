@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
-import sellerPayoutAccount from '../../../links/seller-payout-account'
+import sellerPayoutAccount from '../../../links/seller-payout-account';
 
 /**
  * @oas [get] /vendor/payouts
@@ -94,7 +97,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [sellerPayoutAccountRelation]
@@ -102,13 +105,13 @@ export const GET = async (
     entity: sellerPayoutAccount.entryPoint,
     fields: ['payout_account_id'],
     filters: req.filterableFields
-  })
+  });
 
   if (!sellerPayoutAccountRelation) {
     throw new MedusaError(
       MedusaError.Types.NOT_FOUND,
       'Payout account is not connected to the seller'
-    )
+    );
   }
 
   const { data: payouts, metadata } = await query.graph({
@@ -118,12 +121,12 @@ export const GET = async (
       payout_account_id: sellerPayoutAccountRelation.payout_account_id
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     payouts,
     count: metadata!.count,
     offset: metadata!.skip,
     limit: metadata!.take
-  })
-}
+  });
+};

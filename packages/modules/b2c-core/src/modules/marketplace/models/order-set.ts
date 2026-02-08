@@ -1,4 +1,4 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
 export const OrderSet = model.define('order_set', {
   id: model.id({ prefix: 'ordset' }).primaryKey(),
@@ -7,4 +7,4 @@ export const OrderSet = model.define('order_set', {
   cart_id: model.text(),
   customer_id: model.text().nullable(),
   payment_collection_id: model.text()
-})
+});

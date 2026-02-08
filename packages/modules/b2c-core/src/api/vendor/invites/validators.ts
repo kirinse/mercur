@@ -1,16 +1,16 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-import { MemberRole } from '@mercurjs/framework'
+import { MemberRole } from '@mercurjs/framework';
 
 export type VendorGetMemberInviteParamsType = z.infer<
   typeof VendorGetMemberInviteParams
->
+>;
 export const VendorGetMemberInviteParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /**
  * @schema VendorInviteMember
@@ -28,14 +28,14 @@ export const VendorGetMemberInviteParams = createFindParams({
  *     enum: [owner, admin, member]
  *     description: The role to assign to the invited member.
  */
-export type VendorInviteMemberType = z.infer<typeof VendorInviteMember>
+export type VendorInviteMemberType = z.infer<typeof VendorInviteMember>;
 
 export const VendorInviteMember = z
   .object({
     email: z.string().email(),
     role: z.nativeEnum(MemberRole)
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorAcceptMemberInvite
@@ -53,10 +53,10 @@ export const VendorInviteMember = z
  */
 export type VendorAcceptMemberInviteType = z.infer<
   typeof VendorAcceptMemberInvite
->
+>;
 export const VendorAcceptMemberInvite = z
   .object({
     token: z.string(),
     name: z.string()
   })
-  .strict()
+  .strict();

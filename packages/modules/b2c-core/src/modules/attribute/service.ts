@@ -1,16 +1,17 @@
-import { EntityManager } from "@medusajs/framework/mikro-orm/knex";
-import { UpdateAttributeDTO } from "@mercurjs/framework";
-import { Context, DAL, InferTypeOf } from "@medusajs/framework/types";
+import { EntityManager } from '@medusajs/framework/mikro-orm/knex';
+import { Context, DAL, InferTypeOf } from '@medusajs/framework/types';
 import {
   InjectManager,
   InjectTransactionManager,
   MedusaContext,
-  MedusaService,
-} from "@medusajs/framework/utils";
+  MedusaService
+} from '@medusajs/framework/utils';
 
-import Attribute from "./models/attribute";
-import AttributePossibleValue from "./models/attribute-possible-value";
-import AttributeValue from "./models/attribute-value";
+import { UpdateAttributeDTO } from '@mercurjs/framework';
+
+import Attribute from './models/attribute';
+import AttributePossibleValue from './models/attribute-possible-value';
+import AttributeValue from './models/attribute-value';
 
 type Attribute = InferTypeOf<typeof Attribute>;
 type AttributePossibleValue = InferTypeOf<typeof AttributePossibleValue>;
@@ -23,15 +24,16 @@ type InjectedDependencies = {
 class AttributeModuleService extends MedusaService({
   Attribute,
   AttributeValue,
-  AttributePossibleValue,
+  AttributePossibleValue
 }) {
   protected attributeRepository_: DAL.RepositoryService<Attribute>;
   protected attributePossibleValueRepository_: DAL.RepositoryService<AttributePossibleValue>;
 
   constructor({
     attributeRepository,
-    attributePossibleValueRepository,
+    attributePossibleValueRepository
   }: InjectedDependencies) {
+    // eslint-disable-next-line prefer-rest-params
     super(...arguments);
     this.attributeRepository_ = attributeRepository;
     this.attributePossibleValueRepository_ = attributePossibleValueRepository;
@@ -78,13 +80,13 @@ class AttributeModuleService extends MedusaService({
         ...attribute,
         possible_values: upsertedValues
           .filter((val) => val.attribute_id === attribute.id)
-          .map((upserted) => ({ id: upserted.id })),
+          .map((upserted) => ({ id: upserted.id }))
       };
     });
 
     return this.attributeRepository_.upsertWithReplace(
       attributesInput,
-      { relations: ["possible_values"] },
+      { relations: ['possible_values'] },
       sharedContext
     );
   }

@@ -1,10 +1,10 @@
-import { kebabCase } from '@medusajs/framework/utils'
-import { createCollectionsWorkflow } from '@medusajs/medusa/core-flows'
-import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk'
+import { kebabCase } from '@medusajs/framework/utils';
+import { createCollectionsWorkflow } from '@medusajs/medusa/core-flows';
+import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk';
 
-import { AcceptRequestDTO } from '@mercurjs/framework'
+import { AcceptRequestDTO } from '@mercurjs/framework';
 
-import { updateRequestWorkflow } from './update-request'
+import { updateRequestWorkflow } from './update-request';
 
 export const acceptProductCollectionRequestWorkflow = createWorkflow(
   'accept-product-collection-request',
@@ -21,9 +21,9 @@ export const acceptProductCollectionRequestWorkflow = createWorkflow(
           }
         ]
       }
-    })
+    });
 
-    updateRequestWorkflow.runAsStep({ input })
-    return new WorkflowResponse(collection[0])
+    updateRequestWorkflow.runAsStep({ input });
+    return new WorkflowResponse(collection[0]);
   }
-)
+);

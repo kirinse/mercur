@@ -1,9 +1,9 @@
-import { MedusaService } from "@medusajs/framework/utils";
+import { MedusaService } from '@medusajs/framework/utils';
 
-import { Request } from "./models";
+import { Request } from './models';
 
 class RequestsModuleService extends MedusaService({
-  Request,
+  Request
 }) {}
 
 export default RequestsModuleService;

@@ -15,7 +15,7 @@ export const vendorPromotionFields = [
   'rules.attribute',
   'rules.operator',
   'rules.values.value'
-]
+];
 
 export const vendorPromotionQueryConfig = {
   list: {
@@ -26,7 +26,7 @@ export const vendorPromotionQueryConfig = {
     defaults: vendorPromotionFields,
     isList: false
   }
-}
+};
 
 export const defaultVendorPromotionRuleFields = [
   'id',
@@ -34,7 +34,7 @@ export const defaultVendorPromotionRuleFields = [
   'attribute',
   'operator',
   'values.value'
-]
+];
 
 export const vendorRuleTransformQueryConfig = {
   list: {
@@ -45,10 +45,10 @@ export const vendorRuleTransformQueryConfig = {
     defaults: defaultVendorPromotionRuleFields,
     isList: false
   }
-}
+};
 
 export const listRuleValueTransformQueryConfig = {
   defaults: [],
   allowed: [],
   isList: true
-}
+};

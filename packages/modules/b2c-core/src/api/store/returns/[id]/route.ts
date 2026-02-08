@@ -1,13 +1,16 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { storeReturnFields } from '../query-config'
+import { storeReturnFields } from '../query-config';
 
 export async function GET(
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [order]
@@ -20,9 +23,9 @@ export async function GET(
         id: req.params.id
       }
     }
-  })
+  });
 
   res.json({
     return: order.returns[0]
-  })
+  });
 }

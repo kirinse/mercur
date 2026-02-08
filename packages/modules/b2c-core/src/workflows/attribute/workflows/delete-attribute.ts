@@ -1,19 +1,19 @@
 import {
   WorkflowResponse,
   createWorkflow
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 
-import { deleteAttributeStep } from '../steps'
+import { deleteAttributeStep } from '../steps';
 
-export const deleteAttributeWorkflowId = 'delete-attribute-worklfow'
+export const deleteAttributeWorkflowId = 'delete-attribute-worklfow';
 
 type DeleteAttributeWorkflowInput = {
-  id: string
-}
+  id: string;
+};
 
 export const deleteAttributeWorkflow = createWorkflow(
   deleteAttributeWorkflowId,
   (input: DeleteAttributeWorkflowInput) => {
-    return new WorkflowResponse(deleteAttributeStep(input))
+    return new WorkflowResponse(deleteAttributeStep(input));
   }
-)
+);

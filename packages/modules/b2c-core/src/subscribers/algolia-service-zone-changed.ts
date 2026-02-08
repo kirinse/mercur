@@ -1,18 +1,18 @@
-import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { AlgoliaEvents, IntermediateEvents } from '@mercurjs/framework'
+import { AlgoliaEvents, IntermediateEvents } from '@mercurjs/framework';
 
-import sellerProduct from '../links/seller-product'
-import sellerServiceZone from '../links/seller-service-zone'
+import sellerProduct from '../links/seller-product';
+import sellerServiceZone from '../links/seller-service-zone';
 
 export default async function serviceZoneChangedHandler({
   event,
   container
 }: SubscriberArgs<{ id: string }>) {
-  const service_zone_id = event.data.id
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const eventBus = container.resolve(Modules.EVENT_BUS)
+  const service_zone_id = event.data.id;
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const eventBus = container.resolve(Modules.EVENT_BUS);
 
   const {
     data: [seller]
@@ -23,10 +23,10 @@ export default async function serviceZoneChangedHandler({
       service_zone_id
     },
     withDeleted: true
-  })
+  });
 
   if (!seller) {
-    return
+    return;
   }
 
   const { data: products } = await query.graph({
@@ -35,12 +35,12 @@ export default async function serviceZoneChangedHandler({
     filters: {
       seller_id: seller.id
     }
-  })
+  });
 
   await eventBus.emit({
     name: AlgoliaEvents.PRODUCTS_CHANGED,
     data: { ids: products.map((p) => p.product_id) }
-  })
+  });
 }
 
 export const config: SubscriberConfig = {
@@ -48,4 +48,4 @@ export const config: SubscriberConfig = {
   context: {
     subscriberId: 'service-zone-changed-handler'
   }
-}
+};

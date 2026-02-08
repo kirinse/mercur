@@ -1,17 +1,18 @@
-import { MedusaError } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { MedusaError } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import {
-  CommissionModuleService,
-  COMMISSION_MODULE,
-} from "../../../modules/commission";
 import {
   CommissionRuleDTO,
-  CreateCommissionRuleDTO,
-} from "@mercurjs/framework";
+  CreateCommissionRuleDTO
+} from '@mercurjs/framework';
+
+import {
+  COMMISSION_MODULE,
+  CommissionModuleService
+} from '../../../modules/commission';
 
 export const checkForDuplicateStep = createStep(
-  "check-for-rule-duplicate",
+  'check-for-rule-duplicate',
   async (input: CreateCommissionRuleDTO, { container }) => {
     const service =
       container.resolve<CommissionModuleService>(COMMISSION_MODULE);
@@ -20,11 +21,11 @@ export const checkForDuplicateStep = createStep(
       await service.listCommissionRules({
         reference: input.reference,
         reference_id: input.reference_id,
-        deleted_at: null,
+        deleted_at: null
       });
 
     if (commissionRule.length > 0) {
-      throw new MedusaError(MedusaError.Types.CONFLICT, "Rule already exists!");
+      throw new MedusaError(MedusaError.Types.CONFLICT, 'Rule already exists!');
     }
 
     return new StepResponse(true);

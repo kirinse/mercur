@@ -1,5 +1,5 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
 interface RequestNotificationParams {
   container: MedusaContainer;
@@ -9,30 +9,30 @@ interface RequestNotificationParams {
 }
 
 const notificationResources = {
-  product_type: "value",
-  product_category: "name",
-  product_collection: "title",
-  product_tag: "value",
-  product: "title",
+  product_type: 'value',
+  product_category: 'name',
+  product_collection: 'title',
+  product_tag: 'value',
+  product: 'title'
 };
 
 export async function sendVendorUIRequestNotification({
   container,
   requestId,
   requestType,
-  template,
+  template
 }: RequestNotificationParams) {
   const notificationService = container.resolve(Modules.NOTIFICATION);
   const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [request],
+    data: [request]
   } = await query.graph({
-    entity: "request",
-    fields: ["*"],
+    entity: 'request',
+    fields: ['*'],
     filters: {
-      id: requestId,
-    },
+      id: requestId
+    }
   });
 
   if (!request || request.type !== requestType) {
@@ -43,13 +43,13 @@ export async function sendVendorUIRequestNotification({
   const resourceValue = request.data[resource];
 
   const {
-    data: [member],
+    data: [member]
   } = await query.graph({
-    entity: "member",
-    fields: ["*"],
+    entity: 'member',
+    fields: ['*'],
     filters: {
-      id: request.submitter_id,
-    },
+      id: request.submitter_id
+    }
   });
 
   if (!member || !member.seller_id) {
@@ -62,9 +62,9 @@ export async function sendVendorUIRequestNotification({
   await notificationService.createNotifications([
     {
       to: member.seller_id,
-      channel: "seller_feed",
+      channel: 'seller_feed',
       template,
-      data: { ...payload },
-    },
+      data: { ...payload }
+    }
   ]);
 }

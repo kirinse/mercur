@@ -1,4 +1,4 @@
-import { PriceDTO, ProductVariantDTO } from "@medusajs/framework/types";
+import { PriceDTO, ProductVariantDTO } from '@medusajs/framework/types';
 
 export interface ProductVariantWithRelations extends ProductVariantDTO {
   prices?: PriceDTO[];

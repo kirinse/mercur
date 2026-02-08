@@ -1,16 +1,16 @@
 import {
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { filterBySellerId } from '../../../shared/infra/http/middlewares'
-import { vendorPayoutAccountQueryConfig } from './query-config'
+import { filterBySellerId } from '../../../shared/infra/http/middlewares';
+import { vendorPayoutAccountQueryConfig } from './query-config';
 import {
   VendorCreateOnboarding,
   VendorCreatePayoutAccount,
   VendorGetPayoutAccountParams
-} from './validators'
+} from './validators';
 
 export const vendorPayoutAccountMiddlewares: MiddlewareRoute[] = [
   {
@@ -47,4 +47,4 @@ export const vendorPayoutAccountMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

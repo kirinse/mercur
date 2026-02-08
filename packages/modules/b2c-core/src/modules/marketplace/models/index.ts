@@ -1,1 +1,1 @@
-export * from './order-set'
+export * from './order-set';

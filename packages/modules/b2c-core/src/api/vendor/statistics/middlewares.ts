@@ -1,6 +1,9 @@
-import { MiddlewareRoute, validateAndTransformQuery } from '@medusajs/framework'
+import {
+  MiddlewareRoute,
+  validateAndTransformQuery
+} from '@medusajs/framework';
 
-import { VendorGetStatisticsParams } from './validators'
+import { VendorGetStatisticsParams } from './validators';
 
 export const vendorStatisticsMiddlewares: MiddlewareRoute[] = [
   {
@@ -8,4 +11,4 @@ export const vendorStatisticsMiddlewares: MiddlewareRoute[] = [
     matcher: '/vendor/statistics',
     middlewares: [validateAndTransformQuery(VendorGetStatisticsParams, {})]
   }
-]
+];

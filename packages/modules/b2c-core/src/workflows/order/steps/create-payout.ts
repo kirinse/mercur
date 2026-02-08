@@ -1,10 +1,11 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CreatePayoutDTO, PayoutDTO } from "@mercurjs/framework";
-import { PAYOUT_MODULE, PayoutModuleService } from "../../../modules/payout";
+import { CreatePayoutDTO, PayoutDTO } from '@mercurjs/framework';
+
+import { PAYOUT_MODULE, PayoutModuleService } from '../../../modules/payout';
 
 export const createPayoutStep = createStep(
-  "create-payout",
+  'create-payout',
   async (input: CreatePayoutDTO, { container }) => {
     const service = container.resolve<PayoutModuleService>(PAYOUT_MODULE);
 
@@ -19,7 +20,7 @@ export const createPayoutStep = createStep(
 
     return new StepResponse({
       payout,
-      err,
+      err
     });
   }
 );

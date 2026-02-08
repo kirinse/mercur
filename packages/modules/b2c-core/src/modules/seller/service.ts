@@ -1,17 +1,18 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { ConfigModule } from "@medusajs/framework";
-import { Context, CreateInviteDTO } from "@medusajs/framework/types";
+import { ConfigModule } from '@medusajs/framework';
+import { Context, CreateInviteDTO } from '@medusajs/framework/types';
 import {
   InjectTransactionManager,
   MedusaContext,
   MedusaError,
-  MedusaService,
-} from "@medusajs/framework/utils";
+  MedusaService
+} from '@medusajs/framework/utils';
 
-import { SELLER_MODULE } from ".";
-import { Member, MemberInvite, Seller, SellerOnboarding } from "./models";
-import { MemberInviteDTO } from "@mercurjs/framework";
+import { MemberInviteDTO } from '@mercurjs/framework';
+
+import { SELLER_MODULE } from '.';
+import { Member, MemberInvite, Seller, SellerOnboarding } from './models';
 
 type InjectedDependencies = {
   configModule: ConfigModule;
@@ -28,12 +29,13 @@ class SellerModuleService extends MedusaService({
   MemberInvite,
   Member,
   Seller,
-  SellerOnboarding,
+  SellerOnboarding
 }) {
   private readonly config_: SellerModuleConfig;
-  private readonly httpConfig_: ConfigModule["projectConfig"]["http"];
+  private readonly httpConfig_: ConfigModule['projectConfig']['http'];
 
   constructor({ configModule }: InjectedDependencies) {
+    // eslint-disable-next-line prefer-rest-params
     super(...arguments);
 
     this.httpConfig_ = configModule.projectConfig.http;
@@ -41,20 +43,20 @@ class SellerModuleService extends MedusaService({
     const moduleDef = configModule.modules?.[SELLER_MODULE];
 
     const options =
-      typeof moduleDef !== "boolean"
+      typeof moduleDef !== 'boolean'
         ? (moduleDef?.options as SellerModuleConfig)
         : null;
 
     this.config_ = {
       validInviteDuration:
-        options?.validInviteDuration ?? DEFAULT_VALID_INVITE_DURATION,
+        options?.validInviteDuration ?? DEFAULT_VALID_INVITE_DURATION
     };
   }
 
   async validateInviteToken(token: string) {
     const jwtSecret = this.httpConfig_.jwtSecret;
     const decoded: JwtPayload = jwt.verify(token, jwtSecret, {
-      complete: true,
+      complete: true
     });
 
     const invite = await this.retrieveMemberInvite(decoded.payload.id, {});
@@ -62,14 +64,14 @@ class SellerModuleService extends MedusaService({
     if (invite.accepted) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "The invite has already been accepted"
+        'The invite has already been accepted'
       );
     }
 
     if (invite.expires_at < new Date()) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        "The invite has expired"
+        'The invite has expired'
       );
     }
 
@@ -92,7 +94,7 @@ class SellerModuleService extends MedusaService({
       return {
         ...invite,
         expires_at: new Date(),
-        token: "placeholder",
+        token: 'placeholder'
       };
     });
 
@@ -104,7 +106,7 @@ class SellerModuleService extends MedusaService({
         ...invite,
         id: invite.id,
         expires_at,
-        token: this.generateToken({ id: invite.id }),
+        token: this.generateToken({ id: invite.id })
       };
     });
 
@@ -117,13 +119,13 @@ class SellerModuleService extends MedusaService({
   private generateToken(data: { id: string }): string {
     const jwtSecret = this.httpConfig_.jwtSecret as string;
     return jwt.sign(data, jwtSecret, {
-      expiresIn: this.config_.validInviteDuration / 1000,
+      expiresIn: this.config_.validInviteDuration / 1000
     });
   }
 
   async isOnboardingCompleted(seller_id: string): Promise<boolean> {
     const { onboarding } = await this.retrieveSeller(seller_id, {
-      relations: ["onboarding"],
+      relations: ['onboarding']
     });
 
     if (!onboarding) {

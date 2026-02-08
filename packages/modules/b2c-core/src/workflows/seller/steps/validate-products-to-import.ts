@@ -1,9 +1,9 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { ProductStatus } from '@medusajs/framework/utils'
-import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk'
+import { ProductStatus } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { CreateProduct } from '../../../api/vendor/products/validators'
+import { CreateProduct } from '../../../api/vendor/products/validators';
 
 export const validateProductsToImportStep = createStep(
   'validate-products-to-import',
@@ -13,8 +13,8 @@ export const validateProductsToImportStep = createStep(
         status: z.string().optional()
       }).parse(product),
       status: 'proposed' as ProductStatus
-    }))
+    }));
 
-    return new StepResponse(toCreate)
+    return new StepResponse(toCreate);
   }
-)
+);

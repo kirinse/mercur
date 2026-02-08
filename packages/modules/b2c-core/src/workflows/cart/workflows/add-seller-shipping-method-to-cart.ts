@@ -1,21 +1,21 @@
-import { CartShippingMethodDTO } from '@medusajs/framework/types'
-import { createWorkflow, transform } from '@medusajs/framework/workflows-sdk'
+import { CartShippingMethodDTO } from '@medusajs/framework/types';
+import { createWorkflow, transform } from '@medusajs/framework/workflows-sdk';
 import {
   addShippingMethodToCartStep,
   addShippingMethodToCartWorkflow,
   useQueryGraphStep
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import sellerShippingOptionLink from '../../../links/seller-shipping-option'
-import { validateCartShippingOptionsStep } from '../steps'
+import sellerShippingOptionLink from '../../../links/seller-shipping-option';
+import { validateCartShippingOptionsStep } from '../steps';
 
 type AddSellerShippingMethodToCartWorkflowInput = {
-  cart_id: string
+  cart_id: string;
   option: {
-    id: string
-    data?: Record<string, any>
-  }
-}
+    id: string;
+    data?: Record<string, any>;
+  };
+};
 
 export const addSellerShippingMethodToCartWorkflow = createWorkflow(
   'add-seller-shipping-method-to-cart',
@@ -27,7 +27,7 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
       },
       fields: ['id', 'shipping_methods.*'],
       options: { throwIfKeyNotFound: true }
-    }).config({ name: 'cart-query' })
+    }).config({ name: 'cart-query' });
 
     const validateCartShippingOptionsInput = transform(
       { carts, option: input.option },
@@ -38,9 +38,9 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
           option.id
         ]
       })
-    )
+    );
 
-    validateCartShippingOptionsStep(validateCartShippingOptionsInput)
+    validateCartShippingOptionsStep(validateCartShippingOptionsInput);
 
     const addShippingMethodToCartInput = transform(
       input,
@@ -48,12 +48,12 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
         cart_id,
         options: [option]
       })
-    )
+    );
 
     // default addShippingMethodToCartWorkflow will replace all existing shippings methods in the cart
     addShippingMethodToCartWorkflow.runAsStep({
       input: addShippingMethodToCartInput
-    })
+    });
 
     const shippingOptions = transform(
       { carts, newShippingOption: input.option },
@@ -61,9 +61,9 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
         return [
           ...cart.shipping_methods.map((sm) => sm.shipping_option_id),
           newShippingOption.id
-        ]
+        ];
       }
-    )
+    );
 
     const { data: sellerShippingOptions } = useQueryGraphStep({
       entity: sellerShippingOptionLink.entryPoint,
@@ -71,7 +71,7 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
       filters: {
         shipping_option_id: shippingOptions
       }
-    }).config({ name: 'seller-shipping-option-query' })
+    }).config({ name: 'seller-shipping-option-query' });
 
     const shippingMethodsToAddInput = transform(
       { carts, sellerShippingOptions, newShippingOption: input.option },
@@ -81,28 +81,28 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
             option.shipping_option.id,
             option.seller_id
           ])
-        )
+        );
 
         const existingShippingMethodsBySeller = new Map<
           string,
           CartShippingMethodDTO
-        >()
+        >();
 
         for (const method of cart.shipping_methods) {
           const sellerId = shippingOptionToSellerMap.get(
             method.shipping_option_id
-          )!
-          existingShippingMethodsBySeller.set(sellerId, method)
+          )!;
+          existingShippingMethodsBySeller.set(sellerId, method);
         }
 
         const newOptionSellerId = shippingOptionToSellerMap.get(
           newShippingOption.id
-        )!
+        )!;
 
         // Remove any existing shipping method for the same seller
         // since we're replacing it with the new option
         if (existingShippingMethodsBySeller.has(newOptionSellerId)) {
-          existingShippingMethodsBySeller.delete(newOptionSellerId)
+          existingShippingMethodsBySeller.delete(newOptionSellerId);
         }
 
         return Array.from(existingShippingMethodsBySeller.values()).map(
@@ -114,12 +114,12 @@ export const addSellerShippingMethodToCartWorkflow = createWorkflow(
             amount: method.amount,
             is_tax_inclusive: method.is_tax_inclusive
           })
-        )
+        );
       }
-    )
+    );
 
     addShippingMethodToCartStep({
       shipping_methods: shippingMethodsToAddInput
-    })
+    });
   }
-)
+);

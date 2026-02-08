@@ -1,16 +1,16 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { AdditionalData } from '@medusajs/framework/types'
-import { AdminGetProductsParams } from '@medusajs/medusa/api/admin/products/validators'
+import { AdditionalData } from '@medusajs/framework/types';
+import { AdminGetProductsParams } from '@medusajs/medusa/api/admin/products/validators';
 import {
   WithAdditionalData,
   createFindParams
-} from '@medusajs/medusa/api/utils/validators'
+} from '@medusajs/medusa/api/utils/validators';
 
-import { IdAssociation } from '../../../shared/infra/http/utils'
+import { IdAssociation } from '../../../shared/infra/http/utils';
 
-export type VendorGetProductParamsType = z.infer<typeof VendorGetProductParams>
-export const VendorGetProductParams = AdminGetProductsParams
+export type VendorGetProductParamsType = z.infer<typeof VendorGetProductParams>;
+export const VendorGetProductParams = AdminGetProductsParams;
 
 /* Options */
 
@@ -30,11 +30,11 @@ export const VendorGetProductParams = AdminGetProductsParams
  *     items:
  *       type: string
  */
-export type CreateProductOptionType = z.infer<typeof CreateProductOption>
+export type CreateProductOptionType = z.infer<typeof CreateProductOption>;
 export const CreateProductOption = z.object({
   title: z.string(),
   values: z.array(z.string())
-})
+});
 
 /**
  * @schema VendorAssignBrandName
@@ -46,10 +46,10 @@ export const CreateProductOption = z.object({
  *     type: string
  *     description: The name of the brand.
  */
-export type VendorAssignBrandNameType = z.infer<typeof VendorAssignBrandName>
+export type VendorAssignBrandNameType = z.infer<typeof VendorAssignBrandName>;
 export const VendorAssignBrandName = z.object({
   brand_name: z.string()
-})
+});
 
 /**
  * @schema UpdateProductOption
@@ -67,12 +67,12 @@ export const VendorAssignBrandName = z.object({
  *     items:
  *       type: string
  */
-export type UpdateProductOptionType = z.infer<typeof UpdateProductOption>
+export type UpdateProductOptionType = z.infer<typeof UpdateProductOption>;
 export const UpdateProductOption = z.object({
   id: z.string().optional(),
   title: z.string().optional(),
   values: z.array(z.string()).optional()
-})
+});
 
 /* Variant Prices */
 
@@ -109,7 +109,7 @@ const CreateVariantPrice = z.object({
   min_quantity: z.number().nullish(),
   max_quantity: z.number().nullish(),
   rules: z.record(z.string(), z.string()).optional()
-})
+});
 
 /**
  * @schema UpdateVariantPrice
@@ -145,7 +145,7 @@ const UpdateVariantPrice = z.object({
   min_quantity: z.number().nullish(),
   max_quantity: z.number().nullish(),
   rules: z.record(z.string(), z.string()).optional()
-})
+});
 
 /* Variants */
 
@@ -225,7 +225,7 @@ const UpdateVariantPrice = z.object({
  *         required_quantity:
  *           type: number
  */
-export type CreateProductVariantType = z.infer<typeof CreateProductVariant>
+export type CreateProductVariantType = z.infer<typeof CreateProductVariant>;
 export const CreateProductVariant = z
   .object({
     title: z.string(),
@@ -256,7 +256,7 @@ export const CreateProductVariant = z
       )
       .optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema UpdateProductVariant
@@ -340,7 +340,7 @@ export const CreateProductVariant = z
  *     additionalProperties:
  *       type: string
  */
-export type UpdateProductVariantType = z.infer<typeof UpdateProductVariant>
+export type UpdateProductVariantType = z.infer<typeof UpdateProductVariant>;
 export const UpdateProductVariant = z
   .object({
     id: z.string().optional(),
@@ -364,7 +364,7 @@ export const UpdateProductVariant = z
     metadata: z.record(z.unknown()).nullish(),
     options: z.record(z.string()).optional()
   })
-  .strict()
+  .strict();
 
 /* Products */
 
@@ -490,7 +490,7 @@ export const UpdateProductVariant = z
  *           type: string
  */
 export type VendorCreateProductType = z.infer<typeof CreateProduct> &
-  AdditionalData
+  AdditionalData;
 export const CreateProduct = z
   .object({
     title: z.string(),
@@ -521,7 +521,7 @@ export const CreateProduct = z
     sales_channels: z.array(z.object({ id: z.string() })).optional(),
     brand_name: z.string().optional()
   })
-  .strict()
+  .strict();
 /**
  * @schema VendorCreateProduct
  * type: object
@@ -535,7 +535,7 @@ export const CreateProduct = z
  *        additionalProperties: true
  *
  */
-export const VendorCreateProduct = WithAdditionalData(CreateProduct)
+export const VendorCreateProduct = WithAdditionalData(CreateProduct);
 
 /**
  * @schema UpdateProduct
@@ -664,7 +664,7 @@ export const VendorCreateProduct = WithAdditionalData(CreateProduct)
  *           type: string
  */
 export type VendorUpdateProductType = z.infer<typeof UpdateProduct> &
-  AdditionalData
+  AdditionalData;
 export const UpdateProduct = z
   .object({
     title: z.string().optional(),
@@ -693,7 +693,7 @@ export const UpdateProduct = z
     metadata: z.record(z.unknown()).nullish(),
     sales_channels: z.array(z.object({ id: z.string() })).optional()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorUpdateProduct
@@ -708,7 +708,7 @@ export const UpdateProduct = z
  *        additionalProperties: true
  *
  */
-export const VendorUpdateProduct = WithAdditionalData(UpdateProduct)
+export const VendorUpdateProduct = WithAdditionalData(UpdateProduct);
 
 /**
  * @schema VendorUpdateProductStatus
@@ -723,12 +723,12 @@ export const VendorUpdateProduct = WithAdditionalData(UpdateProduct)
  */
 export type VendorUpdateProductStatusType = z.infer<
   typeof VendorUpdateProductStatus
->
+>;
 export const VendorUpdateProductStatus = z.object({
   status: z.enum(['draft', 'proposed', 'published'])
-})
+});
 
 export type AdminGetAttributesParamsType = z.infer<
   typeof AdminGetAttributesParams
->
-export const AdminGetAttributesParams = createFindParams({})
+>;
+export const AdminGetAttributesParams = createFindParams({});

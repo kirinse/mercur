@@ -1,7 +1,7 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { VendorGetMemberParamsType } from './validators'
+import { VendorGetMemberParamsType } from './validators';
 
 /**
  * @oas [get] /vendor/members
@@ -66,7 +66,7 @@ export const GET = async (
   req: MedusaRequest<VendorGetMemberParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: members, metadata } = await query.graph({
     entity: 'member',
@@ -75,12 +75,12 @@ export const GET = async (
     pagination: {
       ...req.queryConfig.pagination
     }
-  })
+  });
 
   res.json({
     members,
     count: metadata!.count,
     offset: metadata!.skip,
     limit: metadata!.take
-  })
-}
+  });
+};

@@ -1,20 +1,20 @@
 import {
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/framework/http'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/framework/http';
 
-import sellerShippingProfile from '../../../links/seller-shipping-profile'
+import sellerShippingProfile from '../../../links/seller-shipping-profile';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { shippingProfilesQueryConfig } from './query-config'
+} from '../../../shared/infra/http/middlewares';
+import { shippingProfilesQueryConfig } from './query-config';
 import {
   VendorCreateShippingProfile,
   VendorGetShippingProfilesParams,
   VendorUpdateShippingProfile
-} from './validators'
+} from './validators';
 
 export const vendorShippingProfilesMiddlewares: MiddlewareRoute[] = [
   {
@@ -78,4 +78,4 @@ export const vendorShippingProfilesMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

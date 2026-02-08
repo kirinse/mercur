@@ -1,4 +1,4 @@
-export const vendorAdminFulfillmentProvidersFields = ['id', 'is_enabled']
+export const vendorAdminFulfillmentProvidersFields = ['id', 'is_enabled'];
 
 export const vendorFulfillmentProvidersQueryConfig = {
   list: {
@@ -9,4 +9,4 @@ export const vendorFulfillmentProvidersQueryConfig = {
     defaults: vendorAdminFulfillmentProvidersFields,
     isList: false
   }
-}
+};

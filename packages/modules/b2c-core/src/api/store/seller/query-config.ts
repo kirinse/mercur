@@ -10,7 +10,7 @@ export const storeSellerFields = [
   'postal_code',
   'country_code',
   'tax_id'
-]
+];
 
 export const storeSellerQueryConfig = {
   list: {
@@ -21,4 +21,4 @@ export const storeSellerQueryConfig = {
     defaults: storeSellerFields,
     isList: false
   }
-}
+};

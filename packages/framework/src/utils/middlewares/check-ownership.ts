@@ -1,16 +1,18 @@
-import { NextFunction } from 'express'
-
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaNextFunction,
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
 type CheckResourceOwnershipByResourceIdOptions<Body> = {
-  entryPoint: string
-  filterField?: string
-  resourceId?: (req: AuthenticatedMedusaRequest<Body>) => string | string[]
-}
+  entryPoint: string;
+  filterField?: string;
+  resourceId?: (req: AuthenticatedMedusaRequest<Body>) => string | string[];
+};
 
 /**
  * Middleware that verifies if the authenticated member owns/has access to the requested resource(s).
@@ -54,9 +56,9 @@ export const checkResourceOwnershipByResourceId = <Body>({
   return async (
     req: AuthenticatedMedusaRequest<Body>,
     res: MedusaResponse,
-    next: NextFunction
+    next: MedusaNextFunction
   ) => {
-    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
     const {
       data: [member]
@@ -69,14 +71,14 @@ export const checkResourceOwnershipByResourceId = <Body>({
         }
       },
       { throwIfKeyNotFound: true }
-    )
+    );
 
-    const ids = resourceId(req)
-    const idArray = Array.isArray(ids) ? ids : [ids]
+    const ids = resourceId(req);
+    const idArray = Array.isArray(ids) ? ids : [ids];
 
     if (idArray.length === 0) {
-      next()
-      return
+      next();
+      return;
     }
 
     const { data: resources } = await query.graph({
@@ -86,16 +88,16 @@ export const checkResourceOwnershipByResourceId = <Body>({
         [filterField]: idArray,
         seller_id: member.seller.id
       }
-    })
+    });
 
     if (resources.length !== idArray.length) {
       res.status(403).json({
         message: 'You are not allowed to perform this action',
         type: MedusaError.Types.NOT_ALLOWED
-      })
-      return
+      });
+      return;
     }
 
-    next()
-  }
-}
+    next();
+  };
+};

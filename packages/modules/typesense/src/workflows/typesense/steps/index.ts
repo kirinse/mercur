@@ -1,1 +1,1 @@
-export * from './sync-typesense-products'
+export * from './sync-typesense-products';

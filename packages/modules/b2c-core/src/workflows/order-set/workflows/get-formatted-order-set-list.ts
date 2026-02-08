@@ -1,23 +1,23 @@
-import { deduplicate } from '@medusajs/framework/utils'
+import { deduplicate } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
   createWorkflow,
   transform
-} from '@medusajs/framework/workflows-sdk'
-import { useQueryGraphStep } from '@medusajs/medusa/core-flows'
+} from '@medusajs/framework/workflows-sdk';
+import { useQueryGraphStep } from '@medusajs/medusa/core-flows';
 
-import { formatOrderSets } from '../utils'
+import { formatOrderSets } from '../utils';
 
 export const getFormattedOrderSetListWorkflow = createWorkflow(
   'get-formatted-order-set-list',
   function (input: {
-    fields?: string[]
-    filters?: Record<string, any>
+    fields?: string[];
+    filters?: Record<string, any>;
     pagination?: {
-      skip: number
-      take?: number
-      order?: Record<string, any>
-    }
+      skip: number;
+      take?: number;
+      order?: Record<string, any>;
+    };
   }) {
     const fields = transform(input, ({ fields }) => {
       return deduplicate([
@@ -61,18 +61,18 @@ export const getFormattedOrderSetListWorkflow = createWorkflow(
         'orders.items.*',
         'orders.customer.*',
         'orders.fulfillments.*'
-      ])
-    })
+      ]);
+    });
 
     const { data, metadata } = useQueryGraphStep({
       entity: 'order_set',
       fields,
       filters: input.filters,
       pagination: input.pagination
-    })
+    });
 
-    const formattedOrderSets = transform(data, formatOrderSets)
+    const formattedOrderSets = transform(data, formatOrderSets);
 
-    return new WorkflowResponse({ data: formattedOrderSets, metadata })
+    return new WorkflowResponse({ data: formattedOrderSets, metadata });
   }
-)
+);

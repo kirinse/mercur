@@ -5,29 +5,29 @@ import {
   CreateOrderLineItemTaxLineDTO,
   InventoryItemDTO,
   ProductVariantDTO
-} from '@medusajs/framework/types'
-import { MathBN, PriceListType, isDefined } from '@medusajs/framework/utils'
+} from '@medusajs/framework/types';
+import { MathBN, PriceListType, isDefined } from '@medusajs/framework/utils';
 
 interface Input {
-  item?: CartLineItemDTO
-  quantity: BigNumberInput
-  metadata?: Record<string, unknown> | null
-  unitPrice: BigNumberInput
-  compareAtUnitPrice?: BigNumberInput | null
-  isTaxInclusive?: boolean
+  item?: CartLineItemDTO;
+  quantity: BigNumberInput;
+  metadata?: Record<string, unknown> | null;
+  unitPrice: BigNumberInput;
+  compareAtUnitPrice?: BigNumberInput | null;
+  isTaxInclusive?: boolean;
   variant: ProductVariantDTO & {
-    inventory_items: { inventory: InventoryItemDTO }[]
+    inventory_items: { inventory: InventoryItemDTO }[];
     calculated_price: {
       calculated_price: {
-        price_list_type: string
-      }
-      original_amount: BigNumberInput
-      calculated_amount: BigNumberInput
-    }
-  }
-  taxLines?: CreateOrderLineItemTaxLineDTO[]
-  adjustments?: CreateOrderAdjustmentDTO[]
-  cartId?: string
+        price_list_type: string;
+      };
+      original_amount: BigNumberInput;
+      calculated_amount: BigNumberInput;
+    };
+  };
+  taxLines?: CreateOrderLineItemTaxLineDTO[];
+  adjustments?: CreateOrderAdjustmentDTO[];
+  cartId?: string;
 }
 
 export function prepareLineItemData(data: Input) {
@@ -41,13 +41,13 @@ export function prepareLineItemData(data: Input) {
     cartId,
     taxLines,
     adjustments
-  } = data
+  } = data;
 
   if (!variant.product) {
-    throw new Error('Variant does not have a product')
+    throw new Error('Variant does not have a product');
   }
 
-  let compareAtUnitPrice = data.compareAtUnitPrice
+  let compareAtUnitPrice = data.compareAtUnitPrice;
 
   if (
     !isDefined(compareAtUnitPrice) &&
@@ -58,21 +58,21 @@ export function prepareLineItemData(data: Input) {
       variant.calculated_price.calculated_amount
     )
   ) {
-    compareAtUnitPrice = variant.calculated_price.original_amount
+    compareAtUnitPrice = variant.calculated_price.original_amount;
   }
 
   // Note: If any of the items require shipping, we enable fulfillment
   // unless explicitly set to not require shipping by the item in the request
-  const { inventory_items: inventoryItems } = variant
+  const { inventory_items: inventoryItems } = variant;
   const someInventoryRequiresShipping = inventoryItems.length
     ? inventoryItems.some(
         (inventoryItem) => !!inventoryItem.inventory.requires_shipping
       )
-    : true
+    : true;
 
   const requiresShipping = isDefined(item?.requires_shipping)
     ? item.requires_shipping
-    : someInventoryRequiresShipping
+    : someInventoryRequiresShipping;
 
   const lineItem: any = {
     quantity,
@@ -105,21 +105,21 @@ export function prepareLineItemData(data: Input) {
     is_tax_inclusive: !!isTaxInclusive,
 
     metadata
-  }
+  };
 
   if (taxLines) {
-    lineItem.tax_lines = prepareTaxLinesData(taxLines)
+    lineItem.tax_lines = prepareTaxLinesData(taxLines);
   }
 
   if (adjustments) {
-    lineItem.adjustments = prepareAdjustmentsData(adjustments)
+    lineItem.adjustments = prepareAdjustmentsData(adjustments);
   }
 
   if (cartId) {
-    lineItem.cart_id = cartId
+    lineItem.cart_id = cartId;
   }
 
-  return lineItem
+  return lineItem;
 }
 
 export function prepareAdjustmentsData(data: CreateOrderAdjustmentDTO[]) {
@@ -129,7 +129,7 @@ export function prepareAdjustmentsData(data: CreateOrderAdjustmentDTO[]) {
     description: d.description,
     promotion_id: d.promotion_id,
     provider_id: d.promotion_id
-  }))
+  }));
 }
 
 export function prepareTaxLinesData(data: CreateOrderLineItemTaxLineDTO[]) {
@@ -139,5 +139,5 @@ export function prepareTaxLinesData(data: CreateOrderLineItemTaxLineDTO[]) {
     code: d.code,
     rate: d.rate,
     provider_id: d.provider_id
-  }))
+  }));
 }

@@ -1,9 +1,9 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { SELLER_MODULE, SellerModuleService } from "../../../modules/seller";
+import { SELLER_MODULE, SellerModuleService } from '../../../modules/seller';
 
 export const deleteMemberInvitesStep = createStep(
-  "delete-member-invites",
+  'delete-member-invites',
   async (id: string, { container }) => {
     const service = container.resolve<SellerModuleService>(SELLER_MODULE);
 

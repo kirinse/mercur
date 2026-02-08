@@ -1,18 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { HttpTypes } from '@medusajs/framework/types'
+} from '@medusajs/framework/http';
+import { HttpTypes } from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   RuleOperator,
   RuleType,
   remoteQueryObjectFromString
-} from '@medusajs/framework/utils'
-import { operatorsMap } from '@medusajs/medusa/api/admin/promotions/utils/operators-map'
-import { getRuleAttributesMap } from '@medusajs/medusa/api/admin/promotions/utils/rule-attributes-map'
-import { ruleQueryConfigurations } from '@medusajs/medusa/api/admin/promotions/utils/rule-query-configuration'
-import { validateRuleType } from '@medusajs/medusa/api/admin/promotions/utils/validate-rule-type'
+} from '@medusajs/framework/utils';
+import { operatorsMap } from '@medusajs/medusa/api/admin/promotions/utils/operators-map';
+import { getRuleAttributesMap } from '@medusajs/medusa/api/admin/promotions/utils/rule-attributes-map';
+import { ruleQueryConfigurations } from '@medusajs/medusa/api/admin/promotions/utils/rule-query-configuration';
+import { validateRuleType } from '@medusajs/medusa/api/admin/promotions/utils/validate-rule-type';
 
 /**
  * @oas [get] /vendor/promotions/{id}/{rule_type}
@@ -73,55 +74,55 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id, rule_type: ruleType } = req.params
-  const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
+  const { id, rule_type: ruleType } = req.params;
+  const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY);
 
-  validateRuleType(ruleType)
+  validateRuleType(ruleType);
 
-  const dasherizedRuleType = ruleType.split('-').join('_')
+  const dasherizedRuleType = ruleType.split('-').join('_');
   const queryObject = remoteQueryObjectFromString({
     entryPoint: 'promotion',
     variables: { id },
     fields: req.queryConfig.fields
-  })
+  });
 
-  const [promotion] = await remoteQuery(queryObject)
+  const [promotion] = await remoteQuery(queryObject);
   const ruleAttributes = getRuleAttributesMap({
     promotionType: promotion?.type || req.query.promotion_type,
     applicationMethodType:
       promotion?.application_method?.type || req.query.application_method_type
-  })[ruleType]
-  const promotionRules: any[] = []
+  })[ruleType];
+  const promotionRules: any[] = [];
 
   if (dasherizedRuleType === RuleType.RULES) {
-    promotionRules.push(...(promotion?.rules || []))
+    promotionRules.push(...(promotion?.rules || []));
   } else if (dasherizedRuleType === RuleType.TARGET_RULES) {
-    promotionRules.push(...(promotion?.application_method?.target_rules || []))
+    promotionRules.push(...(promotion?.application_method?.target_rules || []));
   } else if (dasherizedRuleType === RuleType.BUY_RULES) {
-    promotionRules.push(...(promotion?.application_method?.buy_rules || []))
+    promotionRules.push(...(promotion?.application_method?.buy_rules || []));
   }
 
-  const transformedRules: HttpTypes.AdminPromotionRule[] = []
-  const disguisedRules = ruleAttributes.filter((attr) => !!attr.disguised)
+  const transformedRules: HttpTypes.AdminPromotionRule[] = [];
+  const disguisedRules = ruleAttributes.filter((attr) => !!attr.disguised);
 
   for (const disguisedRule of disguisedRules) {
     const getValues = () => {
-      const value = promotion?.application_method?.[disguisedRule.id]
+      const value = promotion?.application_method?.[disguisedRule.id];
 
       if (disguisedRule.field_type === 'number') {
-        return value
+        return value;
       }
 
       if (value) {
-        return [{ label: value, value }]
+        return [{ label: value, value }];
       }
 
-      return []
-    }
+      return [];
+    };
 
-    const required = disguisedRule.required ?? true
-    const applicationMethod = promotion?.application_method
-    const recordValue = applicationMethod?.[disguisedRule.id]
+    const required = disguisedRule.required ?? true;
+    const applicationMethod = promotion?.application_method;
+    const recordValue = applicationMethod?.[disguisedRule.id];
 
     if (required || recordValue) {
       transformedRules.push({
@@ -133,10 +134,10 @@ export const GET = async (
         operator_label: operatorsMap[RuleOperator.EQ].label,
         value: undefined,
         values: getValues()
-      })
+      });
     }
 
-    continue
+    continue;
   }
 
   for (const promotionRule of [...promotionRules, ...transformedRules]) {
@@ -144,16 +145,16 @@ export const GET = async (
       (attr) =>
         attr.value === promotionRule.attribute ||
         attr.value === promotionRule.attribute
-    )
+    );
 
     if (!currentRuleAttribute) {
-      continue
+      continue;
     }
 
-    const queryConfig = ruleQueryConfigurations[currentRuleAttribute.id]
+    const queryConfig = ruleQueryConfigurations[currentRuleAttribute.id];
 
     if (!queryConfig) {
-      continue
+      continue;
     }
 
     const rows = await remoteQuery(
@@ -166,20 +167,20 @@ export const GET = async (
         },
         fields: [queryConfig.labelAttr, queryConfig.valueAttr]
       })
-    )
+    );
 
     const valueLabelMap = new Map<string, string>(
       rows.map((row) => [
         row[queryConfig.valueAttr],
         row[queryConfig.labelAttr]
       ])
-    )
+    );
 
     promotionRule.values =
       promotionRule.values?.map((value) => ({
         value: value.value,
         label: valueLabelMap.get(value.value) || value.value
-      })) || promotionRule.values
+      })) || promotionRule.values;
 
     if (!currentRuleAttribute.hydrate) {
       transformedRules.push({
@@ -188,11 +189,11 @@ export const GET = async (
         attribute_label: currentRuleAttribute.label,
         operator_label:
           operatorsMap[promotionRule.operator]?.label || promotionRule.operator
-      })
+      });
     }
   }
 
   res.json({
     rules: transformedRules
-  })
-}
+  });
+};

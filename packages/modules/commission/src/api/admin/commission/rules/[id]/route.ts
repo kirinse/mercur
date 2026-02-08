@@ -1,15 +1,15 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
 import {
   deleteCommissionRuleWorkflow,
   listCommissionRulesWorkflow,
   updateCommissionRuleWorkflow
-} from '../../../../../workflows/commission/workflows'
-import { AdminUpdateCommissionRuleType } from '../../validators'
+} from '../../../../../workflows/commission/workflows';
+import { AdminUpdateCommissionRuleType } from '../../validators';
 
 /**
  * @oas [post] /admin/commission/rules/{id}
@@ -49,12 +49,12 @@ export async function POST(
   req: MedusaRequest<AdminUpdateCommissionRuleType>,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateCommissionRuleWorkflow.run({
     input: { ...req.validatedBody, id: req.params.id },
     container: req.scope
-  })
+  });
 
   const {
     data: [commission_rule]
@@ -64,11 +64,11 @@ export async function POST(
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.status(200).json({
     commission_rule
-  })
+  });
 }
 
 /**
@@ -114,13 +114,13 @@ export async function DELETE(
   const { result } = await deleteCommissionRuleWorkflow.run({
     input: req.params.id,
     container: req.scope
-  })
+  });
 
   res.json({
     id: result,
     object: 'commission_rule',
     deleted: true
-  })
+  });
 }
 
 /**
@@ -165,13 +165,13 @@ export async function GET(
     input: {
       ids: [req.params.id]
     }
-  })
+  });
 
   if (!commission_rule) {
-    throw new MedusaError(MedusaError.Types.NOT_FOUND, 'Rule not found!')
+    throw new MedusaError(MedusaError.Types.NOT_FOUND, 'Rule not found!');
   }
 
   res.json({
     commission_rule
-  })
+  });
 }

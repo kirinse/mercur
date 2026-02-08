@@ -1,5 +1,5 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /admin/requests
@@ -69,7 +69,7 @@ export async function GET(
   req: MedusaRequest,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: requests, metadata } = await query.graph({
     entity: 'request',
@@ -79,12 +79,12 @@ export async function GET(
       status: req.filterableFields.status || { $ne: 'draft' }
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     requests,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
+  });
 }

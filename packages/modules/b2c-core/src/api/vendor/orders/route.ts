@@ -1,10 +1,14 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerOrderLink from '../../../links/seller-order'
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
-import { getVendorOrdersListWorkflow } from '../../../workflows/order/workflows'
-import { VendorGetOrderParamsType } from './validators'
+import sellerOrderLink from '../../../links/seller-order';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { getVendorOrdersListWorkflow } from '../../../workflows/order/workflows';
+import { VendorGetOrderParamsType } from './validators';
 
 /**
  * @oas [get] /vendor/orders
@@ -103,12 +107,12 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<VendorGetOrderParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const { data: orderRelations } = await query.graph({
     entity: sellerOrderLink.entryPoint,
@@ -119,7 +123,7 @@ export const GET = async (
         $eq: null
       }
     }
-  })
+  });
 
   const { result } = await getVendorOrdersListWorkflow(req.scope).run({
     input: {
@@ -132,14 +136,14 @@ export const GET = async (
         ...req.queryConfig.pagination
       }
     }
-  })
+  });
 
-  const { rows, metadata } = result as any
+  const { rows, metadata } = result as any;
 
   res.json({
     orders: rows,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};

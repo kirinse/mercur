@@ -1,11 +1,11 @@
-import { dismissItemReturnRequestWorkflow } from '@medusajs/core-flows'
+import { dismissItemReturnRequestWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { VendorReceiveReturnItemsSchemaType } from '../../validators'
+import { VendorReceiveReturnItemsSchemaType } from '../../validators';
 
 /**
  * @oas [post] /vendor/returns/{id}/dismiss-items
@@ -51,13 +51,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorReceiveReturnItemsSchemaType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   await dismissItemReturnRequestWorkflow.run({
     container: req.scope,
     input: { ...req.validatedBody, return_id: id }
-  })
+  });
 
   const {
     data: [result]
@@ -67,9 +67,9 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     return: result
-  })
-}
+  });
+};

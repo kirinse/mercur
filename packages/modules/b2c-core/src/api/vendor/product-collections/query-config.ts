@@ -5,7 +5,7 @@ export const vendorProductCollectionFields = [
   'created_at',
   'updated_at',
   'metadata'
-]
+];
 
 export const vendorProductCollectionQueryConfig = {
   list: {
@@ -16,7 +16,7 @@ export const vendorProductCollectionQueryConfig = {
     defaults: vendorProductCollectionFields,
     isList: false
   }
-}
+};
 
 export const vendorProductCollectionsProductsFields = [
   'id',
@@ -27,7 +27,7 @@ export const vendorProductCollectionsProductsFields = [
   'collection.id',
   'collection.title',
   'variants.id'
-]
+];
 export const vendorProductCollectionsProductsQueryConfig = {
   list: {
     defaults: vendorProductCollectionsProductsFields,
@@ -37,4 +37,4 @@ export const vendorProductCollectionsProductsQueryConfig = {
     defaults: vendorProductCollectionsProductsFields,
     isList: false
   }
-}
+};

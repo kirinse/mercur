@@ -1,17 +1,17 @@
 import {
   WorkflowResponse,
   createWorkflow
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 
-import { DeleteWishlistDTO } from '@mercurjs/framework'
+import { DeleteWishlistDTO } from '@mercurjs/framework';
 
-import { deleteWishlistEntryStep } from '../steps'
+import { deleteWishlistEntryStep } from '../steps';
 
 export const deleteWishlistEntryWorkflow = createWorkflow(
   {
     name: 'delete-wishlist'
   },
   function (input: DeleteWishlistDTO) {
-    return new WorkflowResponse(deleteWishlistEntryStep(input))
+    return new WorkflowResponse(deleteWishlistEntryStep(input));
   }
-)
+);

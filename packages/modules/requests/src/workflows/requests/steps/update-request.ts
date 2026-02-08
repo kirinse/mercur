@@ -1,13 +1,14 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { UpdateRequestDTO } from "@mercurjs/framework";
+import { UpdateRequestDTO } from '@mercurjs/framework';
+
 import {
   REQUESTS_MODULE,
-  RequestsModuleService,
-} from "../../../modules/requests";
+  RequestsModuleService
+} from '../../../modules/requests';
 
 export const updateRequestStep = createStep(
-  "update-request",
+  'update-request',
   async (input: UpdateRequestDTO, { container }) => {
     const service = container.resolve<RequestsModuleService>(REQUESTS_MODULE);
 

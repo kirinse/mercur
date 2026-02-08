@@ -1,11 +1,11 @@
-import { ProductStatus } from "@medusajs/framework/utils";
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
+import { ProductStatus } from '@medusajs/framework/utils';
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createHook,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
 import {
   CreateRequestDTO,
@@ -13,15 +13,15 @@ import {
   RequestStatus,
   RequestUpdated,
   SELLER_MODULE,
-  updateProductStatusStep,
   emitMultipleEventsStep,
-} from "@mercurjs/framework";
-import { REQUESTS_MODULE } from "../../../modules/requests";
+  updateProductStatusStep
+} from '@mercurjs/framework';
 
-import { createRequestStep } from "../steps";
+import { REQUESTS_MODULE } from '../../../modules/requests';
+import { createRequestStep } from '../steps';
 
 export const createProductUpdateRequestWorkflow = createWorkflow(
-  "create-product-update-request",
+  'create-product-update-request',
   function (input: {
     data: CreateRequestDTO;
     seller_id: string;
@@ -30,7 +30,7 @@ export const createProductUpdateRequestWorkflow = createWorkflow(
     updateProductStatusStep(
       transform({ input }, ({ input }) => ({
         id: input.data.data.product_id,
-        status: ProductStatus.PROPOSED,
+        status: ProductStatus.PROPOSED
       }))
     );
 
@@ -38,10 +38,10 @@ export const createProductUpdateRequestWorkflow = createWorkflow(
       ...input.data,
       data: {
         ...input.data.data,
-        product_id: input.data.data.product_id,
+        product_id: input.data.data.product_id
       },
-      type: "product_update",
-      status: "pending" as RequestStatus,
+      type: 'product_update',
+      status: 'pending' as RequestStatus
     }));
 
     const request = createRequestStep(requestPayload);
@@ -50,12 +50,12 @@ export const createProductUpdateRequestWorkflow = createWorkflow(
       return [
         {
           [SELLER_MODULE]: {
-            seller_id: input.seller_id,
+            seller_id: input.seller_id
           },
           [REQUESTS_MODULE]: {
-            request_id: request[0].id,
-          },
-        },
+            request_id: request[0].id
+          }
+        }
       ];
     });
 
@@ -65,24 +65,24 @@ export const createProductUpdateRequestWorkflow = createWorkflow(
         name: RequestUpdated.CREATED,
         data: {
           ...input.data,
-          sellerId: input.seller_id,
-        },
+          sellerId: input.seller_id
+        }
       },
       {
         name: ProductUpdateRequestUpdatedEvent.CREATED,
-        data: { id: request[0].id },
-      },
+        data: { id: request[0].id }
+      }
     ]);
 
     const productUpdateRequestCreatedHook = createHook(
-      "productUpdateRequestCreated",
+      'productUpdateRequestCreated',
       {
         requestId: request[0].id,
-        sellerId: input.seller_id,
+        sellerId: input.seller_id
       }
     );
     return new WorkflowResponse(request, {
-      hooks: [productUpdateRequestCreatedHook],
+      hooks: [productUpdateRequestCreatedHook]
     });
   }
 );

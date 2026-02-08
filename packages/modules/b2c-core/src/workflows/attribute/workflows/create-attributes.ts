@@ -1,20 +1,20 @@
-import { LinkDefinition } from "@medusajs/framework/types";
-import { Modules } from "@medusajs/framework/utils";
+import { LinkDefinition } from '@medusajs/framework/types';
+import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowData,
   WorkflowResponse,
   createWorkflow,
   transform,
-  when,
-} from "@medusajs/framework/workflows-sdk";
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
+  when
+} from '@medusajs/framework/workflows-sdk';
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 
-import { ATTRIBUTE_MODULE } from "../../../modules/attribute";
-import { CreateAttributeDTO } from "@mercurjs/framework";
+import { CreateAttributeDTO } from '@mercurjs/framework';
 
-import { createAttributesStep } from "../steps/create-attributes";
+import { ATTRIBUTE_MODULE } from '../../../modules/attribute';
+import { createAttributesStep } from '../steps/create-attributes';
 
-export const createAttributesWorkflowId = "create-attributes";
+export const createAttributesWorkflowId = 'create-attributes';
 
 type CreateAttributesWorkflowInput = {
   attributes: CreateAttributeDTO[];
@@ -46,11 +46,11 @@ export const createAttributesWorkflow = createWorkflow(
             return (
               inputAttribute.product_category_ids?.map((productCategoryId) => ({
                 [Modules.PRODUCT]: {
-                  product_category_id: productCategoryId,
+                  product_category_id: productCategoryId
                 },
                 [ATTRIBUTE_MODULE]: {
-                  attribute_id: attribute.id,
-                },
+                  attribute_id: attribute.id
+                }
               })) || []
             );
           })

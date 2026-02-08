@@ -1,24 +1,24 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { PromotionTypes } from "@medusajs/framework/types";
+import { MedusaContainer } from '@medusajs/framework';
+import { PromotionTypes } from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   Modules,
-  deduplicate,
-} from "@medusajs/framework/utils";
+  deduplicate
+} from '@medusajs/framework/utils';
 
-import sellerProduct from "../../../links/seller-product";
-import sellerPromotion from "../../../links/seller-promotion";
-import { SELLER_PRODUCTS_RULE_DESCRIPTION } from "../steps/inject-seller-product-rule";
+import sellerProduct from '../../../links/seller-product';
+import sellerPromotion from '../../../links/seller-promotion';
+import { SELLER_PRODUCTS_RULE_DESCRIPTION } from '../steps/inject-seller-product-rule';
 
 const TARGET_RULE_FIELDS = [
-  "id",
-  "application_method.target_rules.*",
-  "application_method.target_rules.id",
-  "application_method.target_rules.description",
-  "application_method.target_rules.attribute",
-  "application_method.target_rules.values",
-  "application_method.target_rules.values.id",
-  "application_method.target_rules.values.value",
+  'id',
+  'application_method.target_rules.*',
+  'application_method.target_rules.id',
+  'application_method.target_rules.description',
+  'application_method.target_rules.attribute',
+  'application_method.target_rules.values',
+  'application_method.target_rules.values.id',
+  'application_method.target_rules.values.value'
 ];
 
 type BuildRuleUpdatesOptions = {
@@ -28,7 +28,7 @@ type BuildRuleUpdatesOptions = {
 const buildRuleUpdates = (
   promotions: PromotionTypes.PromotionDTO[],
   productIds: string[],
-  action: "add" | "remove",
+  action: 'add' | 'remove',
   options: BuildRuleUpdatesOptions = {}
 ) => {
   const updates: PromotionTypes.UpdatePromotionRuleDTO[] = [];
@@ -36,21 +36,21 @@ const buildRuleUpdates = (
   for (const promotion of promotions) {
     const rules =
       promotion.application_method?.target_rules?.filter((r) =>
-        action === "add"
+        action === 'add'
           ? r.description === SELLER_PRODUCTS_RULE_DESCRIPTION
-          : r.attribute === "items.product.id"
+          : r.attribute === 'items.product.id'
       ) || [];
 
     for (const rule of rules) {
       const existingValues = (rule.values || []).map((v) => v.value as string);
       let nextValues =
-        action === "add"
+        action === 'add'
           ? deduplicate([...existingValues, ...productIds])
           : existingValues.filter((value) => !productIds.includes(value));
 
-      if (action === "remove" && nextValues.length === 0) {
+      if (action === 'remove' && nextValues.length === 0) {
         const fallbackValues =
-          options.sellerProductsByPromotion?.get(promotion.id || "") || [];
+          options.sellerProductsByPromotion?.get(promotion.id || '') || [];
         if (fallbackValues.length) {
           nextValues = deduplicate(fallbackValues);
         }
@@ -66,7 +66,7 @@ const buildRuleUpdates = (
 
       updates.push({
         id: rule.id,
-        values: nextValues,
+        values: nextValues
       });
     }
   }
@@ -77,7 +77,7 @@ const buildRuleUpdates = (
 export const syncSellersPromotionsDefaultProductRuleValues = async (
   container: MedusaContainer,
   productIds: string[],
-  action: "add" | "remove"
+  action: 'add' | 'remove'
 ) => {
   if (!productIds.length) {
     return;
@@ -91,17 +91,17 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
 
   switch (action) {
-    case "remove": {
+    case 'remove': {
       const { data: promotions } = await query.graph({
-        entity: "promotion",
+        entity: 'promotion',
         fields: TARGET_RULE_FIELDS,
         filters: {
           application_method: {
             target_rules: {
-              values: { value: productIds },
-            },
-          },
-        },
+              values: { value: productIds }
+            }
+          }
+        }
       });
 
       const promotionIds = (promotions as PromotionTypes.PromotionDTO[])
@@ -111,14 +111,18 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
       const { data: sellerPromotions } = promotionIds.length
         ? await query.graph({
             entity: sellerPromotion.entryPoint,
-            fields: ["promotion_id", "seller_id", "promotion.id"],
-            filters: { promotion_id: promotionIds },
+            fields: ['promotion_id', 'seller_id', 'promotion.id'],
+            filters: { promotion_id: promotionIds }
           })
         : { data: [] };
 
       const promotionSellerMap = new Map<string, string>();
       for (const sp of sellerPromotions) {
-        if (sp.promotion_id && sp.seller_id && !promotionSellerMap.has(sp.promotion_id)) {
+        if (
+          sp.promotion_id &&
+          sp.seller_id &&
+          !promotionSellerMap.has(sp.promotion_id)
+        ) {
           promotionSellerMap.set(sp.promotion_id, sp.seller_id);
         }
       }
@@ -128,8 +132,8 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
       const { data: sellerProducts } = sellerIds.length
         ? await query.graph({
             entity: sellerProduct.entryPoint,
-            fields: ["product_id", "seller_id"],
-            filters: { seller_id: sellerIds },
+            fields: ['product_id', 'seller_id'],
+            filters: { seller_id: sellerIds }
           })
         : { data: [] };
 
@@ -157,7 +161,7 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
       const updates = buildRuleUpdates(
         promotions as PromotionTypes.PromotionDTO[],
         productIds,
-        "remove",
+        'remove',
         { sellerProductsByPromotion }
       );
 
@@ -167,13 +171,13 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
 
       return;
     }
-    case "add": {
+    case 'add': {
       const productsBySeller = new Map<string, string[]>();
 
       const { data: sellerProducts } = await query.graph({
         entity: sellerProduct.entryPoint,
-        fields: ["product_id", "seller_id"],
-        filters: { product_id: productIds },
+        fields: ['product_id', 'seller_id'],
+        filters: { product_id: productIds }
       });
 
       for (const sp of sellerProducts) {
@@ -189,8 +193,8 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
       for (const [seller, sellerProductIds] of productsBySeller.entries()) {
         const { data: sellerPromotions } = await query.graph({
           entity: sellerPromotion.entryPoint,
-          fields: ["promotion_id", "promotion.id", ...TARGET_RULE_FIELDS],
-          filters: { seller_id: seller },
+          fields: ['promotion_id', 'promotion.id', ...TARGET_RULE_FIELDS],
+          filters: { seller_id: seller }
         });
 
         const promotionMap = new Map<string, PromotionTypes.PromotionDTO>();
@@ -206,7 +210,7 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
           continue;
         }
 
-        const updates = buildRuleUpdates(promotions, sellerProductIds, "add");
+        const updates = buildRuleUpdates(promotions, sellerProductIds, 'add');
 
         if (updates.length) {
           await promotionModule.updatePromotionRules(updates);
@@ -218,7 +222,7 @@ export const syncSellersPromotionsDefaultProductRuleValues = async (
     default:
       logger.warn(
         `Unsupported action "${action}" in syncSellersPromotionsDefaultProductRuleValues; productIds=${productIds.join(
-          ","
+          ','
         )}`
       );
       return;

@@ -12,7 +12,7 @@ export const vendorShippingOptionFields = [
   '*service_zone',
   '*shipping_profile',
   '*provider'
-]
+];
 
 export const vendorShippingOptionQueryConfig = {
   list: {
@@ -23,4 +23,4 @@ export const vendorShippingOptionQueryConfig = {
     defaults: vendorShippingOptionFields,
     isList: false
   }
-}
+};

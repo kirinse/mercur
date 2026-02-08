@@ -1,5 +1,5 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 export async function selectSellerCustomers(
   container: MedusaContainer,
@@ -7,8 +7,8 @@ export async function selectSellerCustomers(
   pagination: { skip: number; take: number },
   fields: string[] = ['*']
 ) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
   const customers = await knex
     .select('id')
@@ -21,8 +21,8 @@ export async function selectSellerCustomers(
           'order.id',
           'seller_seller_order_order.order_id'
         )
-        .where('seller_id', seller_id)
-    })
+        .where('seller_id', seller_id);
+    });
 
   const { data, metadata } = await query.graph({
     entity: 'customer',
@@ -31,9 +31,9 @@ export async function selectSellerCustomers(
       id: customers.map((c) => c.id)
     },
     pagination
-  })
+  });
 
-  return { customers: data, count: metadata?.count }
+  return { customers: data, count: metadata?.count };
 }
 
 export async function selectCustomerOrders(
@@ -43,7 +43,7 @@ export async function selectCustomerOrders(
   pagination: { skip: number; take: number },
   fields: string[] = ['*']
 ) {
-  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
   const orders = await knex
     .select(fields.map((f) => `order.${f}`))
@@ -56,7 +56,7 @@ export async function selectCustomerOrders(
     .where('order.customer_id', customer_id)
     .andWhere('seller_seller_order_order.seller_id', seller_id)
     .limit(pagination.take)
-    .offset(pagination.skip)
+    .offset(pagination.skip);
 
   const countResult = (await knex
     .countDistinct('order.id')
@@ -68,10 +68,10 @@ export async function selectCustomerOrders(
     )
     .where('order.customer_id', customer_id)
     .andWhere('seller_seller_order_order.seller_id', seller_id)) as {
-    count: string
-  }[]
+    count: string;
+  }[];
 
-  return { orders, count: parseInt(countResult[0]?.count || '0') }
+  return { orders, count: parseInt(countResult[0]?.count || '0') };
 }
 
 export async function selectOrdersChartData(
@@ -79,7 +79,7 @@ export async function selectOrdersChartData(
   seller_id: string,
   time_range: [string, string]
 ): Promise<{ date: Date; count: string }[]> {
-  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
   const result = await knex('seller_seller_order_order')
     .select(knex.raw(`DATE_TRUNC('DAY', "created_at") AS date`))
@@ -87,9 +87,9 @@ export async function selectOrdersChartData(
     .where('seller_id', seller_id)
     .andWhereBetween('created_at', time_range)
     .groupByRaw('date')
-    .orderByRaw('date asc')
+    .orderByRaw('date asc');
 
-  return result as unknown as { date: Date; count: string }[]
+  return result as unknown as { date: Date; count: string }[];
 }
 
 export async function selectCustomersChartData(
@@ -97,7 +97,7 @@ export async function selectCustomersChartData(
   seller_id: string,
   time_range: [string, string]
 ): Promise<{ date: Date; count: string }[]> {
-  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
   const result = await knex
     .with('customer_first_orders', (qb) => {
@@ -114,16 +114,16 @@ export async function selectCustomersChartData(
           'seller_seller_order_order.order_id'
         )
         .where('seller_id', seller_id)
-        .groupBy('customer_id')
+        .groupBy('customer_id');
     })
     .select(knex.raw(`DATE_TRUNC('DAY', "first_order_date") AS date`))
     .count('*')
     .from('customer_first_orders')
     .whereBetween('first_order_date', time_range)
     .groupByRaw('date')
-    .orderByRaw('date asc')
+    .orderByRaw('date asc');
 
-  return result as unknown as { date: Date; count: string }[]
+  return result as unknown as { date: Date; count: string }[];
 }
 
 export async function validateSellersPromotions(
@@ -132,18 +132,20 @@ export async function validateSellersPromotions(
   cart_id: string
 ): Promise<{ valid: boolean; invalidCodes: string[] }> {
   if (!promo_codes?.length) {
-    return { valid: true, invalidCodes: [] }
+    return { valid: true, invalidCodes: [] };
   }
 
-  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION)
+  const knex = container.resolve(ContainerRegistrationKeys.PG_CONNECTION);
 
   const promotions = await knex('promotion')
     .select('id', 'code')
     .whereIn('promotion.code', promo_codes)
-    .whereNull('promotion.deleted_at')
+    .whereNull('promotion.deleted_at');
 
-  const existingCodes = promotions.map((p) => p.code)
-  const missingCodes = promo_codes.filter((code) => !existingCodes.includes(code))
+  const existingCodes = promotions.map((p) => p.code);
+  const missingCodes = promo_codes.filter(
+    (code) => !existingCodes.includes(code)
+  );
 
   const cartSellers = await knex('cart_line_item as cli')
     .distinct('spp.seller_id')
@@ -154,9 +156,9 @@ export async function validateSellersPromotions(
     )
     .where('cli.cart_id', cart_id)
     .whereNull('cli.deleted_at')
-    .whereNull('spp.deleted_at')
+    .whereNull('spp.deleted_at');
 
-  const cartSellerIds = cartSellers.map((row) => row.seller_id)
+  const cartSellerIds = cartSellers.map((row) => row.seller_id);
 
   const sellerPromotionLinks = await knex(
     'seller_seller_promotion_promotion as sppromo'
@@ -164,28 +166,28 @@ export async function validateSellersPromotions(
     .join('promotion', 'promotion.id', 'sppromo.promotion_id')
     .select('promotion.code', 'sppromo.seller_id')
     .whereIn('promotion.code', promo_codes)
-    .whereNull('promotion.deleted_at')
+    .whereNull('promotion.deleted_at');
 
-  const codesWithSeller = new Map<string, Set<string>>()
+  const codesWithSeller = new Map<string, Set<string>>();
   sellerPromotionLinks.forEach((row) => {
     if (!codesWithSeller.has(row.code)) {
-      codesWithSeller.set(row.code, new Set())
+      codesWithSeller.set(row.code, new Set());
     }
-    codesWithSeller.get(row.code)!.add(row.seller_id)
-  })
+    codesWithSeller.get(row.code)!.add(row.seller_id);
+  });
 
   const invalidSellerCodes = existingCodes.filter((code) => {
-    const sellers = codesWithSeller.get(code)
+    const sellers = codesWithSeller.get(code);
     if (!sellers || sellers.size === 0) {
-      return false // admin/global promo – no seller restriction
+      return false; // admin/global promo – no seller restriction
     }
-    return !cartSellerIds.some((id) => sellers.has(id))
-  })
+    return !cartSellerIds.some((id) => sellers.has(id));
+  });
 
-  const invalidCodes = [...new Set([...missingCodes, ...invalidSellerCodes])]
+  const invalidCodes = [...new Set([...missingCodes, ...invalidSellerCodes])];
 
   return {
     valid: invalidCodes.length === 0,
     invalidCodes
-  }
+  };
 }

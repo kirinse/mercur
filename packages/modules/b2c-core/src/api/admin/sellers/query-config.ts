@@ -1,5 +1,5 @@
-import { defaultAdminCustomerGroupFields } from '@medusajs/medusa/api/admin/customer-groups/query-config'
-import { defaultAdminOrderFields } from '@medusajs/medusa/api/admin/orders/query-config'
+import { defaultAdminCustomerGroupFields } from '@medusajs/medusa/api/admin/customer-groups/query-config';
+import { defaultAdminOrderFields } from '@medusajs/medusa/api/admin/orders/query-config';
 
 export const adminSellerFields = [
   'id',
@@ -7,7 +7,7 @@ export const adminSellerFields = [
   'handle',
   'description',
   'photo'
-]
+];
 
 export const adminSellerQueryConfig = {
   list: {
@@ -18,7 +18,7 @@ export const adminSellerQueryConfig = {
     defaults: adminSellerFields,
     isList: false
   }
-}
+};
 
 export const adminSellerOrdersQueryConfig = {
   list: {
@@ -29,7 +29,7 @@ export const adminSellerOrdersQueryConfig = {
     defaults: defaultAdminOrderFields,
     isList: false
   }
-}
+};
 
 export const adminSellerCustomerGroupsQueryConfig = {
   list: {
@@ -40,4 +40,4 @@ export const adminSellerCustomerGroupsQueryConfig = {
     defaults: defaultAdminCustomerGroupFields,
     isList: false
   }
-}
+};

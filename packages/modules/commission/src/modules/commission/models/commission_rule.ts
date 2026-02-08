@@ -1,6 +1,6 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
-import { CommissionRate } from './commission_rate'
+import { CommissionRate } from './commission_rate';
 
 export const CommissionRule = model.define('commission_rule', {
   id: model.id({ prefix: 'com_rule' }).primaryKey(),
@@ -11,4 +11,4 @@ export const CommissionRule = model.define('commission_rule', {
   rate: model.hasOne(() => CommissionRate, {
     mappedBy: 'rule'
   })
-})
+});

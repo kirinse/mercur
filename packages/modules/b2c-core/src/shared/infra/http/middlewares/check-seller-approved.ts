@@ -1,4 +1,4 @@
-import { NextFunction } from 'express'
+import { NextFunction } from 'express';
 
 import {
   AuthType,
@@ -6,8 +6,8 @@ import {
   MedusaRequest,
   MedusaResponse,
   getAuthContextFromJwtToken
-} from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 export function checkSellerApproved(authTypes: AuthType[]) {
   return async (
@@ -17,27 +17,29 @@ export function checkSellerApproved(authTypes: AuthType[]) {
   ) => {
     const {
       projectConfig: { http }
-    } = req.scope.resolve<ConfigModule>(ContainerRegistrationKeys.CONFIG_MODULE)
+    } = req.scope.resolve<ConfigModule>(
+      ContainerRegistrationKeys.CONFIG_MODULE
+    );
 
     const ctx = getAuthContextFromJwtToken(
       req.headers.authorization,
       http.jwtSecret!,
       authTypes,
       ['seller']
-    )
+    );
 
     if (!ctx) {
       return res.status(401).json({
         message: 'Unauthorized'
-      })
+      });
     }
 
     if (ctx.actor_id) {
-      return next()
+      return next();
     }
 
     res.status(403).json({
       message: 'Seller is not active'
-    })
-  }
+    });
+  };
 }

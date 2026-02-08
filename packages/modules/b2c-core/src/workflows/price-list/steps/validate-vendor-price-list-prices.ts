@@ -1,31 +1,31 @@
-import { MedusaContainer } from '@medusajs/framework'
+import { MedusaContainer } from '@medusajs/framework';
 import {
   CreatePriceListPriceWorkflowDTO,
   UpdatePriceListPriceWorkflowDTO
-} from '@medusajs/framework/types'
+} from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
-import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import sellerProduct from '../../../links/seller-product'
+import sellerProduct from '../../../links/seller-product';
 
 async function validateVariantOwnership(
   container: MedusaContainer,
   seller_id: string,
   variantIds: string[]
 ) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const { data: products } = await query.graph({
     entity: 'product_variant',
     fields: ['product_id'],
     filters: {
       id: variantIds
     }
-  })
+  });
 
-  const productIds = [...new Set(products.map((p) => p.product_id))]
+  const productIds = [...new Set(products.map((p) => p.product_id))];
 
   const { data: relations } = await query.graph({
     entity: sellerProduct.entryPoint,
@@ -34,13 +34,13 @@ async function validateVariantOwnership(
       seller_id,
       product_id: productIds
     }
-  })
+  });
 
   if (relations.length !== productIds.length) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       'Price lists can be applied only to seller own products!'
-    )
+    );
   }
 }
 
@@ -53,10 +53,10 @@ async function validatePrices(
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       'Update requires price list id!'
-    )
+    );
   }
 
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [list]
@@ -66,13 +66,16 @@ async function validatePrices(
     filters: {
       id: price_list_id
     }
-  })
+  });
 
-  const prices = list.prices.map((p) => p.id) as string[]
+  const prices = list.prices.map((p) => p.id) as string[];
 
   for (const price of priceIds) {
     if (!prices.includes(price)) {
-      throw new MedusaError(MedusaError.Types.INVALID_DATA, 'Invalid price id!')
+      throw new MedusaError(
+        MedusaError.Types.INVALID_DATA,
+        'Invalid price id!'
+      );
     }
   }
 }
@@ -81,10 +84,10 @@ export const validateVendorPriceListPricesStep = createStep(
   'validate-vendor-price-list-prices',
   async (
     input: {
-      create?: CreatePriceListPriceWorkflowDTO[]
-      update?: UpdatePriceListPriceWorkflowDTO[]
-      price_list_id?: string
-      seller_id: string
+      create?: CreatePriceListPriceWorkflowDTO[];
+      update?: UpdatePriceListPriceWorkflowDTO[];
+      price_list_id?: string;
+      seller_id: string;
     },
     { container }
   ) => {
@@ -93,7 +96,7 @@ export const validateVendorPriceListPricesStep = createStep(
         container,
         input.seller_id,
         input.create.map((price) => price.variant_id)
-      )
+      );
     }
 
     if (input.update) {
@@ -101,9 +104,9 @@ export const validateVendorPriceListPricesStep = createStep(
         container,
         input.update.map((p) => p.id),
         input.price_list_id
-      )
+      );
     }
 
-    return new StepResponse()
+    return new StepResponse();
   }
-)
+);

@@ -1,9 +1,12 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
-import { batchPriceListPricesWorkflow } from '@medusajs/medusa/core-flows'
+} from '@medusajs/framework/utils';
+import { batchPriceListPricesWorkflow } from '@medusajs/medusa/core-flows';
 
 /**
  * @oas [delete] /vendor/price-lists/{id}/prices/{price_id}
@@ -51,7 +54,7 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [price]
@@ -61,10 +64,10 @@ export const DELETE = async (
     filters: {
       id: req.params.price_id
     }
-  })
+  });
 
   if (price.price_list_id !== req.params.id) {
-    throw new MedusaError(MedusaError.Types.INVALID_DATA, 'Invalid price_id!')
+    throw new MedusaError(MedusaError.Types.INVALID_DATA, 'Invalid price_id!');
   }
 
   await batchPriceListPricesWorkflow.run({
@@ -74,11 +77,11 @@ export const DELETE = async (
         delete: [req.params.price_id]
       }
     }
-  })
+  });
 
   res.status(200).json({
     id: req.params.price_id,
     object: 'price',
     deleted: true
-  })
-}
+  });
+};

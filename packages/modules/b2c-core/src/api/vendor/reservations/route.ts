@@ -1,12 +1,15 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { createReservationsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { createReservationsWorkflow } from '@medusajs/medusa/core-flows';
 
-import sellerInventoryItem from '../../../links/seller-inventory-item'
+import sellerInventoryItem from '../../../links/seller-inventory-item';
 import {
   VendorCreateReservationType,
   VendorGetReservationParamsType
-} from './validators'
+} from './validators';
 
 /**
  * @oas [get] /vendor/reservations
@@ -64,9 +67,9 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<VendorGetReservationParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { seller_id, ...filters } = req.filterableFields
+  const { seller_id, ...filters } = req.filterableFields;
 
   const { data: inventory_items } = await query.graph({
     entity: sellerInventoryItem.entryPoint,
@@ -82,15 +85,15 @@ export const GET = async (
       ...filters
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     reservations,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/reservations
@@ -130,12 +133,12 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateReservationType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { result } = await createReservationsWorkflow.run({
     container: req.scope,
     input: { reservations: [req.validatedBody] }
-  })
+  });
 
   const {
     data: [reservation]
@@ -145,7 +148,7 @@ export const POST = async (
     filters: {
       id: result[0].id
     }
-  })
+  });
 
-  res.status(201).json({ reservation })
-}
+  res.status(201).json({ reservation });
+};

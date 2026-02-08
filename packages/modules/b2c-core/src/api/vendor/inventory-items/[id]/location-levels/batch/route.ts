@@ -1,18 +1,18 @@
-import { batchInventoryItemLevelsWorkflow } from '@medusajs/core-flows'
+import { batchInventoryItemLevelsWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { Modules } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { Modules } from '@medusajs/framework/utils';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils'
+import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils';
 import {
   prepareBatchInventoryLevelDeletePayload,
   validateOwnership
-} from '../../../utils'
-import { VendorBatchInventoryItemLocationsLevelType } from '../../../validators'
+} from '../../../utils';
+import { VendorBatchInventoryItemLocationsLevelType } from '../../../validators';
 
 /**
  * @oas [post] /vendor/inventory-items/{id}/location-levels/batch
@@ -45,7 +45,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorBatchInventoryItemLocationsLevelType>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   const batchInput = {
     input: {
@@ -66,28 +66,28 @@ export const POST = async (
         })) ?? [],
       force: req.validatedBody.force ?? true
     }
-  }
+  };
 
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
-  await validateOwnership(req.scope, seller.id, batchInput.input)
+  );
+  await validateOwnership(req.scope, seller.id, batchInput.input);
 
   const output = await batchInventoryItemLevelsWorkflow.run({
     container: req.scope,
     ...batchInput
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.INVENTORY_ITEM_CHANGED,
     data: { id }
-  })
+  });
 
   res.status(200).json({
     created: output.result.created,
     updated: output.result.updated,
     deleted: output.result.deleted
-  })
-}
+  });
+};

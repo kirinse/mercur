@@ -13,7 +13,7 @@ export const storeReturnOrderRequestFields = [
   'order.*',
   'order.items.*',
   'order.seller.*'
-]
+];
 
 export const storeReturnOrderRequestQueryConfig = {
   list: {
@@ -24,4 +24,4 @@ export const storeReturnOrderRequestQueryConfig = {
     defaults: [],
     isList: false
   }
-}
+};

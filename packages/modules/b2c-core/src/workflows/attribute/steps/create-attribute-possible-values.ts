@@ -1,13 +1,14 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { CreateAttributeValueDTO } from '@mercurjs/framework';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
-import { CreateAttributeValueDTO } from "@mercurjs/framework";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
 export const createAttributePossibleValuesStepId =
-  "create-attribute-possible-values";
+  'create-attribute-possible-values';
 
 export type CreateAttributePossibleValuesStepInput = CreateAttributeValueDTO[];
 

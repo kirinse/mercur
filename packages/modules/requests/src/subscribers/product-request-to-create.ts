@@ -1,16 +1,15 @@
-import { SubscriberArgs, SubscriberConfig } from "@medusajs/framework";
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 
 import {
   CreateRequestDTO,
-  ProductRequestUpdatedEvent,
-} from "@mercurjs/framework";
-import {
-  createProductRequestWorkflow,
-} from "../workflows";
+  ProductRequestUpdatedEvent
+} from '@mercurjs/framework';
+
+import { createProductRequestWorkflow } from '../workflows';
 
 export default async function productRequestToCreateHandler({
   event,
-  container,
+  container
 }: SubscriberArgs<{
   data: CreateRequestDTO;
   seller_id: string;
@@ -19,13 +18,13 @@ export default async function productRequestToCreateHandler({
 
   await createProductRequestWorkflow.run({
     container,
-    input,
+    input
   });
 }
 
 export const config: SubscriberConfig = {
   event: ProductRequestUpdatedEvent.TO_CREATE,
   context: {
-    subscriberId: "product-request-to-create",
-  },
+    subscriberId: 'product-request-to-create'
+  }
 };

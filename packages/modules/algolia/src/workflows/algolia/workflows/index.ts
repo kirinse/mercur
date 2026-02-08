@@ -1,1 +1,1 @@
-export * from './sync-algolia'
+export * from './sync-algolia';

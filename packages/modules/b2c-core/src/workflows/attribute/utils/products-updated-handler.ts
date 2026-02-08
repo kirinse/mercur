@@ -1,19 +1,19 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { ProductDTO } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { MedusaContainer } from '@medusajs/framework';
+import { ProductDTO } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { ProductAttributeValueDTO } from "@mercurjs/framework";
+import { ProductAttributeValueDTO } from '@mercurjs/framework';
 
-import productAttributeValue from "../../../links/product-attribute-value";
+import productAttributeValue from '../../../links/product-attribute-value';
 import {
   createAttributeValueWorkflow,
-  deleteAttributeValueWorkflow,
-} from "../../../workflows/attribute/workflows";
+  deleteAttributeValueWorkflow
+} from '../../../workflows/attribute/workflows';
 
 export const productsUpdatedHookHandler = async ({
   products,
   additional_data,
-  container,
+  container
 }: {
   products: ProductDTO[];
   additional_data: Record<string, unknown> | undefined;
@@ -35,13 +35,13 @@ export const productsUpdatedHookHandler = async ({
         const { data: productValues } = await query.graph({
           entity: productAttributeValue.entryPoint,
           fields: [
-            "attribute_value.id",
-            "attribute_value.value",
-            "attribute_value.attribute_id",
+            'attribute_value.id',
+            'attribute_value.value',
+            'attribute_value.attribute_id'
           ],
           filters: {
-            product_id: prodId,
-          },
+            product_id: prodId
+          }
         });
 
         return Promise.all(
@@ -63,8 +63,8 @@ export const productsUpdatedHookHandler = async ({
               input: {
                 attribute_id: attrVal.attribute_id,
                 value: attrVal.value,
-                product_id: prodId,
-              },
+                product_id: prodId
+              }
             });
             return result.id;
           })
@@ -75,13 +75,13 @@ export const productsUpdatedHookHandler = async ({
 
   const { data: attributeValuesToDelete } = await query.graph({
     entity: productAttributeValue.entryPoint,
-    fields: ["attribute_value_id"],
+    fields: ['attribute_value_id'],
     filters: {
       attribute_value_id: {
-        $nin: updatedValueIds,
+        $nin: updatedValueIds
       },
-      product_id: productIds,
-    },
+      product_id: productIds
+    }
   });
 
   if (!attributeValuesToDelete.length) {
@@ -89,6 +89,6 @@ export const productsUpdatedHookHandler = async ({
   }
 
   await deleteAttributeValueWorkflow(container).run({
-    input: attributeValuesToDelete.map((val) => val.attribute_value_id),
+    input: attributeValuesToDelete.map((val) => val.attribute_value_id)
   });
 };

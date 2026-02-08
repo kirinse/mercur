@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-export type AdminOrderSetParamsType = z.infer<typeof AdminOrderSetParams>
+export type AdminOrderSetParamsType = z.infer<typeof AdminOrderSetParams>;
 export const AdminOrderSetParams = createFindParams({
   offset: 0,
   limit: 50
@@ -10,4 +10,4 @@ export const AdminOrderSetParams = createFindParams({
   z.object({
     order_id: z.string().optional()
   })
-)
+);

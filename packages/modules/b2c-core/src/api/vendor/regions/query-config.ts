@@ -8,7 +8,7 @@ export const defaultVendorRegionFields = [
   'automatic_taxes',
   'metadata',
   '*countries'
-]
+];
 
 export const vendorRegionsQueryConfig = {
   list: {
@@ -19,4 +19,4 @@ export const vendorRegionsQueryConfig = {
     defaults: defaultVendorRegionFields,
     isList: false
   }
-}
+};

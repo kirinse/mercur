@@ -1,60 +1,74 @@
+import Typesense, {
+  Client,
+  CollectionCreateSchema,
+  CollectionUpdateSchema,
+  SearchParams
+} from 'typesense';
 import {
-  Action,
-  Algoliasearch,
-  BatchRequest,
-  IndexSettings,
-  SearchParams,
-  SearchResponse,
-  algoliasearch
-} from 'algoliasearch';
+  NodeConfiguration,
+  NodeConfigurationWithHostname,
+  NodeConfigurationWithUrl
+} from 'typesense/lib/Typesense/Configuration';
 
 import { TypesenseEntity, TypesenseIndexType } from '@mercurjs/framework';
 
 type ModuleOptions = {
-  appId: string;
   apiKey: string;
+  nodes:
+    | NodeConfiguration[]
+    | NodeConfigurationWithHostname[]
+    | NodeConfigurationWithUrl[];
 };
 
-export const defaultProductSettings: IndexSettings = {
-  searchableAttributes: [
-    'title',
-    'subtitle',
-    'tags.value',
-    'type.value',
-    'categories.name',
-    'collection.title',
-    'variants.title'
+export const defaultProductSchema: CollectionCreateSchema = {
+  name: TypesenseIndexType.PRODUCT,
+  // fields: [{ name: '.*', type: 'auto' }]
+  fields: [
+    { name: 'title', type: 'string' },
+    { name: 'subtitle', type: 'string' },
+    { name: 'tags.value', type: 'string', facet: true },
+    { name: 'type.value', type: 'string', facet: true },
+    { name: 'categories.name', type: 'string' },
+    { name: 'collection.title', type: 'string' },
+    { name: 'variants.title', type: 'string' }
   ]
 };
 
-export const defaultReviewSettings: IndexSettings = {
-  attributesForFaceting: ['filterOnly(reference_id)', 'filterOnly(reference)']
+export const defaultReviewSchema: CollectionCreateSchema = {
+  name: TypesenseIndexType.REVIEW,
+  fields: [
+    {
+      name: 'reference_id',
+      type: 'auto',
+      facet: true
+    },
+    {
+      name: 'reference',
+      type: 'auto',
+      facet: true
+    }
+  ]
 };
 
 class TypesenseModuleService {
   private options_: ModuleOptions;
-  private algolia_: Algoliasearch;
+  private typesense_: Client;
 
-  constructor(_, options: ModuleOptions) {
+  constructor(options: ModuleOptions) {
     this.options_ = options;
-    this.algolia_ = algoliasearch(this.options_.appId, this.options_.apiKey);
+    this.typesense_ = new Typesense.Client(options);
   }
 
-  getAppId() {
-    return this.options_.appId;
+  getApiKey() {
+    return this.options_.apiKey;
   }
 
   checkIndex(index: TypesenseIndexType) {
-    return this.algolia_.indexExists({
-      indexName: index
-    });
+    return this.typesense_.collections(index).exists();
   }
 
-  updateSettings(index: TypesenseIndexType, settings: IndexSettings) {
-    return this.algolia_.setSettings({
-      indexName: index,
-      indexSettings: settings
-    });
+  updateSchema(index: TypesenseIndexType, schema: CollectionUpdateSchema) {
+    return this.typesense_.collections(index).update(schema);
   }
 
   batch(
@@ -62,96 +76,57 @@ class TypesenseModuleService {
     toAdd: TypesenseEntity[],
     toDelete: string[]
   ) {
-    const addRequests: BatchRequest[] = toAdd.map((entity) => {
-      return {
-        action: 'addObject' as Action,
-        objectID: entity.id,
-        body: entity
-      };
-    });
-
-    const deleteRequests: BatchRequest[] = toDelete.map((id) => {
-      return {
-        action: 'deleteObject' as Action,
-        objectID: id,
-        body: {}
-      };
-    });
-
-    const requests = [...addRequests, ...deleteRequests];
-
-    return this.algolia_.batch({
-      indexName: type,
-      batchWriteParams: {
-        requests
-      }
-    });
+    return Promise.all([
+      this.typesense_
+        .collections(type)
+        .documents()
+        .import(toAdd, { action: 'create' }),
+      this.typesense_
+        .collections(type)
+        .documents()
+        .delete({ filter_by: `id: [${toDelete.join(',')}}]` })
+    ]);
   }
 
   batchUpsert(type: TypesenseIndexType, entities: TypesenseEntity[]) {
-    return this.algolia_.batch({
-      indexName: type,
-      batchWriteParams: {
-        requests: entities.map((entity) => {
-          return {
-            action: 'addObject',
-            objectID: entity.id,
-            body: entity
-          };
-        })
-      }
-    });
+    return this.typesense_
+      .collections(type)
+      .documents()
+      .import(entities, { action: 'upsert' });
   }
 
   batchDelete(type: TypesenseIndexType, ids: string[]) {
-    return this.algolia_.batch({
-      indexName: type,
-      batchWriteParams: {
-        requests: ids.map((id) => {
-          return {
-            action: 'deleteObject',
-            objectID: id,
-            body: {}
-          };
-        })
-      }
-    });
+    return this.typesense_
+      .collections(type)
+      .documents()
+      .delete({ filter_by: `id: [${ids.join(',')}}]` });
   }
 
   upsert(type: TypesenseIndexType, entity: TypesenseEntity) {
-    return this.algolia_.addOrUpdateObject({
-      indexName: type,
-      objectID: entity.id,
-      body: entity
-    });
+    return this.typesense_
+      .collections(type)
+      .documents()
+      .create(entity, { action: 'upsert' });
   }
 
   delete(type: TypesenseIndexType, id: string) {
-    return this.algolia_.deleteObject({
-      indexName: type,
-      objectID: id
-    });
+    return this.typesense_.collections(type).documents(id).delete();
   }
 
   partialUpdate(
     type: TypesenseIndexType,
     entity: Partial<TypesenseEntity> & { id: string }
   ) {
-    return this.algolia_.partialUpdateObject({
-      indexName: type,
-      objectID: entity.id,
-      attributesToUpdate: { ...entity }
-    });
+    return this.typesense_
+      .collections(type)
+      .documents(entity.id)
+      .update(entity);
   }
 
-  search<T = Record<string, unknown>>(
-    indexName: TypesenseIndexType,
-    params: SearchParams
-  ): Promise<SearchResponse<T>> {
-    return this.algolia_.searchSingleIndex<T>({
-      indexName,
-      searchParams: params
-    });
+  search(indexName: TypesenseIndexType, params: SearchParams<TypesenseEntity>) {
+    // TODO: To fix this type error??
+    // @ts-expect-error type mismatch
+    return this.typesense_.collections(indexName).documents().search(params);
   }
 }
 

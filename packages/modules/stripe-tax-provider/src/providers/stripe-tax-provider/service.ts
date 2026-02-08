@@ -1,16 +1,17 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 import {
   ITaxProvider,
   RemoteQueryFunction,
-  TaxTypes,
-} from "@medusajs/framework/types";
-import { MathBN } from "@medusajs/framework/utils";
-import { Logger } from "@medusajs/medusa";
+  TaxTypes
+} from '@medusajs/framework/types';
+import { MathBN } from '@medusajs/framework/utils';
+import { Logger } from '@medusajs/medusa';
 
-import { getSmallestUnit } from "@mercurjs/framework";
-import StripeTaxClient from "./client";
-import { StripeTaxCalculationResponseValidator } from "./validators";
+import { getSmallestUnit } from '@mercurjs/framework';
+
+import StripeTaxClient from './client';
+import { StripeTaxCalculationResponseValidator } from './validators';
 
 type InjectedDependencies = {
   logger: Logger;
@@ -23,7 +24,7 @@ type Options = {
 };
 
 export default class StripeTaxProvider implements ITaxProvider {
-  static identifier = "stripe-tax-provider";
+  static identifier = 'stripe-tax-provider';
 
   private readonly client_: StripeTaxClient;
   private defaultTaxcode_: string;
@@ -50,7 +51,7 @@ export default class StripeTaxProvider implements ITaxProvider {
     }
 
     const currency =
-      itemLines[0].line_item.currency_code?.toLowerCase() || "eur";
+      itemLines[0].line_item.currency_code?.toLowerCase() || 'eur';
 
     const shipping = shippingLines.reduce((acc, l) => {
       return (acc = acc.plus(MathBN.convert(l.shipping_line.unit_price || 0)));
@@ -69,7 +70,7 @@ export default class StripeTaxProvider implements ITaxProvider {
         reference: item.line_item.id,
         amount: getSmallestUnit(amount, currency),
         quantity: quantity.toNumber(),
-        tax_code,
+        tax_code
       });
     }
 
@@ -82,12 +83,12 @@ export default class StripeTaxProvider implements ITaxProvider {
           line1: address.address_1,
           line2: address.address_2,
           postal_code: address.postal_code,
-          state: address.province_code,
-        },
+          state: address.province_code
+        }
       },
       shipping_cost: { amount: getSmallestUnit(shipping, currency) },
       line_items,
-      expand: ["line_items.data.tax_breakdown"],
+      expand: ['line_items.data.tax_breakdown']
     });
 
     const calculation =
@@ -102,7 +103,7 @@ export default class StripeTaxProvider implements ITaxProvider {
             ).toNumber(),
             code: item.tax_code,
             provider_id: this.getIdentifier(),
-            name: `Stripe-${item.tax_code}`,
+            name: `Stripe-${item.tax_code}`
           };
         })
       : [];
@@ -111,13 +112,13 @@ export default class StripeTaxProvider implements ITaxProvider {
       (i) => {
         return {
           shipping_line_id: i.shipping_line.id,
-          code: "SHIPPING",
-          name: "SHIPPING",
+          code: 'SHIPPING',
+          name: 'SHIPPING',
           provider_id: this.getIdentifier(),
           rate: MathBN.convert(
             calculation.shipping_cost.tax_breakdown[0].tax_rate_details[0]
               .percentage_decimal || 0
-          ).toNumber(),
+          ).toNumber()
         };
       }
     );
@@ -126,11 +127,11 @@ export default class StripeTaxProvider implements ITaxProvider {
 
   private async getProductTaxCode_(productId: string) {
     const {
-      data: [product],
+      data: [product]
     } = await this.remoteQuery_.graph({
-      entity: "product",
-      fields: ["categories.tax_code.code"],
-      filters: { id: productId },
+      entity: 'product',
+      fields: ['categories.tax_code.code'],
+      filters: { id: productId }
     });
 
     if (!product || product.categories.length !== 1) {

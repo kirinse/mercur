@@ -2,16 +2,16 @@ import {
   IEventBusModuleService,
   MedusaContainer,
   Message
-} from '@medusajs/framework/types'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+} from '@medusajs/framework/types';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { PayoutAccountStatus, PayoutSummaryEvents } from '@mercurjs/framework'
+import { PayoutAccountStatus, PayoutSummaryEvents } from '@mercurjs/framework';
 
 export default async function dailyPayoutsSummaryJob(
   container: MedusaContainer
 ) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const eventBus: IEventBusModuleService = container.resolve(Modules.EVENT_BUS)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const eventBus: IEventBusModuleService = container.resolve(Modules.EVENT_BUS);
 
   const { data: payout_accounts } = await query.graph({
     entity: 'payout_account',
@@ -19,11 +19,11 @@ export default async function dailyPayoutsSummaryJob(
     filters: {
       status: PayoutAccountStatus.ACTIVE
     }
-  })
+  });
 
-  const to_date = new Date()
-  const from_date = new Date(to_date.getTime() - 24 * 60 * 60 * 1000)
-  const events: Message[] = []
+  const to_date = new Date();
+  const from_date = new Date(to_date.getTime() - 24 * 60 * 60 * 1000);
+  const events: Message[] = [];
 
   for (const payout_account of payout_accounts) {
     const { data: payouts } = await query.graph({
@@ -44,7 +44,7 @@ export default async function dailyPayoutsSummaryJob(
           $lte: to_date
         }
       }
-    })
+    });
 
     if (payouts.length > 0) {
       events.push({
@@ -53,14 +53,14 @@ export default async function dailyPayoutsSummaryJob(
           seller: payout_account.seller,
           payouts
         }
-      })
+      });
     }
   }
 
-  await eventBus.emit(events)
+  await eventBus.emit(events);
 }
 
 export const config = {
   name: 'daily-payouts-summary',
   schedule: '0 8 * * *' // Every day at 8 AM
-}
+};

@@ -1,12 +1,12 @@
-import * as z from 'zod'
+import * as z from 'zod';
 
 import {
   createFindParams,
   createOperatorMap,
   createSelectParams
-} from '@medusajs/medusa/api/utils/validators'
+} from '@medusajs/medusa/api/utils/validators';
 
-export type VendorGetOrderParamsType = z.infer<typeof VendorGetOrderParams>
+export type VendorGetOrderParamsType = z.infer<typeof VendorGetOrderParams>;
 export const VendorGetOrderParams = createFindParams({
   offset: 0,
   limit: 50,
@@ -23,12 +23,12 @@ export const VendorGetOrderParams = createFindParams({
     sales_channel_id: z.string().optional(),
     q: z.string().optional()
   })
-)
+);
 
 export type VendorGetOrderChangesParamsType = z.infer<
   typeof VendorGetOrderChangesParams
->
-export const VendorGetOrderChangesParams = createSelectParams()
+>;
+export const VendorGetOrderChangesParams = createSelectParams();
 
 /**
  * @schema VendorCreateFulfillment
@@ -52,7 +52,7 @@ export const VendorGetOrderChangesParams = createSelectParams()
  */
 export type VendorCreateFulfillmentType = z.infer<
   typeof VendorCreateFulfillment
->
+>;
 export const VendorCreateFulfillment = z.object({
   items: z.array(
     z.object({
@@ -62,7 +62,7 @@ export const VendorCreateFulfillment = z.object({
   ),
   requires_shipping: z.boolean(),
   location_id: z.string()
-})
+});
 
 /**
  * @schema VendorOrderCreateShipment
@@ -93,7 +93,7 @@ export const VendorCreateFulfillment = z.object({
  */
 export type VendorOrderCreateShipmentType = z.infer<
   typeof VendorOrderCreateShipment
->
+>;
 export const VendorOrderCreateShipment = z.object({
   items: z.array(
     z.object({
@@ -110,4 +110,4 @@ export const VendorOrderCreateShipment = z.object({
       })
     )
     .optional()
-})
+});

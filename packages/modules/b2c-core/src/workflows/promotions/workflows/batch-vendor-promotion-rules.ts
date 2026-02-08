@@ -1,19 +1,19 @@
 import {
   BatchPromotionRulesWorkflowInput,
   batchPromotionRulesWorkflow
-} from '@medusajs/medusa/core-flows'
-import { createWorkflow, transform, when } from '@medusajs/workflows-sdk'
+} from '@medusajs/medusa/core-flows';
+import { createWorkflow, transform, when } from '@medusajs/workflows-sdk';
 
 import {
-  verifyVendorTargetPromotionRulesStep,
-  ensureSellerProductRuleAfterDeletionStep
-} from '../steps'
+  ensureSellerProductRuleAfterDeletionStep,
+  verifyVendorTargetPromotionRulesStep
+} from '../steps';
 
 export const batchVendorPromotionRulesWorkflow = createWorkflow(
   'batch-vendor-promotion-rules',
   function (input: {
-    data: BatchPromotionRulesWorkflowInput
-    seller_id: string
+    data: BatchPromotionRulesWorkflowInput;
+    seller_id: string;
   }) {
     when(input, (input) => input.data.rule_type === 'target_rules').then(() => {
       verifyVendorTargetPromotionRulesStep(
@@ -21,8 +21,8 @@ export const batchVendorPromotionRulesWorkflow = createWorkflow(
           rules: input.data.create,
           seller_id: input.seller_id
         }))
-      )
-    })
+      );
+    });
 
     const batchInputWithDefaultRule = ensureSellerProductRuleAfterDeletionStep(
       transform(input, (input) => ({
@@ -30,10 +30,10 @@ export const batchVendorPromotionRulesWorkflow = createWorkflow(
         seller_id: input.seller_id,
         promotion_id: input.data.id
       }))
-    )
+    );
 
     batchPromotionRulesWorkflow.runAsStep({
       input: batchInputWithDefaultRule
-    })
+    });
   }
-)
+);

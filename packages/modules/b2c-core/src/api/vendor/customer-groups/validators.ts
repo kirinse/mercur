@@ -1,15 +1,15 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 import {
   createFindParams,
   createOperatorMap,
   createSelectParams
-} from '@medusajs/medusa/api/utils/validators'
+} from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetCustomerGroupParamsType = z.infer<
   typeof VendorGetCustomerGroupParams
->
-export const VendorGetCustomerGroupParams = createSelectParams()
+>;
+export const VendorGetCustomerGroupParams = createSelectParams();
 
 export const VendorCustomerInGroupFilters = z.object({
   id: z.union([z.string(), z.array(z.string())]).optional(),
@@ -29,7 +29,7 @@ export const VendorCustomerInGroupFilters = z.object({
   created_at: createOperatorMap().optional(),
   updated_at: createOperatorMap().optional(),
   deleted_at: createOperatorMap().optional()
-})
+});
 
 export const VendorGetCustomerGroupsParamsFields = z.object({
   q: z.string().optional(),
@@ -45,18 +45,18 @@ export const VendorGetCustomerGroupsParamsFields = z.object({
   created_at: createOperatorMap().optional(),
   updated_at: createOperatorMap().optional(),
   deleted_at: createOperatorMap().optional()
-})
+});
 
 export type VendorGetCustomerGroupsParamsType = z.infer<
   typeof VendorGetCustomerGroupsParams
->
+>;
 export const VendorGetCustomerGroupsParams = createFindParams({
   offset: 0,
   limit: 50
-})
-  // TODO: will be used when we'll get back to using index module
-  // .merge(VendorGetCustomerGroupsParamsFields)
-  // .merge(applyAndAndOrOperators(VendorGetCustomerGroupsParamsFields))
+});
+// TODO: will be used when we'll get back to using index module
+// .merge(VendorGetCustomerGroupsParamsFields)
+// .merge(applyAndAndOrOperators(VendorGetCustomerGroupsParamsFields))
 
 /**
  * @schema VendorCreateCustomerGroup
@@ -69,12 +69,12 @@ export const VendorGetCustomerGroupsParams = createFindParams({
  */
 export type VendorCreateCustomerGroupType = z.infer<
   typeof VendorCreateCustomerGroup
->
+>;
 export const VendorCreateCustomerGroup = z
   .object({
     name: z.string()
   })
-  .strict()
+  .strict();
 
 /**
  * @schema VendorLinkCustomersToGroup
@@ -94,10 +94,10 @@ export const VendorCreateCustomerGroup = z
  */
 export type VendorLinkCustomersToGroupType = z.infer<
   typeof VendorLinkCustomersToGroup
->
+>;
 export const VendorLinkCustomersToGroup = z
   .object({
     add: z.array(z.string()).default([]),
     remove: z.array(z.string()).default([])
   })
-  .strict()
+  .strict();

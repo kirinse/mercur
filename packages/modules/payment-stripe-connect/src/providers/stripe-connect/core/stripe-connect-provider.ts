@@ -1,18 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 import {
   ProviderWebhookPayload,
-  WebhookActionResult,
-} from "@medusajs/framework/types";
+  WebhookActionResult
+} from '@medusajs/framework/types';
 import {
   AbstractPaymentProvider,
   MedusaError,
   PaymentActions,
   PaymentSessionStatus,
-  isPresent,
-} from "@medusajs/framework/utils";
+  isPresent
+} from '@medusajs/framework/utils';
 import {
   AuthorizePaymentInput,
   AuthorizePaymentOutput,
@@ -31,16 +31,16 @@ import {
   RetrievePaymentInput,
   RetrievePaymentOutput,
   UpdatePaymentInput,
-  UpdatePaymentOutput,
-} from "@medusajs/types";
+  UpdatePaymentOutput
+} from '@medusajs/types';
 
 import {
-  getAmountFromSmallestUnit,
-  getSmallestUnit,
   ErrorCodes,
   ErrorIntentStatus,
   PaymentIntentOptions,
-} from "@mercurjs/framework";
+  getAmountFromSmallestUnit,
+  getSmallestUnit
+} from '@mercurjs/framework';
 
 type Options = {
   apiKey: string;
@@ -69,20 +69,20 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
     const dataResponse = paymentIntent as unknown as Record<string, unknown>;
 
     switch (paymentIntent.status) {
-      case "requires_payment_method":
-      case "requires_confirmation":
-      case "processing":
+      case 'requires_payment_method':
+      case 'requires_confirmation':
+      case 'processing':
         return { status: PaymentSessionStatus.PENDING, data: dataResponse };
-      case "requires_action":
+      case 'requires_action':
         return {
           status: PaymentSessionStatus.REQUIRES_MORE,
-          data: dataResponse,
+          data: dataResponse
         };
-      case "canceled":
+      case 'canceled':
         return { status: PaymentSessionStatus.CANCELED, data: dataResponse };
-      case "requires_capture":
+      case 'requires_capture':
         return { status: PaymentSessionStatus.AUTHORIZED, data: dataResponse };
-      case "succeeded":
+      case 'succeeded':
         return { status: PaymentSessionStatus.CAPTURED, data: dataResponse };
       default:
         return { status: PaymentSessionStatus.PENDING, data: dataResponse };
@@ -99,16 +99,16 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
     const paymentIntentInput: Stripe.PaymentIntentCreateParams = {
       ...this.paymentIntentOptions,
       currency: currency_code,
-      amount: getSmallestUnit(amount, currency_code),
+      amount: getSmallestUnit(amount, currency_code)
     };
 
     // revisit when you could update customer using initiatePayment
     try {
       const {
-        data: [customer],
+        data: [customer]
       } = await this.client_.customers.list({
         email,
-        limit: 1,
+        limit: 1
       });
 
       if (customer) {
@@ -116,7 +116,7 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
       }
     } catch (error) {
       throw this.buildError(
-        "An error occurred in initiatePayment when retrieving a Stripe customer",
+        'An error occurred in initiatePayment when retrieving a Stripe customer',
         error
       );
     }
@@ -127,7 +127,7 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
         paymentIntentInput.customer = customer.id;
       } catch (error) {
         throw this.buildError(
-          "An error occurred in initiatePayment when creating a Stripe customer",
+          'An error occurred in initiatePayment when creating a Stripe customer',
           error
         );
       }
@@ -140,11 +140,11 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
 
       return {
         id: data.id,
-        data,
+        data
       };
     } catch (error) {
       throw this.buildError(
-        "An error occurred in initiatePayment when creating a Stripe payment intent",
+        'An error occurred in initiatePayment when creating a Stripe payment intent',
         error
       );
     }
@@ -162,7 +162,7 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
   }
 
   async cancelPayment({
-    data: paymentSessionData,
+    data: paymentSessionData
   }: CancelPaymentInput): Promise<CancelPaymentOutput> {
     try {
       const id = paymentSessionData?.id as string;
@@ -174,12 +174,12 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
       const data = (await this.client_.paymentIntents.cancel(id)) as any;
       return { data };
     } catch (error) {
-      throw this.buildError("An error occurred in cancelPayment", error);
+      throw this.buildError('An error occurred in cancelPayment', error);
     }
   }
 
   async capturePayment({
-    data: paymentSessionData,
+    data: paymentSessionData
   }: CapturePaymentInput): Promise<CapturePaymentOutput> {
     const id = paymentSessionData?.id as string;
     try {
@@ -191,7 +191,7 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
           return { data: error.payment_intent };
         }
       }
-      throw this.buildError("An error occurred in capturePayment", error);
+      throw this.buildError('An error occurred in capturePayment', error);
     }
   }
 
@@ -201,7 +201,7 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
 
   async refundPayment({
     data: paymentSessionData,
-    amount,
+    amount
   }: RefundPaymentInput): Promise<RefundPaymentOutput> {
     const id = paymentSessionData?.id as string;
 
@@ -209,27 +209,27 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
       const currency = paymentSessionData?.currency as string;
       await this.client_.refunds.create({
         amount: getSmallestUnit(amount, currency),
-        payment_intent: id as string,
+        payment_intent: id as string
       });
     } catch (e) {
-      throw this.buildError("An error occurred in refundPayment", e);
+      throw this.buildError('An error occurred in refundPayment', e);
     }
 
     return { data: paymentSessionData };
   }
 
   async retrievePayment({
-    data: paymentSessionData,
+    data: paymentSessionData
   }: RetrievePaymentInput): Promise<RetrievePaymentOutput> {
     try {
       const id = paymentSessionData?.id as string;
       const intent = (await this.client_.paymentIntents.retrieve(id)) as any;
 
       intent.amount = getAmountFromSmallestUnit(intent.amount, intent.currency);
-      console.log("Stripe - retrieving", intent);
+      console.log('Stripe - retrieving', intent);
       return { data: intent };
     } catch (e) {
-      throw this.buildError("An error occurred in retrievePayment", e);
+      throw this.buildError('An error occurred in retrievePayment', e);
     }
   }
 
@@ -245,12 +245,12 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
     try {
       const id = data?.id as string;
       const sessionData = (await this.client_.paymentIntents.update(id, {
-        amount: amountNumeric,
+        amount: amountNumeric
       })) as any;
 
       return { data: sessionData };
     } catch (e) {
-      throw this.buildError("An error occurred in updatePayment", e);
+      throw this.buildError('An error occurred in updatePayment', e);
     }
   }
 
@@ -261,27 +261,27 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
       if (isPresent(data.amount)) {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
-          "Cannot update amount, use updatePayment instead"
+          'Cannot update amount, use updatePayment instead'
         );
       }
 
       return (await this.client_.paymentIntents.update(sessionId, {
-        ...data,
+        ...data
       })) as any;
     } catch (e) {
-      throw this.buildError("An error occurred in updatePaymentData", e);
+      throw this.buildError('An error occurred in updatePaymentData', e);
     }
   }
 
   async getWebhookActionAndData(
-    webhookData: ProviderWebhookPayload["payload"]
+    webhookData: ProviderWebhookPayload['payload']
   ): Promise<WebhookActionResult> {
     const event = this.constructWebhookEvent(webhookData);
     const intent = event.data.object as Stripe.PaymentIntent;
 
     const { currency } = intent;
     switch (event.type) {
-      case "payment_intent.amount_capturable_updated":
+      case 'payment_intent.amount_capturable_updated':
         return {
           action: PaymentActions.AUTHORIZED,
           data: {
@@ -289,32 +289,32 @@ abstract class StripeConnectProvider extends AbstractPaymentProvider<Options> {
             amount: getAmountFromSmallestUnit(
               intent.amount_capturable,
               currency
-            ),
-          },
+            )
+          }
         };
-      case "payment_intent.succeeded":
+      case 'payment_intent.succeeded':
         return {
           action: PaymentActions.SUCCESSFUL,
           data: {
             session_id: intent.metadata.session_id,
-            amount: getAmountFromSmallestUnit(intent.amount_received, currency),
-          },
+            amount: getAmountFromSmallestUnit(intent.amount_received, currency)
+          }
         };
-      case "payment_intent.payment_failed":
+      case 'payment_intent.payment_failed':
         return {
           action: PaymentActions.FAILED,
           data: {
             session_id: intent.metadata.session_id,
-            amount: getAmountFromSmallestUnit(intent.amount, currency),
-          },
+            amount: getAmountFromSmallestUnit(intent.amount, currency)
+          }
         };
       default:
         return { action: PaymentActions.NOT_SUPPORTED };
     }
   }
 
-  constructWebhookEvent(data: ProviderWebhookPayload["payload"]): Stripe.Event {
-    const signature = data.headers["stripe-signature"] as string;
+  constructWebhookEvent(data: ProviderWebhookPayload['payload']): Stripe.Event {
+    const signature = data.headers['stripe-signature'] as string;
 
     return this.client_.webhooks.constructEvent(
       data.rawData as string | Buffer,

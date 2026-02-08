@@ -1,12 +1,11 @@
+import { deleteInventoryLevelsWorkflow } from '@medusajs/core-flows';
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework/http';
+import { HttpTypes } from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
-  MedusaError,
-} from "@medusajs/framework/utils";
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
-
-import { deleteInventoryLevelsWorkflow } from "@medusajs/core-flows";
-import { HttpTypes } from "@medusajs/framework/types";
-import { refetchInventoryItem } from "@medusajs/medusa/api/admin/inventory-items/helpers";
+  MedusaError
+} from '@medusajs/framework/utils';
+import { refetchInventoryItem } from '@medusajs/medusa/api/admin/inventory-items/helpers';
 
 // Overridden admin default delete inventory level route to force delete the inventory level with stocked items at the locations.
 
@@ -18,11 +17,14 @@ export const DELETE = async (
 
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const result = await query.graph({
-    entity: "inventory_level",
-    filters: { inventory_item_id: id, location_id },
-    fields: ["id", "reserved_quantity"],
-  }, { throwIfKeyNotFound: true });
+  const result = await query.graph(
+    {
+      entity: 'inventory_level',
+      filters: { inventory_item_id: id, location_id },
+      fields: ['id', 'reserved_quantity']
+    },
+    { throwIfKeyNotFound: true }
+  );
 
   const { id: levelId, reserved_quantity: reservedQuantity } = result.data[0];
 
@@ -38,8 +40,8 @@ export const DELETE = async (
   await deleteInventoryLevelWorkflow.run({
     input: {
       id: [levelId],
-      force: true,
-    },
+      force: true
+    }
   });
 
   const inventoryItem = await refetchInventoryItem(
@@ -50,8 +52,8 @@ export const DELETE = async (
 
   res.status(200).json({
     id: levelId,
-    object: "inventory-level",
+    object: 'inventory-level',
     deleted: true,
-    parent: inventoryItem,
+    parent: inventoryItem
   });
 };

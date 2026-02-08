@@ -1,16 +1,16 @@
 import {
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { filterBySellerId } from '../../../shared/infra/http/middlewares'
-import { vendorMemberInviteQueryConfig } from './query-config'
+import { filterBySellerId } from '../../../shared/infra/http/middlewares';
+import { vendorMemberInviteQueryConfig } from './query-config';
 import {
   VendorAcceptMemberInvite,
   VendorGetMemberInviteParams,
   VendorInviteMember
-} from './validators'
+} from './validators';
 
 export const vendorInvitesMiddlewares: MiddlewareRoute[] = [
   {
@@ -46,4 +46,4 @@ export const vendorInvitesMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

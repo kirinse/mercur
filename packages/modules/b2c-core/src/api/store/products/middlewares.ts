@@ -1,9 +1,6 @@
-import {
-  MiddlewareRoute,
-  validateAndTransformBody
-} from '@medusajs/framework'
+import { MiddlewareRoute, validateAndTransformBody } from '@medusajs/framework';
 
-import { StoreSearchProductsSchema } from './validators'
+import { StoreSearchProductsSchema } from './validators';
 
 export const storeProductsMiddlewares: MiddlewareRoute[] = [
   {
@@ -11,5 +8,4 @@ export const storeProductsMiddlewares: MiddlewareRoute[] = [
     matcher: '/store/products/search',
     middlewares: [validateAndTransformBody(StoreSearchProductsSchema)]
   }
-]
-
+];

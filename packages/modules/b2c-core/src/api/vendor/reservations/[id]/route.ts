@@ -1,19 +1,19 @@
 import {
   deleteReservationsWorkflow,
   updateReservationsWorkflow
-} from '@medusajs/core-flows'
+} from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
+} from '@medusajs/framework/http';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
-import sellerStockLocation from '../../../../links/seller-stock-location'
-import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils'
-import { VendorUpdateReservationType } from '../validators'
+import sellerStockLocation from '../../../../links/seller-stock-location';
+import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils';
+import { VendorUpdateReservationType } from '../validators';
 
 /**
  * @oas [get] /vendor/reservations/{id}
@@ -54,8 +54,8 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   const {
     data: [reservation]
@@ -65,10 +65,10 @@ export const GET = async (
     filters: {
       id
     }
-  })
+  });
 
-  res.json({ reservation })
-}
+  res.json({ reservation });
+};
 
 /**
  * @oas [post] /vendor/reservations/{id}
@@ -114,14 +114,14 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateReservationType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   if (req.validatedBody.location_id) {
     const seller = await fetchSellerByAuthActorId(
       req.auth_context.actor_id,
       req.scope
-    )
+    );
 
     const {
       data: [relation]
@@ -131,13 +131,13 @@ export const POST = async (
       filters: {
         stock_location_id: req.validatedBody.location_id
       }
-    })
+    });
 
     if (relation.seller_id !== seller.id) {
       throw new MedusaError(
         MedusaError.Types.UNAUTHORIZED,
         'You can modify stock only in your own locations.'
-      )
+      );
     }
   }
 
@@ -146,7 +146,7 @@ export const POST = async (
     input: {
       updates: [{ ...req.validatedBody, id }]
     }
-  })
+  });
 
   const {
     data: [reservation]
@@ -156,10 +156,10 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
-  res.json({ reservation })
-}
+  res.json({ reservation });
+};
 
 /**
  * @oas [delete] /vendor/reservations/{id}
@@ -201,16 +201,16 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await deleteReservationsWorkflow.run({
     container: req.scope,
     input: { ids: [id] }
-  })
+  });
 
   res.status(200).json({
     id,
     object: 'reservation',
     deleted: true
-  })
-}
+  });
+};

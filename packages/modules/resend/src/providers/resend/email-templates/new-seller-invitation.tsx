@@ -1,30 +1,35 @@
 interface EmailTemplateProps {
   data: {
-    url: string
-    store_name: string
-    storefront_url: string
-  }
+    url: string;
+    store_name: string;
+    storefront_url: string;
+  };
 }
 
-export const NewSellerInviteEmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({ data }) => {
+export const NewSellerInviteEmailTemplate: React.FC<
+  Readonly<EmailTemplateProps>
+> = ({ data }) => {
   return (
-    <div style={{
-      maxWidth: 600,
-      margin: '0 auto',
-      fontFamily: 'Arial, sans-serif',
-      color: '#222',
-      background: '#fff',
-      padding: 24,
-      borderRadius: 10
-    }}> 
+    <div
+      style={{
+        maxWidth: 600,
+        margin: '0 auto',
+        fontFamily: 'Arial, sans-serif',
+        color: '#222',
+        background: '#fff',
+        padding: 24,
+        borderRadius: 10
+      }}
+    >
       <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>
         You are invited to sell on {data.store_name}!
       </h1>
       <p style={{ fontSize: '1.1rem', marginBottom: '16px' }}>
-        To join the platform, please accept the invitation.<br />
+        To join the platform, please accept the invitation.
+        <br />
       </p>
       <div style={{ marginBottom: 24 }}>
-      <a
+        <a
           href={`${data.url}`}
           style={{
             display: 'inline-block',
@@ -45,7 +50,9 @@ export const NewSellerInviteEmailTemplate: React.FC<Readonly<EmailTemplateProps>
         </div>
       </div>
       <div style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>
-        You received this email because you were invited to join the {data.store_name} marketplace.<br />
+        You received this email because you were invited to join the{' '}
+        {data.store_name} marketplace.
+        <br />
         If you have any questions, please contact our support team.
       </div>
       <div style={{ marginTop: 32 }}>
@@ -54,5 +61,5 @@ export const NewSellerInviteEmailTemplate: React.FC<Readonly<EmailTemplateProps>
         <div style={{ color: '#888', marginTop: 4 }}>{data.storefront_url}</div>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,22 +1,22 @@
-import { uploadFilesWorkflow } from '@medusajs/core-flows'
+import { uploadFilesWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { HttpTypes } from '@medusajs/framework/types'
-import { MedusaError } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { HttpTypes } from '@medusajs/framework/types';
+import { MedusaError } from '@medusajs/framework/utils';
 
 export const POST = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminUploadFile>,
   res: MedusaResponse
 ) => {
-  const input = (req as any).files
+  const input = (req as any).files;
 
   if (!input?.length) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       'No files were uploaded'
-    )
+    );
   }
 
   const { result: files } = await uploadFilesWorkflow(req.scope).run({
@@ -28,7 +28,7 @@ export const POST = async (
         access: 'public'
       }))
     }
-  })
+  });
 
-  res.json({ files })
-}
+  res.json({ files });
+};

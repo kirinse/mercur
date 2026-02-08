@@ -1,11 +1,17 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   deleteReviewWorkflow,
   updateReviewWorkflow
-} from '../../../../workflows/review/workflows'
-import { StoreGetReviewsParamsType, StoreUpdateReviewType } from '../validators'
+} from '../../../../workflows/review/workflows';
+import {
+  StoreGetReviewsParamsType,
+  StoreUpdateReviewType
+} from '../validators';
 
 /**
  * @oas [post] /store/reviews/{id}
@@ -51,13 +57,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<StoreUpdateReviewType>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const { id } = req.params;
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateReviewWorkflow.run({
     container: req.scope,
     input: { id, ...req.validatedBody }
-  })
+  });
 
   const {
     data: [review]
@@ -67,12 +73,12 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
   res.json({
     review
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /store/reviews/{id}
@@ -114,18 +120,18 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
   await deleteReviewWorkflow.run({
     container: req.scope,
     input: id
-  })
+  });
 
   res.json({
     id,
     object: 'review',
     deleted: true
-  })
-}
+  });
+};
 
 /**
  * @oas [get] /store/reviews/{id}
@@ -166,8 +172,8 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<StoreGetReviewsParamsType>,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const { id } = req.params;
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [review]
@@ -177,9 +183,9 @@ export const GET = async (
     filters: {
       id
     }
-  })
+  });
 
   res.json({
     review
-  })
-}
+  });
+};

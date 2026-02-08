@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { linkCustomerGroupsToCustomerWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { linkCustomerGroupsToCustomerWorkflow } from '@medusajs/medusa/core-flows';
 
-import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils'
-import { validateCustomerGroupsOwnership } from '../../utils'
-import { VendorUpdateCustomerGroupsType } from '../../validators'
+import { fetchSellerByAuthActorId } from '../../../../../shared/infra/http/utils';
+import { validateCustomerGroupsOwnership } from '../../utils';
+import { VendorUpdateCustomerGroupsType } from '../../validators';
 
 /**
  * @oas [post] /vendor/customers/{id}/customer-groups
@@ -44,17 +47,17 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateCustomerGroupsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   await validateCustomerGroupsOwnership(
     req.scope,
     seller.id,
     req.validatedBody.add.concat(req.validatedBody.remove)
-  )
+  );
 
   await linkCustomerGroupsToCustomerWorkflow.run({
     container: req.scope,
@@ -62,7 +65,7 @@ export const POST = async (
       id: req.params.id,
       ...req.validatedBody
     }
-  })
+  });
 
   const {
     data: [customer]
@@ -72,9 +75,9 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     customer
-  })
-}
+  });
+};

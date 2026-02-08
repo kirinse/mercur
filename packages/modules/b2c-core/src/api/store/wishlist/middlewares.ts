@@ -1,39 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   validateAndTransformBody,
-  validateAndTransformQuery,
-} from "@medusajs/framework";
-import { authenticate, MiddlewareRoute } from "@medusajs/medusa";
-
-import { isPresent, ProductStatus } from "@medusajs/framework/utils";
-import { listProductQueryConfig } from "@medusajs/medusa/api/store/products/query-config";
-import { StoreGetProductsParams } from "@medusajs/medusa/api/store/products/validators";
-import { storeWishlistQueryConfig } from "./query-config";
-import { StoreCreateWishlist, StoreGetWishlistsParams } from "./validators";
-
+  validateAndTransformQuery
+} from '@medusajs/framework';
 import {
   applyDefaultFilters,
   clearFiltersByKey,
-  maybeApplyLinkFilter,
-} from "@medusajs/framework/http";
+  maybeApplyLinkFilter
+} from '@medusajs/framework/http';
+import { ProductStatus, isPresent } from '@medusajs/framework/utils';
+import { MiddlewareRoute, authenticate } from '@medusajs/medusa';
+import { listProductQueryConfig } from '@medusajs/medusa/api/store/products/query-config';
+import { StoreGetProductsParams } from '@medusajs/medusa/api/store/products/validators';
 import {
   filterByValidSalesChannels,
   normalizeDataForContext,
   setPricingContext,
-  setTaxContext,
-} from "@medusajs/medusa/api/utils/middlewares/index";
+  setTaxContext
+} from '@medusajs/medusa/api/utils/middlewares/index';
+
+import { storeWishlistQueryConfig } from './query-config';
+import { StoreCreateWishlist, StoreGetWishlistsParams } from './validators';
 
 export const storeWishlistMiddlewares: MiddlewareRoute[] = [
   {
-    method: ["GET"],
-    matcher: "/store/wishlist",
+    method: ['GET'],
+    matcher: '/store/wishlist',
     middlewares: [
-      authenticate("customer", ["bearer", "session"]),
+      authenticate('customer', ['bearer', 'session']),
       validateAndTransformQuery(StoreGetProductsParams, listProductQueryConfig),
       filterByValidSalesChannels(),
       maybeApplyLinkFilter({
-        entryPoint: "product_sales_channel",
-        resourceId: "product_id",
-        filterableField: "sales_channel_id",
+        entryPoint: 'product_sales_channel',
+        resourceId: 'product_id',
+        filterableField: 'sales_channel_id'
       }),
       applyDefaultFilters({
         status: ProductStatus.PUBLISHED,
@@ -47,31 +47,29 @@ export const storeWishlistMiddlewares: MiddlewareRoute[] = [
           }
 
           return { id: categoryIds, is_internal: false, is_active: true };
-        },
+        }
       }),
       normalizeDataForContext(),
       setPricingContext(),
       setTaxContext(),
-      clearFiltersByKey(["region_id", "country_code", "province", "cart_id"]),
-    ],
+      clearFiltersByKey(['region_id', 'country_code', 'province', 'cart_id'])
+    ]
   },
   {
-    method: ["POST"],
-    matcher: "/store/wishlist",
+    method: ['POST'],
+    matcher: '/store/wishlist',
     middlewares: [
-      authenticate("customer", ["bearer", "session"]),
+      authenticate('customer', ['bearer', 'session']),
       validateAndTransformQuery(
         StoreGetWishlistsParams,
         storeWishlistQueryConfig.retrieve
       ),
-      validateAndTransformBody(StoreCreateWishlist),
-    ],
+      validateAndTransformBody(StoreCreateWishlist)
+    ]
   },
   {
-    method: ["DELETE"],
-    matcher: "/store/wishlist/product/:reference_id",
-    middlewares: [
-      authenticate("customer", ["bearer", "session"]),
-    ],
-  },
+    method: ['DELETE'],
+    matcher: '/store/wishlist/product/:reference_id',
+    middlewares: [authenticate('customer', ['bearer', 'session'])]
+  }
 ];

@@ -1,6 +1,7 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { ConfigurationRuleType } from "../types";
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+
+import { ConfigurationRuleType } from '../types';
 
 export const ConfigurationRuleDefaults = new Map<
   ConfigurationRuleType,
@@ -9,7 +10,7 @@ export const ConfigurationRuleDefaults = new Map<
   [ConfigurationRuleType.GLOBAL_PRODUCT_CATALOG, false],
   [ConfigurationRuleType.PRODUCT_REQUEST_ENABLED, true],
   [ConfigurationRuleType.REQUIRE_PRODUCT_APPROVAL, false],
-  [ConfigurationRuleType.PRODUCT_IMPORT_ENABLED, true],
+  [ConfigurationRuleType.PRODUCT_IMPORT_ENABLED, true]
 ]);
 
 export const checkConfigurationRule = async (
@@ -23,13 +24,13 @@ export const checkConfigurationRule = async (
 
   try {
     const {
-      data: [rule],
+      data: [rule]
     } = await query.graph({
-      entity: "configuration_rule",
-      fields: ["is_enabled"],
+      entity: 'configuration_rule',
+      fields: ['is_enabled'],
       filters: {
-        rule_type: ruleType,
-      },
+        rule_type: ruleType
+      }
     });
 
     enabled = rule.is_enabled;

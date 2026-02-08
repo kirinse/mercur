@@ -1,15 +1,15 @@
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
-import { SubscriberArgs, SubscriberConfig } from '@medusajs/medusa'
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/medusa';
 
-import { OrderSetWorkflowEvents } from '@mercurjs/framework'
+import { OrderSetWorkflowEvents } from '@mercurjs/framework';
 
 export default async function newOrderSetAdminNotifyHandler({
   event,
   container
 }: SubscriberArgs<{ id: string }>) {
-  const notificationService = container.resolve(Modules.NOTIFICATION)
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const { id: orderSetId } = event.data
+  const notificationService = container.resolve(Modules.NOTIFICATION);
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const { id: orderSetId } = event.data;
 
   const {
     data: [order_set]
@@ -19,10 +19,10 @@ export default async function newOrderSetAdminNotifyHandler({
     filters: {
       id: orderSetId
     }
-  })
+  });
 
   if (!order_set || order_set.orders.length < 2) {
-    return
+    return;
   }
 
   await notificationService.createNotifications({
@@ -37,7 +37,7 @@ export default async function newOrderSetAdminNotifyHandler({
       description: 'Someone has placed a new order from multiple sellers 🔔',
       redirect: '/admin/orders'
     }
-  })
+  });
 }
 
 export const config: SubscriberConfig = {
@@ -45,4 +45,4 @@ export const config: SubscriberConfig = {
   context: {
     subscriberId: 'new-order-set-admin-notify-handler'
   }
-}
+};

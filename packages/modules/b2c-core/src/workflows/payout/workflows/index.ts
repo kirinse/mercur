@@ -1,1 +1,1 @@
-export * from './process-payout-webhook-action'
+export * from './process-payout-webhook-action';

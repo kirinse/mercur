@@ -5,11 +5,11 @@ export const vendorPayoutAccountFields = [
   'data',
   'context',
   '*onboarding'
-]
+];
 
 export const vendorPayoutAccountQueryConfig = {
   retrieve: {
     defaults: vendorPayoutAccountFields,
     isList: false
   }
-}
+};

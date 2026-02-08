@@ -2,36 +2,36 @@ import {
   WorkflowResponse,
   createWorkflow,
   transform
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 import {
   beginReturnOrderWorkflow,
   confirmReturnRequestWorkflow,
   requestItemReturnWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
 import {
   AdminUpdateOrderReturnRequestDTO,
   VendorUpdateOrderReturnRequestDTO
-} from '@mercurjs/framework'
+} from '@mercurjs/framework';
 
-import { retrieveOrderFromReturnRequestStep } from '../steps'
+import { retrieveOrderFromReturnRequestStep } from '../steps';
 
 export const proceedReturnRequestWorkflow = createWorkflow(
   'proceed-return-request',
   function (
     input: VendorUpdateOrderReturnRequestDTO | AdminUpdateOrderReturnRequestDTO
   ) {
-    const order = retrieveOrderFromReturnRequestStep(input)
+    const order = retrieveOrderFromReturnRequestStep(input);
     const beginPayload = transform({ order, input }, ({ order, input }) => {
       return {
         input: {
           order_id: order.order_id,
           location_id: input.location_id
         }
-      }
-    })
+      };
+    });
 
-    const returnOrder = beginReturnOrderWorkflow.runAsStep(beginPayload)
+    const returnOrder = beginReturnOrderWorkflow.runAsStep(beginPayload);
 
     const requestItemReturnPayload = transform(
       { returnOrder, order },
@@ -44,14 +44,14 @@ export const proceedReturnRequestWorkflow = createWorkflow(
                 id: item.line_item_id,
                 quantity: item.quantity,
                 reason_id: item.reason_id
-              }
+              };
             })
           }
-        }
+        };
       }
-    )
+    );
 
-    requestItemReturnWorkflow.runAsStep(requestItemReturnPayload)
+    requestItemReturnWorkflow.runAsStep(requestItemReturnPayload);
 
     const confirmReturnRequestPayload = transform(
       returnOrder,
@@ -60,12 +60,12 @@ export const proceedReturnRequestWorkflow = createWorkflow(
           input: {
             return_id: returnOrder.return_id
           }
-        }
+        };
       }
-    )
+    );
 
-    confirmReturnRequestWorkflow.runAsStep(confirmReturnRequestPayload)
+    confirmReturnRequestWorkflow.runAsStep(confirmReturnRequestPayload);
 
-    return new WorkflowResponse(returnOrder)
+    return new WorkflowResponse(returnOrder);
   }
-)
+);

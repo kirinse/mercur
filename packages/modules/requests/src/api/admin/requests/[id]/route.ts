@@ -1,12 +1,15 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
-import { getRequestWorkflowByType } from '../../../../workflows/requests/utils/select-workflow'
-import { updateRequestWorkflow } from '../../../../workflows/requests/workflows'
-import { AdminReviewRequestType } from '../validators'
+import { getRequestWorkflowByType } from '../../../../workflows/requests/utils/select-workflow';
+import { updateRequestWorkflow } from '../../../../workflows/requests/workflows';
+import { AdminReviewRequestType } from '../validators';
 
 /**
  * @oas [post] /admin/requests/{id}
@@ -49,7 +52,7 @@ export async function POST(
   req: AuthenticatedMedusaRequest<AdminReviewRequestType>,
   res: MedusaResponse
 ) {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [request]
@@ -60,13 +63,13 @@ export async function POST(
       id: req.params.id,
       status: 'pending'
     }
-  })
+  });
 
   if (!request) {
     throw new MedusaError(
       MedusaError.Types.INVALID_ARGUMENT,
       'This request is already reviewed'
-    )
+    );
   }
 
   if (req.validatedBody.status === 'rejected') {
@@ -77,21 +80,21 @@ export async function POST(
         ...req.validatedBody
       },
       container: req.scope
-    })
+    });
 
     return res.json({
       id: req.params.id,
       status: 'rejected'
-    })
+    });
   }
 
-  const workflow = getRequestWorkflowByType(request.type)
+  const workflow = getRequestWorkflowByType(request.type);
 
   if (!workflow) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
       'This type of request does not have workflow'
-    )
+    );
   }
 
   const { result: createdResource } = await workflow(req.scope).run({
@@ -102,14 +105,14 @@ export async function POST(
       ...req.validatedBody
     },
     throwOnError: true
-  })
+  });
 
   return res.json({
     id: req.params.id,
     status: 'accepted',
     createdResourceType: request.type,
     createdResource
-  })
+  });
 }
 
 /**
@@ -151,7 +154,7 @@ export async function GET(
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [request]
@@ -161,7 +164,7 @@ export async function GET(
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ request })
+  res.json({ request });
 }

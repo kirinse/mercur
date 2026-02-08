@@ -1,6 +1,9 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { confirmReturnReceiveWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { confirmReturnReceiveWorkflow } from '@medusajs/medusa/core-flows';
 
 /**
  * @oas [post] /vendor/returns/{id}/receive/confirm
@@ -43,8 +46,8 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const { id } = req.params;
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await confirmReturnReceiveWorkflow.run({
     container: req.scope,
@@ -52,7 +55,7 @@ export const POST = async (
       return_id: id,
       confirmed_by: req.auth_context.actor_id
     }
-  })
+  });
 
   const {
     data: [result]
@@ -62,9 +65,9 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     return: result
-  })
-}
+  });
+};

@@ -1,4 +1,9 @@
-import { MedusaNextFunction, MedusaResponse, MedusaRequest, MiddlewareFunction } from '@medusajs/framework'
+import {
+  MedusaNextFunction,
+  MedusaRequest,
+  MedusaResponse,
+  MiddlewareFunction
+} from '@medusajs/framework';
 
 /**
  * Due to Medusa's `unlessPath` function bug, we need to use this function to skip middlewares for particular routes.
@@ -9,10 +14,11 @@ import { MedusaNextFunction, MedusaResponse, MedusaRequest, MiddlewareFunction }
 export const unlessBaseUrl =
   (onPath: RegExp, middleware: MiddlewareFunction, methods?: string[]) =>
   (req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) => {
-    const methodMatches = !methods || methods.includes(req.method.toUpperCase())
+    const methodMatches =
+      !methods || methods.includes(req.method.toUpperCase());
     if (onPath.test(req.baseUrl) && methodMatches) {
-      return next()
+      return next();
     } else {
-      return middleware(req, res, next)
+      return middleware(req, res, next);
     }
-  }
+  };

@@ -1,21 +1,21 @@
-import { SubscriberConfig } from '@medusajs/framework'
+import { SubscriberConfig } from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
-import { SubscriberArgs } from '@medusajs/medusa'
-import { capturePaymentWorkflow } from '@medusajs/medusa/core-flows'
+} from '@medusajs/framework/utils';
+import { SubscriberArgs } from '@medusajs/medusa';
+import { capturePaymentWorkflow } from '@medusajs/medusa/core-flows';
 
-import { OrderSetWorkflowEvents } from '@mercurjs/framework'
+import { OrderSetWorkflowEvents } from '@mercurjs/framework';
 
-import { markSplitOrderPaymentsAsCapturedWorkflow } from '../workflows/split-order-payment/workflows'
+import { markSplitOrderPaymentsAsCapturedWorkflow } from '../workflows/split-order-payment/workflows';
 
 export default async function orderSetPlacedHandler({
   event,
   container
 }: SubscriberArgs<{ id: string }>) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const { id: orderSetId } = event.data
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const { id: orderSetId } = event.data;
 
   const {
     data: [order_set]
@@ -25,7 +25,7 @@ export default async function orderSetPlacedHandler({
     filters: {
       id: orderSetId
     }
-  })
+  });
 
   const {
     data: [payment_collection]
@@ -35,10 +35,10 @@ export default async function orderSetPlacedHandler({
     filters: {
       id: order_set.payment_collection_id
     }
-  })
+  });
 
   if (!payment_collection || !payment_collection.payments[0]) {
-    return
+    return;
   }
 
   const { result } = await capturePaymentWorkflow.run({
@@ -46,19 +46,19 @@ export default async function orderSetPlacedHandler({
     input: {
       payment_id: payment_collection.payments[0].id
     }
-  })
+  });
 
   if (!result.captured_at) {
     throw new MedusaError(
       MedusaError.Types.PAYMENT_AUTHORIZATION_ERROR,
       'Payment failed!'
-    )
+    );
   }
 
   await markSplitOrderPaymentsAsCapturedWorkflow.run({
     container,
     input: order_set.payment_collection_id
-  })
+  });
 }
 
 export const config: SubscriberConfig = {
@@ -66,4 +66,4 @@ export const config: SubscriberConfig = {
   context: {
     subscriberId: 'order-set-placed-payment-capture'
   }
-}
+};

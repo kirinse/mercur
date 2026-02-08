@@ -1,4 +1,4 @@
-import { vendorInventoryItemFields } from '../inventory-items/query-config'
+import { vendorInventoryItemFields } from '../inventory-items/query-config';
 
 export const vendorReservationFields = [
   'id',
@@ -10,7 +10,7 @@ export const vendorReservationFields = [
   'created_at',
   'updated_at',
   ...vendorInventoryItemFields.map((f) => `inventory_item.${f}`)
-]
+];
 
 export const vendorReservationQueryConfig = {
   list: {
@@ -21,4 +21,4 @@ export const vendorReservationQueryConfig = {
     defaults: vendorReservationFields,
     isList: false
   }
-}
+};

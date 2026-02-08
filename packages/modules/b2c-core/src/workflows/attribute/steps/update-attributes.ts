@@ -1,15 +1,13 @@
-import {
-  StepResponse,
-  createStep,
-} from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { UpdateAttributeDTO } from '@mercurjs/framework';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
-import { UpdateAttributeDTO } from "@mercurjs/framework";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
-const updateAttributesStepId = "update-attributes";
+const updateAttributesStepId = 'update-attributes';
 
 export const updateAttributesStep = createStep(
   updateAttributesStepId,
@@ -17,18 +15,18 @@ export const updateAttributesStep = createStep(
     const service = container.resolve<AttributeModuleService>(ATTRIBUTE_MODULE);
 
     const prevData = await service.listAttributes({
-      id: data.map((attribute) => attribute.id),
+      id: data.map((attribute) => attribute.id)
     });
 
     const normalized = data.map((attr) => {
       const { possible_values: values, ...attribute } = attr;
       const valuesWithAttribute = values?.map((val) => ({
         ...val,
-        attribute_id: attribute.id,
+        attribute_id: attribute.id
       }));
       return {
         ...attr,
-        possible_values: valuesWithAttribute,
+        possible_values: valuesWithAttribute
       };
     });
 

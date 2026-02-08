@@ -1,6 +1,6 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
-import { CommissionRule } from './commission_rule'
+import { CommissionRule } from './commission_rule';
 
 export const CommissionRate = model.define('commission_rate', {
   id: model.id({ prefix: 'com_rate' }).primaryKey(),
@@ -15,4 +15,4 @@ export const CommissionRate = model.define('commission_rate', {
       mappedBy: 'rate'
     })
     .nullable()
-})
+});

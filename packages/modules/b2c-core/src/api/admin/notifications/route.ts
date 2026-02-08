@@ -1,9 +1,9 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from '@medusajs/framework/http'
-import { HttpTypes } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+  MedusaResponse
+} from '@medusajs/framework/http';
+import { HttpTypes } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /admin/notifications
@@ -61,19 +61,19 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminNotificationListParams>,
   res: MedusaResponse<HttpTypes.AdminNotificationListResponse>
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: notifications, metadata } = await query.graph({
     entity: 'notification',
     filters: { ...req.filterableFields, channel: 'feed' },
     fields: req.queryConfig.fields,
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     notifications,
     count: metadata?.count ?? notifications.length,
     offset: metadata?.skip ?? req.queryConfig.pagination?.skip ?? 0,
     limit: metadata?.take ?? req.queryConfig.pagination?.take ?? 0
-  })
-}
+  });
+};

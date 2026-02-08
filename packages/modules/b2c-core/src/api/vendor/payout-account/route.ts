@@ -1,15 +1,16 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
 import {
-  ContainerRegistrationKeys,
-} from '@medusajs/framework/utils'
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
 import {
   createPayoutAccountForSellerWorkflow,
   syncStripeAccountWorkflow
-} from '../../../workflows/seller/workflows'
-import { refetchPayoutAccount } from './utils'
-import { VendorCreatePayoutAccountType } from './validators'
+} from '../../../workflows/seller/workflows';
+import { refetchPayoutAccount } from './utils';
+import { VendorCreatePayoutAccountType } from './validators';
 
 /**
  * @oas [get] /vendor/payout-account
@@ -47,27 +48,27 @@ export const GET = async (
     req.scope,
     req.queryConfig.fields.map((field) => `payout_account.${field}`),
     req.filterableFields
-  )
+  );
 
   if (payout_account.status !== 'active') {
     await syncStripeAccountWorkflow.run({
       container: req.scope,
       input: payout_account.id
-    })
+    });
 
     const refreshed = await refetchPayoutAccount(
       req.scope,
       req.queryConfig.fields.map((field) => `payout_account.${field}`),
       req.filterableFields
-    )
+    );
 
-    payout_account = refreshed.payout_account
+    payout_account = refreshed.payout_account;
   }
 
   res.json({
     payout_account
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/payout-account
@@ -100,13 +101,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreatePayoutAccountType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
-  const transactionId = `${seller.id}-${Date.now()}`
+  const transactionId = `${seller.id}-${Date.now()}`;
 
   const { result } = await createPayoutAccountForSellerWorkflow(req.scope).run({
     context: { transactionId },
@@ -114,7 +115,7 @@ export const POST = async (
       seller_id: seller.id,
       context: req.validatedBody.context ?? {}
     }
-  })
+  });
 
   const {
     data: [payoutAccount]
@@ -127,9 +128,9 @@ export const POST = async (
       }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
   res.status(201).json({
     payout_account: payoutAccount
-  })
-}
+  });
+};

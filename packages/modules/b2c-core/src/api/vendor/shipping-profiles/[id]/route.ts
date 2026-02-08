@@ -1,11 +1,14 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 import {
   deleteShippingProfileWorkflow,
   updateShippingProfilesWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { VendorUpdateShippingProfileType } from '../validators'
+import { VendorUpdateShippingProfileType } from '../validators';
 
 /**
  * @oas [get] /vendor/shipping-profiles/{id}
@@ -45,7 +48,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [shipping_profile]
@@ -55,10 +58,10 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ shipping_profile })
-}
+  res.json({ shipping_profile });
+};
 
 /**
  * @oas [post] /vendor/shipping-profiles/{id}
@@ -103,13 +106,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateShippingProfileType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   await updateShippingProfilesWorkflow.run({
     container: req.scope,
     input: { selector: { id }, update: req.validatedBody }
-  })
+  });
 
   const {
     data: [shipping_profile]
@@ -119,10 +122,10 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
-  res.json({ shipping_profile })
-}
+  res.json({ shipping_profile });
+};
 
 /**
  * @oas [delete] /vendor/shipping-profiles/{id}
@@ -164,16 +167,16 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await deleteShippingProfileWorkflow.run({
     container: req.scope,
     input: { ids: [id] }
-  })
+  });
 
   res.json({
     id,
     object: 'shipping_profile',
     deleted: true
-  })
-}
+  });
+};

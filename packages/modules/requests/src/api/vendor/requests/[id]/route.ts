@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { updateRequestDataWorkflow } from '../../../../workflows/requests/workflows'
-import { VendorUpdateRequestDataType } from '../validators'
+import { updateRequestDataWorkflow } from '../../../../workflows/requests/workflows';
+import { VendorUpdateRequestDataType } from '../validators';
 
 /**
  * @oas [get] /vendor/requests/{id}
@@ -43,7 +46,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [request]
@@ -53,10 +56,10 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ request })
-}
+  res.json({ request });
+};
 
 /**
  * @oas [post] /vendor/requests/{id}
@@ -101,7 +104,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateRequestDataType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateRequestDataWorkflow.run({
     container: req.scope,
@@ -109,7 +112,7 @@ export const POST = async (
       id: req.params.id,
       ...req.validatedBody.request
     }
-  })
+  });
 
   const {
     data: [request]
@@ -119,7 +122,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ request })
-}
+  res.json({ request });
+};

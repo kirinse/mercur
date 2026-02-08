@@ -1,9 +1,9 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { REVIEW_MODULE, ReviewModuleService } from "../../../modules/reviews";
+import { REVIEW_MODULE, ReviewModuleService } from '../../../modules/reviews';
 
 export const deleteReviewStep = createStep(
-  "delete-review",
+  'delete-review',
   async (id: string, { container }) => {
     const service = container.resolve<ReviewModuleService>(REVIEW_MODULE);
 

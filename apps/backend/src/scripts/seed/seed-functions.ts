@@ -1,5 +1,5 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import {
   createApiKeysWorkflow,
   createCollectionsWorkflow,
@@ -12,53 +12,53 @@ import {
   createShippingOptionsWorkflow,
   createStockLocationsWorkflow,
   createTaxRegionsWorkflow,
+  createUserAccountWorkflow,
   linkSalesChannelsToApiKeyWorkflow,
   updateStoresWorkflow,
-  updateTaxRegionsWorkflow,
-  createUserAccountWorkflow
-} from '@medusajs/medusa/core-flows'
+  updateTaxRegionsWorkflow
+} from '@medusajs/medusa/core-flows';
 
-import { SELLER_MODULE } from '@mercurjs/b2c-core/modules/seller'
+import { SELLER_MODULE } from '@mercurjs/b2c-core/modules/seller';
 import {
   createConfigurationRuleWorkflow,
   createLocationFulfillmentSetAndAssociateWithSellerWorkflow,
   createSellerWorkflow
-} from '@mercurjs/b2c-core/workflows'
-import { createCommissionRuleWorkflow } from '@mercurjs/commission/workflows'
+} from '@mercurjs/b2c-core/workflows';
+import { createCommissionRuleWorkflow } from '@mercurjs/commission/workflows';
 import {
   ConfigurationRuleDefaults,
   SELLER_SHIPPING_PROFILE_LINK
-} from '@mercurjs/framework'
+} from '@mercurjs/framework';
 
-import { productsToInsert } from './seed-products'
+import { productsToInsert } from './seed-products';
 
-const countries = ['be', 'de', 'dk', 'se', 'fr', 'es', 'it', 'pl', 'cz', 'nl']
+const countries = ['be', 'de', 'dk', 'se', 'fr', 'es', 'it', 'pl', 'cz', 'nl'];
 
 export async function createAdminUser(container: MedusaContainer) {
-  const authService = container.resolve(Modules.AUTH)
-  const userService = container.resolve(Modules.USER)
-  
+  const authService = container.resolve(Modules.AUTH);
+  const userService = container.resolve(Modules.USER);
+
   // Check if admin user already exists
   const [existingUser] = await userService.listUsers({
     email: 'admin@mercurjs.com'
-  })
-  
+  });
+
   if (existingUser) {
-    return existingUser
+    return existingUser;
   }
-  
+
   // Create auth identity with password
   const { authIdentity } = await authService.register('emailpass', {
     body: {
       email: 'admin@mercurjs.com',
       password: 'supersecret'
     }
-  })
-  
+  });
+
   if (!authIdentity?.id) {
-    throw new Error('Failed to create admin auth identity')
+    throw new Error('Failed to create admin auth identity');
   }
-  
+
   // Create admin user account
   const { result: user } = await createUserAccountWorkflow(container).run({
     input: {
@@ -69,18 +69,18 @@ export async function createAdminUser(container: MedusaContainer) {
       },
       authIdentityId: authIdentity.id
     }
-  })
-  
-  return user
+  });
+
+  return user;
 }
 
 export async function createSalesChannel(container: MedusaContainer) {
-  const salesChannelModuleService = container.resolve(Modules.SALES_CHANNEL)
+  const salesChannelModuleService = container.resolve(Modules.SALES_CHANNEL);
   let [defaultSalesChannel] = await salesChannelModuleService.listSalesChannels(
     {
       name: 'Default Sales Channel'
     }
-  )
+  );
 
   if (!defaultSalesChannel) {
     const {
@@ -93,11 +93,11 @@ export async function createSalesChannel(container: MedusaContainer) {
           }
         ]
       }
-    })
-    defaultSalesChannel = salesChannelResult
+    });
+    defaultSalesChannel = salesChannelResult;
   }
 
-  return defaultSalesChannel
+  return defaultSalesChannel;
 }
 
 export async function createStore(
@@ -105,11 +105,11 @@ export async function createStore(
   salesChannelId: string,
   regionId: string
 ) {
-  const storeModuleService = container.resolve(Modules.STORE)
-  const [store] = await storeModuleService.listStores()
+  const storeModuleService = container.resolve(Modules.STORE);
+  const [store] = await storeModuleService.listStores();
 
   if (!store) {
-    return
+    return;
   }
 
   await updateStoresWorkflow(container).run({
@@ -120,7 +120,7 @@ export async function createStore(
         default_region_id: regionId
       }
     }
-  })
+  });
 }
 export async function createRegions(container: MedusaContainer) {
   const {
@@ -136,31 +136,31 @@ export async function createRegions(container: MedusaContainer) {
         }
       ]
     }
-  })
+  });
 
   const { result: taxRegions } = await createTaxRegionsWorkflow(container).run({
     input: countries.map((country_code) => ({
       country_code
     }))
-  })
+  });
 
   await updateTaxRegionsWorkflow(container).run({
     input: taxRegions.map((taxRegion) => ({
       id: taxRegion.id,
       provider_id: 'tp_system'
     }))
-  })
+  });
 
-  return region
+  return region;
 }
 
 export async function createPublishableKey(
   container: MedusaContainer,
   salesChannelId: string
 ) {
-  const apiKeyService = container.resolve(Modules.API_KEY)
+  const apiKeyService = container.resolve(Modules.API_KEY);
 
-  let [key] = await apiKeyService.listApiKeys({ type: 'publishable' })
+  let [key] = await apiKeyService.listApiKeys({ type: 'publishable' });
 
   if (!key) {
     const {
@@ -175,8 +175,8 @@ export async function createPublishableKey(
           }
         ]
       }
-    })
-    key = publishableApiKeyResult
+    });
+    key = publishableApiKeyResult;
   }
 
   await linkSalesChannelsToApiKeyWorkflow(container).run({
@@ -184,9 +184,9 @@ export async function createPublishableKey(
       id: key.id,
       add: [salesChannelId]
     }
-  })
+  });
 
-  return key
+  return key;
 }
 
 export async function createProductCategories(container: MedusaContainer) {
@@ -219,9 +219,9 @@ export async function createProductCategories(container: MedusaContainer) {
         }
       ]
     }
-  })
+  });
 
-  return result
+  return result;
 }
 
 export async function createProductCollections(container: MedusaContainer) {
@@ -248,20 +248,20 @@ export async function createProductCollections(container: MedusaContainer) {
         }
       ]
     }
-  })
+  });
 
-  return result
+  return result;
 }
 
 export async function createSeller(container: MedusaContainer) {
-  const authService = container.resolve(Modules.AUTH)
+  const authService = container.resolve(Modules.AUTH);
 
   const { authIdentity } = await authService.register('emailpass', {
     body: {
       email: 'seller@mercurjs.com',
       password: 'secret'
     }
-  })
+  });
 
   const { result: seller } = await createSellerWorkflow.run({
     container,
@@ -275,9 +275,9 @@ export async function createSeller(container: MedusaContainer) {
         name: 'MercurJS Store'
       }
     }
-  })
+  });
 
-  return seller
+  return seller;
 }
 
 export async function createSellerStockLocation(
@@ -285,7 +285,7 @@ export async function createSellerStockLocation(
   sellerId: string,
   salesChannelId: string
 ) {
-  const link = container.resolve(ContainerRegistrationKeys.LINK)
+  const link = container.resolve(ContainerRegistrationKeys.LINK);
   const {
     result: [stock]
   } = await createStockLocationsWorkflow(container).run({
@@ -301,7 +301,7 @@ export async function createSellerStockLocation(
         }
       ]
     }
-  })
+  });
 
   await link.create([
     {
@@ -328,7 +328,7 @@ export async function createSellerStockLocation(
         stock_location_id: stock.id
       }
     }
-  ])
+  ]);
 
   await createLocationFulfillmentSetAndAssociateWithSellerWorkflow.run({
     container,
@@ -340,9 +340,9 @@ export async function createSellerStockLocation(
       location_id: stock.id,
       seller_id: sellerId
     }
-  })
+  });
 
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [stockLocation]
@@ -352,9 +352,9 @@ export async function createSellerStockLocation(
     filters: {
       id: stock.id
     }
-  })
+  });
 
-  return stockLocation
+  return stockLocation;
 }
 
 export async function createServiceZoneForFulfillmentSet(
@@ -376,17 +376,17 @@ export async function createServiceZoneForFulfillmentSet(
         }
       ]
     }
-  })
+  });
 
-  const fulfillmentService = container.resolve(Modules.FULFILLMENT)
+  const fulfillmentService = container.resolve(Modules.FULFILLMENT);
 
   const [zone] = await fulfillmentService.listServiceZones({
     fulfillment_set: {
       id: fulfillmentSetId
     }
-  })
+  });
 
-  const link = container.resolve(ContainerRegistrationKeys.LINK)
+  const link = container.resolve(ContainerRegistrationKeys.LINK);
   await link.create({
     [SELLER_MODULE]: {
       seller_id: sellerId
@@ -394,9 +394,9 @@ export async function createServiceZoneForFulfillmentSet(
     [Modules.FULFILLMENT]: {
       service_zone_id: zone.id
     }
-  })
+  });
 
-  return zone
+  return zone;
 }
 
 export async function createSellerShippingOption(
@@ -406,7 +406,7 @@ export async function createSellerShippingOption(
   regionId: string,
   serviceZoneId: string
 ) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const {
     data: [shippingProfile]
   } = await query.graph({
@@ -415,7 +415,7 @@ export async function createSellerShippingOption(
     filters: {
       seller_id: sellerId
     }
-  })
+  });
 
   const {
     result: [shippingOption]
@@ -444,9 +444,9 @@ export async function createSellerShippingOption(
         data: { id: 'manual-fulfillment' }
       }
     ]
-  })
+  });
 
-  const link = container.resolve(ContainerRegistrationKeys.LINK)
+  const link = container.resolve(ContainerRegistrationKeys.LINK);
   await link.create({
     [SELLER_MODULE]: {
       seller_id: sellerId
@@ -454,9 +454,9 @@ export async function createSellerShippingOption(
     [Modules.FULFILLMENT]: {
       shipping_option_id: shippingOption.id
     }
-  })
+  });
 
-  return shippingOption
+  return shippingOption;
 }
 
 export async function createSellerProducts(
@@ -464,20 +464,20 @@ export async function createSellerProducts(
   sellerId: string,
   salesChannelId: string
 ) {
-  const productService = container.resolve(Modules.PRODUCT)
+  const productService = container.resolve(Modules.PRODUCT);
   const collections = await productService.listProductCollections(
     {},
     { select: ['id', 'title'] }
-  )
+  );
   const categories = await productService.listProductCategories(
     {},
     { select: ['id', 'name'] }
-  )
+  );
 
   const randomCategory = () =>
-    categories[Math.floor(Math.random() * categories.length)]
+    categories[Math.floor(Math.random() * categories.length)];
   const randomCollection = () =>
-    collections[Math.floor(Math.random() * collections.length)]
+    collections[Math.floor(Math.random() * collections.length)];
 
   const toInsert = productsToInsert.map((p) => ({
     ...p,
@@ -492,7 +492,7 @@ export async function createSellerProducts(
         id: salesChannelId
       }
     ]
-  }))
+  }));
 
   const { result } = await createProductsWorkflow.run({
     container,
@@ -502,34 +502,34 @@ export async function createSellerProducts(
         seller_id: sellerId
       }
     }
-  })
+  });
 
-  return result
+  return result;
 }
 
 export async function createInventoryItemStockLevels(
   container: MedusaContainer,
   stockLocationId: string
 ) {
-  const inventoryService = container.resolve(Modules.INVENTORY)
+  const inventoryService = container.resolve(Modules.INVENTORY);
   const items = await inventoryService.listInventoryItems(
     {},
     { select: ['id'] }
-  )
+  );
 
   const toCreate = items.map((i) => ({
     inventory_item_id: i.id,
     location_id: stockLocationId,
     stocked_quantity: Math.floor(Math.random() * 50) + 1
-  }))
+  }));
 
   const { result } = await createInventoryLevelsWorkflow.run({
     container,
     input: {
       inventory_levels: toCreate
     }
-  })
-  return result
+  });
+  return result;
 }
 
 export async function createDefaultCommissionLevel(container: MedusaContainer) {
@@ -546,7 +546,7 @@ export async function createDefaultCommissionLevel(container: MedusaContainer) {
         percentage_rate: 2
       }
     }
-  })
+  });
 }
 
 export async function createConfigurationRules(container: MedusaContainer) {
@@ -557,6 +557,6 @@ export async function createConfigurationRules(container: MedusaContainer) {
         rule_type: ruleType,
         is_enabled: isEnabled
       }
-    })
+    });
   }
 }

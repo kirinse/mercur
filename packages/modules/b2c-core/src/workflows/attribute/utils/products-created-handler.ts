@@ -1,15 +1,15 @@
-import { MedusaContainer, ProductDTO } from "@medusajs/framework/types";
-import { MedusaError, arrayDifference } from "@medusajs/framework/utils";
+import { MedusaContainer, ProductDTO } from '@medusajs/framework/types';
+import { MedusaError, arrayDifference } from '@medusajs/framework/utils';
 
-import { ProductAttributeValueDTO } from "@mercurjs/framework";
+import { ProductAttributeValueDTO } from '@mercurjs/framework';
 
-import { getApplicableAttributes } from "../../../shared/infra/http/utils/products";
-import { createAttributeValueWorkflow } from "../../../workflows/attribute/workflows";
+import { getApplicableAttributes } from '../../../shared/infra/http/utils/products';
+import { createAttributeValueWorkflow } from '../../../workflows/attribute/workflows';
 
 export const productsCreatedHookHandler = async ({
   products,
   additional_data,
-  container,
+  container
 }: {
   products: ProductDTO[];
   additional_data: Record<string, unknown> | undefined;
@@ -25,9 +25,9 @@ export const productsCreatedHookHandler = async ({
   for (const product of products) {
     const requiredAttributes = (
       await getApplicableAttributes(container, product.id, [
-        "id",
-        "name",
-        "is_required",
+        'id',
+        'name',
+        'is_required'
       ])
     ).filter((attr) => attr.is_required);
 
@@ -39,7 +39,7 @@ export const productsCreatedHookHandler = async ({
     if (missingAttributes.length) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
-        `Missing required attributes for product ${product.title}: ${missingAttributes.join(", ")}`
+        `Missing required attributes for product ${product.title}: ${missingAttributes.join(', ')}`
       );
     }
 
@@ -48,8 +48,8 @@ export const productsCreatedHookHandler = async ({
         input: {
           attribute_id: attrVal.attribute_id,
           value: attrVal.value,
-          product_id: product.id,
-        },
+          product_id: product.id
+        }
       });
     }
   }

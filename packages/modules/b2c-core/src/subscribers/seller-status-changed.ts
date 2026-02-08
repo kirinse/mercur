@@ -1,16 +1,16 @@
-import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 
-import { SellerEvents, StoreStatus, AlgoliaEvents } from '@mercurjs/framework'
+import { AlgoliaEvents, SellerEvents, StoreStatus } from '@mercurjs/framework';
 
-import sellerProduct from '../links/seller-product'
+import sellerProduct from '../links/seller-product';
 
 export default async function sellerStatusChangedHandler({
   event,
   container
 }: SubscriberArgs<{ id: string; store_status: StoreStatus }>) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const eventBus = container.resolve(Modules.EVENT_BUS)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const eventBus = container.resolve(Modules.EVENT_BUS);
 
   const { data: products } = await query.graph({
     entity: sellerProduct.entryPoint,
@@ -18,10 +18,10 @@ export default async function sellerStatusChangedHandler({
     filters: {
       seller_id: event.data.id
     }
-  })
+  });
 
   if (!products.length) {
-    return
+    return;
   }
 
   await eventBus.emit({
@@ -29,7 +29,7 @@ export default async function sellerStatusChangedHandler({
     data: {
       ids: products.map((p) => p.product_id)
     }
-  })
+  });
 }
 
 export const config: SubscriberConfig = {
@@ -37,4 +37,4 @@ export const config: SubscriberConfig = {
   context: {
     subscriberId: 'seller-store-status-changed-handler'
   }
-}
+};

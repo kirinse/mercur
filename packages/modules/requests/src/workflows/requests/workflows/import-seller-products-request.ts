@@ -1,25 +1,25 @@
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
 import {
   CreateRequestDTO,
   ProductRequestUpdatedEvent,
-  emitMultipleEventsStep,
   SELLER_MODULE,
-} from "@mercurjs/framework";
-import { REQUESTS_MODULE } from "../../../modules/requests";
+  emitMultipleEventsStep
+} from '@mercurjs/framework';
 
-import { createRequestStep } from "../../requests/steps";
+import { REQUESTS_MODULE } from '../../../modules/requests';
+import { createRequestStep } from '../../requests/steps';
 
 export const importSellerProductsRequestWorkflow = createWorkflow(
-  "import-seller-products-request",
+  'import-seller-products-request',
   function ({
     seller_id,
-    request_payloads,
+    request_payloads
   }: {
     seller_id: string;
     request_payloads: CreateRequestDTO[];
@@ -31,11 +31,11 @@ export const importSellerProductsRequestWorkflow = createWorkflow(
       ({ requests, seller_id }) => {
         return requests.map(({ id }) => ({
           [SELLER_MODULE]: {
-            seller_id,
+            seller_id
           },
           [REQUESTS_MODULE]: {
-            request_id: id,
-          },
+            request_id: id
+          }
         }));
       }
     );
@@ -43,7 +43,7 @@ export const importSellerProductsRequestWorkflow = createWorkflow(
     const events = transform(requests, (requests) => {
       return requests.map(({ id }) => ({
         name: ProductRequestUpdatedEvent.CREATED,
-        data: { id },
+        data: { id }
       }));
     });
 

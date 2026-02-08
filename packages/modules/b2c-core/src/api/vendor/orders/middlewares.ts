@@ -1,4 +1,4 @@
-import { NextFunction } from 'express'
+import { NextFunction } from 'express';
 
 import {
   AuthenticatedMedusaRequest,
@@ -7,22 +7,22 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import sellerOrderLink from '../../../links/seller-order'
-import sellerLocationLink from '../../../links/seller-stock-location'
-import { checkResourceOwnershipByResourceId } from '../../../shared/infra/http/middlewares'
+import sellerOrderLink from '../../../links/seller-order';
+import sellerLocationLink from '../../../links/seller-stock-location';
+import { checkResourceOwnershipByResourceId } from '../../../shared/infra/http/middlewares';
 import {
   vendorOrderChangesQueryConfig,
   vendorOrderQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   VendorCreateFulfillment,
   VendorCreateFulfillmentType,
   VendorGetOrderChangesParams,
   VendorGetOrderParams,
   VendorOrderCreateShipment
-} from './validators'
+} from './validators';
 
 const transformPaymentFilters = () => {
   return async (
@@ -31,16 +31,16 @@ const transformPaymentFilters = () => {
     next: NextFunction
   ) => {
     if (!req.queryConfig || !req.queryConfig.fields) {
-      return next()
+      return next();
     }
 
     req.queryConfig.fields = req.queryConfig.fields
       .filter((f) => !f.includes('payment_collections'))
-      .concat(['split_order_payment.*'])
+      .concat(['split_order_payment.*']);
 
-    return next()
-  }
-}
+    return next();
+  };
+};
 
 export const vendorOrderMiddlewares: MiddlewareRoute[] = [
   {
@@ -179,4 +179,4 @@ export const vendorOrderMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

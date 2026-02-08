@@ -1,14 +1,12 @@
-import { EntityManager } from "@medusajs/framework/mikro-orm/knex";
-
-import { Context } from "@medusajs/framework/types";
+import { EntityManager } from '@medusajs/framework/mikro-orm/knex';
+import { Context } from '@medusajs/framework/types';
 import {
   InjectTransactionManager,
   MedusaContext,
   MedusaError,
-  MedusaService,
-} from "@medusajs/framework/utils";
+  MedusaService
+} from '@medusajs/framework/utils';
 
-import { Onboarding, Payout, PayoutAccount, PayoutReversal } from "./models";
 import {
   CreateOnboardingDTO,
   CreatePayoutAccountDTO,
@@ -16,8 +14,10 @@ import {
   CreatePayoutReversalDTO,
   IPayoutProvider,
   PayoutAccountStatus,
-  PayoutWebhookActionPayload,
-} from "@mercurjs/framework";
+  PayoutWebhookActionPayload
+} from '@mercurjs/framework';
+
+import { Onboarding, Payout, PayoutAccount, PayoutReversal } from './models';
 
 type InjectedDependencies = {
   payoutProvider: IPayoutProvider;
@@ -27,7 +27,7 @@ class PayoutModuleService extends MedusaService({
   Payout,
   PayoutReversal,
   PayoutAccount,
-  Onboarding,
+  Onboarding
 }) {
   protected provider_: IPayoutProvider;
 
@@ -42,7 +42,7 @@ class PayoutModuleService extends MedusaService({
     @MedusaContext() sharedContext?: Context<EntityManager>
   ) {
     const result = await this.createPayoutAccounts(
-      { context, reference_id: "placeholder", data: {} },
+      { context, reference_id: 'placeholder', data: {} },
       sharedContext
     );
 
@@ -50,14 +50,14 @@ class PayoutModuleService extends MedusaService({
       const { data, id: referenceId } =
         await this.provider_.createPayoutAccount({
           context,
-          account_id: result.id,
+          account_id: result.id
         });
 
       await this.updatePayoutAccounts(
         {
           id: result.id,
           data,
-          reference_id: referenceId,
+          reference_id: referenceId
         },
         sharedContext
       );
@@ -97,7 +97,7 @@ class PayoutModuleService extends MedusaService({
         data: stripe_account as unknown as Record<string, unknown>,
         status: status
           ? PayoutAccountStatus.ACTIVE
-          : PayoutAccountStatus.PENDING,
+          : PayoutAccountStatus.PENDING
       },
       sharedContext
     );
@@ -116,7 +116,7 @@ class PayoutModuleService extends MedusaService({
     @MedusaContext() sharedContext?: Context<EntityManager>
   ) {
     const [existingOnboarding] = await this.listOnboardings({
-      payout_account_id,
+      payout_account_id
     });
     const account = await this.retrievePayoutAccount(payout_account_id);
 
@@ -129,7 +129,7 @@ class PayoutModuleService extends MedusaService({
     if (!existingOnboarding) {
       onboarding = await super.createOnboardings(
         {
-          payout_account_id,
+          payout_account_id
         },
         sharedContext
       );
@@ -139,7 +139,7 @@ class PayoutModuleService extends MedusaService({
       {
         id: onboarding.id,
         data: providerData,
-        context,
+        context
       },
       sharedContext
     );
@@ -161,7 +161,7 @@ class PayoutModuleService extends MedusaService({
       currency_code,
       account_id,
       transaction_id,
-      source_transaction,
+      source_transaction
     } = input;
 
     const payoutAccount = await this.retrievePayoutAccount(account_id);
@@ -171,7 +171,7 @@ class PayoutModuleService extends MedusaService({
       amount,
       currency: currency_code,
       transaction_id,
-      source_transaction,
+      source_transaction
     });
 
     // @ts-expect-error BigNumber incompatible interface
@@ -180,7 +180,7 @@ class PayoutModuleService extends MedusaService({
         data,
         amount,
         currency_code,
-        payout_account: payoutAccount.id,
+        payout_account: payoutAccount.id
       },
       sharedContext
     );
@@ -196,7 +196,7 @@ class PayoutModuleService extends MedusaService({
     const payout = await this.retrievePayout(input.payout_id);
 
     if (!payout || !payout.data || !payout.data.id) {
-      throw new MedusaError(MedusaError.Types.NOT_FOUND, "Payout not found");
+      throw new MedusaError(MedusaError.Types.NOT_FOUND, 'Payout not found');
     }
 
     const transfer_id = payout.data.id as string;
@@ -204,7 +204,7 @@ class PayoutModuleService extends MedusaService({
     const transferReversal = await this.provider_.reversePayout({
       transfer_id,
       amount: input.amount,
-      currency: input.currency_code,
+      currency: input.currency_code
     });
 
     // @ts-expect-error BigNumber incompatible interface
@@ -213,7 +213,7 @@ class PayoutModuleService extends MedusaService({
         data: transferReversal as unknown as Record<string, unknown>,
         amount: input.amount,
         currency_code: input.currency_code,
-        payout: payout.id,
+        payout: payout.id
       },
       sharedContext
     );

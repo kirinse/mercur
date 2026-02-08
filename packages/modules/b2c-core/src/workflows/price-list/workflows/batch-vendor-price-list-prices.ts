@@ -1,19 +1,19 @@
 import {
   CreatePriceListPriceWorkflowDTO,
   UpdatePriceListPriceWorkflowDTO
-} from '@medusajs/framework/types'
-import { batchPriceListPricesWorkflow } from '@medusajs/medusa/core-flows'
-import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk'
+} from '@medusajs/framework/types';
+import { batchPriceListPricesWorkflow } from '@medusajs/medusa/core-flows';
+import { WorkflowResponse, createWorkflow } from '@medusajs/workflows-sdk';
 
-import { validateVendorPriceListPricesStep } from '../steps'
+import { validateVendorPriceListPricesStep } from '../steps';
 
 type WorkflowInput = {
-  id: string
-  seller_id: string
-  delete: string[]
-  create: CreatePriceListPriceWorkflowDTO[]
-  update: UpdatePriceListPriceWorkflowDTO[]
-}
+  id: string;
+  seller_id: string;
+  delete: string[];
+  create: CreatePriceListPriceWorkflowDTO[];
+  update: UpdatePriceListPriceWorkflowDTO[];
+};
 
 export const batchVendorPriceListPricesWorkflow = createWorkflow(
   'batch-vendor-price-list-prices',
@@ -23,7 +23,7 @@ export const batchVendorPriceListPricesWorkflow = createWorkflow(
       update: input.update,
       price_list_id: input.id,
       seller_id: input.seller_id
-    })
+    });
 
     const result = batchPriceListPricesWorkflow.runAsStep({
       input: {
@@ -34,7 +34,7 @@ export const batchVendorPriceListPricesWorkflow = createWorkflow(
           delete: input.delete
         }
       }
-    })
-    return new WorkflowResponse(result)
+    });
+    return new WorkflowResponse(result);
   }
-)
+);

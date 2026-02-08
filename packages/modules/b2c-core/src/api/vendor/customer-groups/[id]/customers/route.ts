@@ -1,11 +1,11 @@
-import { linkCustomersToCustomerGroupWorkflow } from '@medusajs/core-flows'
+import { linkCustomersToCustomerGroupWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { VendorLinkCustomersToGroupType } from '../../validators'
+import { VendorLinkCustomersToGroupType } from '../../validators';
 
 /**
  * @oas [post] /vendor/customer-groups/{id}/customers
@@ -45,9 +45,9 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorLinkCustomersToGroupType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
-  const { add, remove } = req.validatedBody
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
+  const { add, remove } = req.validatedBody;
 
   await linkCustomersToCustomerGroupWorkflow.run({
     container: req.scope,
@@ -56,7 +56,7 @@ export const POST = async (
       add,
       remove
     }
-  })
+  });
 
   const {
     data: [customer_group]
@@ -66,7 +66,7 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
-  res.json({ customer_group })
-}
+  res.json({ customer_group });
+};

@@ -1,13 +1,14 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerRequest from "../../../links/seller-request";
-import { fetchSellerByAuthActorId } from "@mercurjs/framework";
-import { createRequestWorkflow } from "../../../workflows/requests/workflows";
-import { VendorCreateRequestType } from "./validators";
+import { fetchSellerByAuthActorId } from '@mercurjs/framework';
+
+import sellerRequest from '../../../links/seller-request';
+import { createRequestWorkflow } from '../../../workflows/requests/workflows';
+import { VendorCreateRequestType } from './validators';
 
 /**
  * @oas [get] /vendor/requests
@@ -61,17 +62,17 @@ export const GET = async (
     filters: {
       ...req.filterableFields,
       deleted_at: {
-        $eq: null,
-      },
+        $eq: null
+      }
     },
-    pagination: req.queryConfig.pagination,
+    pagination: req.queryConfig.pagination
   });
 
   res.json({
     requests: requests.map((relation) => relation.request),
     count: metadata!.count,
     offset: metadata!.skip,
-    limit: metadata!.take,
+    limit: metadata!.take
   });
 };
 
@@ -117,21 +118,21 @@ export const POST = async (
     input: {
       data: {
         submitter_id: req.auth_context.actor_id,
-        ...req.validatedBody.request,
+        ...req.validatedBody.request
       },
-      seller_id: seller.id,
+      seller_id: seller.id
     },
-    container: req.scope,
+    container: req.scope
   });
 
   const {
-    data: [request],
+    data: [request]
   } = await query.graph({
-    entity: "request",
+    entity: 'request',
     fields: req.queryConfig.fields,
     filters: {
-      id: result[0].id,
-    },
+      id: result[0].id
+    }
   });
 
   res.status(201).json({ request });

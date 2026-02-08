@@ -1,8 +1,10 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 
-import { COMMISSION_MODULE, CommissionModuleService } from "../../../../modules/commission";
-
-import { listCommissionRulesWorkflow } from "../../../../workflows/commission/workflows";
+import {
+  COMMISSION_MODULE,
+  CommissionModuleService
+} from '../../../../modules/commission';
+import { listCommissionRulesWorkflow } from '../../../../workflows/commission/workflows';
 
 export async function GET(
   req: MedusaRequest,
@@ -12,23 +14,23 @@ export async function GET(
 
   const ids = await service.listCommissionRules(
     {
-      q: req.query.q,
+      q: req.query.q
     },
-    { select: ["id"] }
+    { select: ['id'] }
   );
 
   const { result } = await listCommissionRulesWorkflow.run({
     container: req.scope,
     input: {
       ids: ids.map((v) => v.id),
-      pagination: req.queryConfig.pagination,
-    },
+      pagination: req.queryConfig.pagination
+    }
   });
 
   res.json({
     commission_rules: result.commission_rules,
     count: result.count,
     offset: req.queryConfig.pagination.skip,
-    limit: req.queryConfig.pagination.take,
+    limit: req.queryConfig.pagination.take
   });
 }

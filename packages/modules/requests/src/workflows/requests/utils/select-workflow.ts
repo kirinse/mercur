@@ -7,7 +7,7 @@ import {
   acceptReviewRemoveRequestWorkflow,
   acceptSellerCreationRequestWorkflow,
   updateRequestWorkflow
-} from "../workflows";
+} from '../workflows';
 
 const workflowMap: Record<string, any> = {
   product: acceptProductRequestWorkflow,
@@ -18,7 +18,7 @@ const workflowMap: Record<string, any> = {
   product_type: acceptProductTypeRequestWorkflow,
   product_tag: acceptProductTagRequestWorkflow,
   seller: acceptSellerCreationRequestWorkflow,
-  review_remove: acceptReviewRemoveRequestWorkflow,
+  review_remove: acceptReviewRemoveRequestWorkflow
 };
 
 export const getRequestWorkflowByType = (type: string) =>

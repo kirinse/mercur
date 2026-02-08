@@ -1,13 +1,16 @@
-import { MedusaResponse, AuthenticatedMedusaRequest } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import {
   deleteStockLocationsWorkflow,
   updateStockLocationsWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { VendorUpdateStockLocationType } from '../validators'
+import { VendorUpdateStockLocationType } from '../validators';
 
 /**
  * @oas [get] /vendor/stock-locations/{id}
@@ -47,7 +50,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [stockLocation]
@@ -60,12 +63,12 @@ export const GET = async (
       }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
   res.status(200).json({
     stock_location: stockLocation
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/stock-locations/{id}
@@ -110,7 +113,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateStockLocationType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateStockLocationsWorkflow(req.scope).run({
     input: {
@@ -119,13 +122,13 @@ export const POST = async (
       },
       update: req.validatedBody
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.STOCK_LOCATION_CHANGED,
     data: { id: req.params.id }
-  })
+  });
 
   const {
     data: [stockLocation]
@@ -138,12 +141,12 @@ export const POST = async (
       }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
   res.status(200).json({
     stock_location: stockLocation
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /vendor/stock-locations/{id}
@@ -189,17 +192,17 @@ export const DELETE = async (
     input: {
       ids: [req.params.id]
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.STOCK_LOCATION_CHANGED,
     data: { id: req.params.id }
-  })
+  });
 
   res.status(200).json({
     id: req.params.id,
     object: 'stock_location',
     deleted: true
-  })
-}
+  });
+};

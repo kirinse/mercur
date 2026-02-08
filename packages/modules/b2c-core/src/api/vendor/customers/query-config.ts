@@ -11,7 +11,7 @@ export const vendorCustomerFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const vendorCustomersFields = [
   'id',
@@ -25,7 +25,7 @@ export const vendorCustomersFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const vendorCustomerQueryConfig = {
   list: {
@@ -36,7 +36,7 @@ export const vendorCustomerQueryConfig = {
     defaults: vendorCustomerFields,
     isList: false
   }
-}
+};
 
 export const vendorCustomerOrdersFields = [
   'id',
@@ -56,7 +56,7 @@ export const vendorCustomerOrdersFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const vendorCustomerOrdersQueryConfig = {
   list: {
@@ -67,4 +67,4 @@ export const vendorCustomerOrdersQueryConfig = {
     defaults: vendorCustomerOrdersFields,
     isList: false
   }
-}
+};

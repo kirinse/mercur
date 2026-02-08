@@ -1,9 +1,7 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
-import { ConfigModule, Logger } from "@medusajs/framework/types";
-import { MedusaError, isPresent } from "@medusajs/framework/utils";
-
-import { PAYOUT_MODULE } from "..";
+import { ConfigModule, Logger } from '@medusajs/framework/types';
+import { MedusaError, isPresent } from '@medusajs/framework/utils';
 
 import {
   CreatePayoutAccountInput,
@@ -15,8 +13,10 @@ import {
   ProcessPayoutInput,
   ProcessPayoutResponse,
   ReversePayoutInput,
-  getSmallestUnit,
-} from "@mercurjs/framework";
+  getSmallestUnit
+} from '@mercurjs/framework';
+
+import { PAYOUT_MODULE } from '..';
 
 type InjectedDependencies = {
   logger: Logger;
@@ -37,16 +37,16 @@ export class PayoutProvider implements IPayoutProvider {
     this.logger_ = logger;
 
     const moduleDef = configModule.modules?.[PAYOUT_MODULE];
-    if (typeof moduleDef !== "boolean" && moduleDef?.options) {
+    if (typeof moduleDef !== 'boolean' && moduleDef?.options) {
       this.config_ = {
         apiKey: process.env.STRIPE_SECRET_API_KEY as string,
         webhookSecret: process.env
-          .STRIPE_CONNECTED_ACCOUNTS_WEBHOOK_SECRET as string,
+          .STRIPE_CONNECTED_ACCOUNTS_WEBHOOK_SECRET as string
       };
     }
 
     this.client_ = new Stripe(this.config_.apiKey, {
-      apiVersion: "2025-02-24.acacia",
+      apiVersion: '2025-02-24.acacia'
     });
   }
 
@@ -55,7 +55,7 @@ export class PayoutProvider implements IPayoutProvider {
     currency,
     account_reference_id,
     transaction_id,
-    source_transaction,
+    source_transaction
   }: ProcessPayoutInput): Promise<ProcessPayoutResponse> {
     try {
       this.logger_.info(
@@ -69,19 +69,19 @@ export class PayoutProvider implements IPayoutProvider {
           amount: getSmallestUnit(amount, currency),
           source_transaction,
           metadata: {
-            transaction_id,
-          },
+            transaction_id
+          }
         },
         { idempotencyKey: transaction_id }
       );
 
       return {
-        data: transfer as unknown as Record<string, unknown>,
+        data: transfer as unknown as Record<string, unknown>
       };
     } catch (error) {
-      this.logger_.error("Error occured while creating payout", error);
+      this.logger_.error('Error occured while creating payout', error);
 
-      const message = error?.message ?? "Error occured while creating payout";
+      const message = error?.message ?? 'Error occured while creating payout';
 
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, message);
     }
@@ -89,11 +89,11 @@ export class PayoutProvider implements IPayoutProvider {
 
   async createPayoutAccount({
     context,
-    account_id,
+    account_id
   }: CreatePayoutAccountInput): Promise<CreatePayoutAccountResponse> {
     try {
       const { country } = context;
-      this.logger_.info("Creating payment profile");
+      this.logger_.info('Creating payment profile');
 
       if (!isPresent(country)) {
         throw new MedusaError(
@@ -104,19 +104,19 @@ export class PayoutProvider implements IPayoutProvider {
 
       const account = await this.client_.accounts.create({
         country: country as string,
-        type: "standard",
+        type: 'standard',
         metadata: {
-          account_id,
-        },
+          account_id
+        }
       });
 
       return {
         data: account as unknown as Record<string, unknown>,
-        id: account.id,
+        id: account.id
       };
     } catch (error) {
       const message =
-        error?.message ?? "Error occured while creating payout account";
+        error?.message ?? 'Error occured while creating payout account';
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, message);
     }
   }
@@ -126,7 +126,7 @@ export class PayoutProvider implements IPayoutProvider {
     context: Record<string, unknown>
   ): Promise<InitializeOnboardingResponse> {
     try {
-      this.logger_.info("Initializing onboarding");
+      this.logger_.info('Initializing onboarding');
 
       if (!isPresent(context.refresh_url)) {
         throw new MedusaError(
@@ -146,15 +146,15 @@ export class PayoutProvider implements IPayoutProvider {
         account: accountId,
         refresh_url: context.refresh_url as string,
         return_url: context.return_url as string,
-        type: "account_onboarding",
+        type: 'account_onboarding'
       });
 
       return {
-        data: accountLink as unknown as Record<string, unknown>,
+        data: accountLink as unknown as Record<string, unknown>
       };
     } catch (error) {
       const message =
-        error?.message ?? "Error occured while initializing onboarding";
+        error?.message ?? 'Error occured while initializing onboarding';
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, message);
     }
   }
@@ -164,7 +164,7 @@ export class PayoutProvider implements IPayoutProvider {
       const account = await this.client_.accounts.retrieve(accountId);
       return account;
     } catch (error) {
-      const message = error?.message ?? "Error occured while getting account";
+      const message = error?.message ?? 'Error occured while getting account';
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, message);
     }
   }
@@ -174,19 +174,19 @@ export class PayoutProvider implements IPayoutProvider {
       const reversal = await this.client_.transfers.createReversal(
         input.transfer_id,
         {
-          amount: getSmallestUnit(input.amount, input.currency),
+          amount: getSmallestUnit(input.amount, input.currency)
         }
       );
 
       return reversal;
     } catch (error) {
-      const message = error?.message ?? "Error occured while reversing payout";
+      const message = error?.message ?? 'Error occured while reversing payout';
       throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, message);
     }
   }
 
   async getWebhookActionAndData(payload: PayoutWebhookActionPayload) {
-    const signature = payload.headers["stripe-signature"] as string;
+    const signature = payload.headers['stripe-signature'] as string;
 
     const event = this.client_.webhooks.constructEvent(
       payload.rawData as string | Buffer,
@@ -197,13 +197,13 @@ export class PayoutProvider implements IPayoutProvider {
     const data = event.data.object as Stripe.Account;
 
     switch (event.type) {
-      case "account.updated":
+      case 'account.updated':
         // here you can validate account data to make sure it's valid
         return {
           action: PayoutWebhookAction.ACCOUNT_AUTHORIZED,
           data: {
-            account_id: data.metadata?.account_id as string,
-          },
+            account_id: data.metadata?.account_id as string
+          }
         };
     }
 

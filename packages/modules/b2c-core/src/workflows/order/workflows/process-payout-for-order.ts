@@ -1,44 +1,44 @@
-import { Modules } from "@medusajs/framework/utils";
-import { transform, when } from "@medusajs/framework/workflows-sdk";
+import { Modules } from '@medusajs/framework/utils';
+import { transform, when } from '@medusajs/framework/workflows-sdk';
 import {
   createRemoteLinkStep,
   emitEventStep,
-  useQueryGraphStep,
-} from "@medusajs/medusa/core-flows";
-import { createWorkflow } from "@medusajs/workflows-sdk";
+  useQueryGraphStep
+} from '@medusajs/medusa/core-flows';
+import { createWorkflow } from '@medusajs/workflows-sdk';
 
-import { PayoutWorkflowEvents } from "@mercurjs/framework";
-import { PAYOUT_MODULE } from "../../../modules/payout";
+import { PayoutWorkflowEvents } from '@mercurjs/framework';
 
+import { PAYOUT_MODULE } from '../../../modules/payout';
 import {
   calculatePayoutForOrderStep,
   createPayoutStep,
   validateNoExistingPayoutForOrderStep,
-  validateSellerPayoutAccountStep,
-} from "../steps";
+  validateSellerPayoutAccountStep
+} from '../steps';
 
 type ProcessPayoutForOrderWorkflowInput = {
   order_id: string;
 };
 
 export const processPayoutForOrderWorkflow = createWorkflow(
-  { name: "process-payout-for-order" },
+  { name: 'process-payout-for-order' },
   function (input: ProcessPayoutForOrderWorkflowInput) {
     validateNoExistingPayoutForOrderStep(input.order_id);
 
     const { data: orders } = useQueryGraphStep({
-      entity: "order",
+      entity: 'order',
       fields: [
-        "seller.id",
-        "total",
-        "currency_code",
-        "payment_collections.payment_sessions.*",
+        'seller.id',
+        'total',
+        'currency_code',
+        'payment_collections.payment_sessions.*'
       ],
       filters: {
-        id: input.order_id,
+        id: input.order_id
       },
-      options: { throwIfKeyNotFound: true },
-    }).config({ name: "query-order" });
+      options: { throwIfKeyNotFound: true }
+    }).config({ name: 'query-order' });
 
     const order = transform(orders, (orders) => {
       const transformed = orders[0];
@@ -50,17 +50,17 @@ export const processPayoutForOrderWorkflow = createWorkflow(
         currency_code: transformed.currency_code,
         source_transaction:
           transformed.payment_collections[0].payment_sessions[0].data
-            .latest_charge,
+            .latest_charge
       };
     });
 
     const { data: sellers } = useQueryGraphStep({
-      entity: "seller",
-      fields: ["*", "payout_account.*"],
+      entity: 'seller',
+      fields: ['*', 'payout_account.*'],
       filters: {
-        id: order.seller_id,
-      },
-    }).config({ name: "query-seller" });
+        id: order.seller_id
+      }
+    }).config({ name: 'query-seller' });
 
     const seller = transform(sellers, (sellers) => sellers[0]);
 
@@ -73,7 +73,7 @@ export const processPayoutForOrderWorkflow = createWorkflow(
       amount: payout_total,
       currency_code: order.currency_code,
       account_id: seller.payout_account.id,
-      source_transaction: order.source_transaction,
+      source_transaction: order.source_transaction
     });
 
     when({ createPayoutErr }, ({ createPayoutErr }) => !createPayoutErr).then(
@@ -81,21 +81,21 @@ export const processPayoutForOrderWorkflow = createWorkflow(
         createRemoteLinkStep([
           {
             [Modules.ORDER]: {
-              order_id: order.id,
+              order_id: order.id
             },
             [PAYOUT_MODULE]: {
-              payout_id: payout!.id,
-            },
-          },
+              payout_id: payout!.id
+            }
+          }
         ]);
 
         emitEventStep({
           eventName: PayoutWorkflowEvents.SUCCEEDED,
           data: {
             id: payout!.id,
-            order_id: order.id,
-          },
-        }).config({ name: "emit-payout-succeeded" });
+            order_id: order.id
+          }
+        }).config({ name: 'emit-payout-succeeded' });
       }
     );
 
@@ -104,9 +104,9 @@ export const processPayoutForOrderWorkflow = createWorkflow(
         emitEventStep({
           eventName: PayoutWorkflowEvents.FAILED,
           data: {
-            order_id: order.id,
-          },
-        }).config({ name: "emit-payout-failed" });
+            order_id: order.id
+          }
+        }).config({ name: 'emit-payout-failed' });
       }
     );
   }

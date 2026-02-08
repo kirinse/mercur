@@ -2,21 +2,21 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import sellerReturn from '../../../links/seller-return'
+import sellerReturn from '../../../links/seller-return';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { vendorReturnsQueryConfig } from './query-config'
+} from '../../../shared/infra/http/middlewares';
+import { vendorReturnsQueryConfig } from './query-config';
 import {
   VendorGetReturnsParams,
   VendorReceiveReturnItemsSchema,
   VendorReceiveReturnSchema,
   VendorReturnsDismissItemsActionSchema,
   VendorReturnsReceiveItemsActionSchema
-} from './validators'
+} from './validators';
 
 export const vendorReturnsMiddlewares: MiddlewareRoute[] = [
   {
@@ -161,4 +161,4 @@ export const vendorReturnsMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

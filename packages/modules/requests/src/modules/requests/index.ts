@@ -1,11 +1,11 @@
-import { Module } from "@medusajs/framework/utils";
+import { Module } from '@medusajs/framework/utils';
 
-import RequestsModuleService from "./service";
+import RequestsModuleService from './service';
 
-export const REQUESTS_MODULE = "requests";
+export const REQUESTS_MODULE = 'requests';
 export { RequestsModuleService };
-export * from "./utils";
+export * from './utils';
 
 export default Module(REQUESTS_MODULE, {
-  service: RequestsModuleService,
+  service: RequestsModuleService
 });

@@ -14,7 +14,7 @@ export const vendorInventoryItemFields = [
   'requires_shipping',
   'thumbnail',
   'metadata'
-]
+];
 
 export const vendorInventoryItemQueryConfig = {
   list: {
@@ -25,7 +25,7 @@ export const vendorInventoryItemQueryConfig = {
     defaults: vendorInventoryItemFields,
     isList: false
   }
-}
+};
 
 export const vendorInventoryLevelFields = [
   'id',
@@ -37,7 +37,7 @@ export const vendorInventoryLevelFields = [
   'incoming_quantity',
   '*stock_locations',
   '*stock_locations.address'
-]
+];
 
 export const vendorInventoryLevelQueryConfig = {
   list: {
@@ -48,4 +48,4 @@ export const vendorInventoryLevelQueryConfig = {
     defaults: vendorInventoryLevelFields,
     isList: false
   }
-}
+};

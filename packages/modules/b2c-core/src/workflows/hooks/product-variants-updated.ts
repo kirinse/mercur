@@ -1,7 +1,7 @@
-import { Modules } from '@medusajs/framework/utils'
-import { updateProductVariantsWorkflow } from '@medusajs/medusa/core-flows'
+import { Modules } from '@medusajs/framework/utils';
+import { updateProductVariantsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { AlgoliaEvents } from '@mercurjs/framework'
+import { AlgoliaEvents } from '@mercurjs/framework';
 
 updateProductVariantsWorkflow.hooks.productVariantsUpdated(
   async ({ product_variants }, { container }) => {
@@ -12,6 +12,6 @@ updateProductVariantsWorkflow.hooks.productVariantsUpdated(
           .map((v) => v.product_id)
           .filter((v) => v && v !== null)
       }
-    })
+    });
   }
-)
+);

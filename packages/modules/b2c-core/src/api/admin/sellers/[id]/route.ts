@@ -1,8 +1,11 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { updateSellerWorkflow } from '../../../../workflows/seller/workflows'
-import { AdminUpdateSellerType } from '../validators'
+import { updateSellerWorkflow } from '../../../../workflows/seller/workflows';
+import { AdminUpdateSellerType } from '../validators';
 
 /**
  * @oas [get] /admin/sellers/{id}
@@ -53,7 +56,7 @@ export async function GET(
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [seller]
@@ -66,11 +69,11 @@ export async function GET(
       }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
   res.json({
     seller
-  })
+  });
 }
 
 /**
@@ -162,15 +165,15 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<AdminUpdateSellerType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   await updateSellerWorkflow(req.scope).run({
     input: {
       id,
       ...req.validatedBody
     }
-  })
+  });
 
   const {
     data: [seller]
@@ -178,7 +181,7 @@ export const POST = async (
     entity: 'seller',
     fields: req.queryConfig.fields,
     filters: { id }
-  })
+  });
 
-  res.json({ seller })
-}
+  res.json({ seller });
+};

@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { deletePromotionsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { deletePromotionsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils'
-import { updateVendorPromotionWorkflow } from '../../../../workflows/promotions/workflows'
-import { VendorUpdatePromotionType } from '../validators'
+import { fetchSellerByAuthActorId } from '../../../../shared/infra/http/utils';
+import { updateVendorPromotionWorkflow } from '../../../../workflows/promotions/workflows';
+import { VendorUpdatePromotionType } from '../validators';
 
 /**
  * @oas [get] /vendor/promotions/{id}
@@ -45,7 +48,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [promotion]
@@ -55,10 +58,10 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ promotion })
-}
+  res.json({ promotion });
+};
 
 /**
  * @oas [delete] /vendor/promotions/{id}
@@ -100,15 +103,15 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await deletePromotionsWorkflow.run({
     container: req.scope,
     input: { ids: [id] }
-  })
+  });
 
-  res.json({ id, object: 'promotion', deleted: true })
-}
+  res.json({ id, object: 'promotion', deleted: true });
+};
 
 /**
  * @oas [post] /vendor/promotions/{id}
@@ -148,12 +151,12 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdatePromotionType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   await updateVendorPromotionWorkflow.run({
     container: req.scope,
@@ -164,7 +167,7 @@ export const POST = async (
       },
       seller_id: seller.id
     }
-  })
+  });
 
   const {
     data: [promotion]
@@ -174,7 +177,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.status(200).json({ promotion })
-}
+  res.status(200).json({ promotion });
+};

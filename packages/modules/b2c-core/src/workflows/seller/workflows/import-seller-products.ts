@@ -1,23 +1,23 @@
 import {
   createProductsWorkflow,
   emitEventStep,
-  parseProductCsvStep,
-} from "@medusajs/medusa/core-flows";
+  parseProductCsvStep
+} from '@medusajs/medusa/core-flows';
 import {
   WorkflowResponse,
   createWorkflow,
-  transform,
-} from "@medusajs/workflows-sdk";
+  transform
+} from '@medusajs/workflows-sdk';
 
 import {
   ImportSellerProductsRequestUpdatedEvent,
-  RequestStatus,
-} from "@mercurjs/framework";
+  RequestStatus
+} from '@mercurjs/framework';
 
-import { validateProductsToImportStep } from "../steps";
+import { validateProductsToImportStep } from '../steps';
 
 export const importSellerProductsWorkflow = createWorkflow(
-  "import-seller-products",
+  'import-seller-products',
   function (input: {
     file_content: string;
     seller_id: string;
@@ -29,8 +29,8 @@ export const importSellerProductsWorkflow = createWorkflow(
     const created = createProductsWorkflow.runAsStep({
       input: {
         products: batchCreate,
-        additional_data: { seller_id: input.seller_id },
-      },
+        additional_data: { seller_id: input.seller_id }
+      }
     });
 
     const requestsPayload = transform(
@@ -39,11 +39,11 @@ export const importSellerProductsWorkflow = createWorkflow(
         return created.map((p) => ({
           data: {
             ...p,
-            product_id: p.id,
+            product_id: p.id
           },
           submitter_id: input.submitter_id,
-          type: "product_import",
-          status: "pending" as RequestStatus,
+          type: 'product_import',
+          status: 'pending' as RequestStatus
         }));
       }
     );
@@ -53,13 +53,13 @@ export const importSellerProductsWorkflow = createWorkflow(
       ({ requestsPayload, input }) => ({
         request_payloads: requestsPayload,
         seller_id: input.seller_id,
-        submitter_id: input.submitter_id,
+        submitter_id: input.submitter_id
       })
     );
 
     emitEventStep({
       eventName: ImportSellerProductsRequestUpdatedEvent.TO_CREATE,
-      data: eventPayload,
+      data: eventPayload
     });
 
     return new WorkflowResponse(created);

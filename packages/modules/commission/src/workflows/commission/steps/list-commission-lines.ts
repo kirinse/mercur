@@ -1,12 +1,12 @@
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { SELLER_ORDER_LINK } from '@mercurjs/framework';
 
 import {
-  CommissionModuleService,
   COMMISSION_MODULE,
-} from "../../../modules/commission";
-
-import { SELLER_ORDER_LINK } from "@mercurjs/framework";
+  CommissionModuleService
+} from '../../../modules/commission';
 
 type Input = {
   expand: boolean;
@@ -22,7 +22,7 @@ type Input = {
 };
 
 export const listCommissionLinesStep = createStep(
-  "list-commission-lines",
+  'list-commission-lines',
   async (input: Input, { container }) => {
     const { pagination, filters } = input;
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
@@ -43,11 +43,11 @@ export const listCommissionLinesStep = createStep(
     if (filters.seller_id) {
       const { data: sellerOrders } = await query.graph({
         entity: SELLER_ORDER_LINK,
-        fields: ["*", "order.items.id"],
+        fields: ['*', 'order.items.id'],
         filters: {
           seller_id: filters.seller_id,
-          created_at: createdFilter,
-        },
+          created_at: createdFilter
+        }
       });
 
       itemLineIdFilter.$in = sellerOrders
@@ -58,11 +58,11 @@ export const listCommissionLinesStep = createStep(
     const [commissionLines, count] = await service.listAndCountCommissionLines(
       {
         item_line_id: itemLineIdFilter,
-        created_at: createdFilter,
+        created_at: createdFilter
       },
       {
         take: pagination.take,
-        skip: pagination.skip,
+        skip: pagination.skip
       }
     );
 
@@ -72,21 +72,21 @@ export const listCommissionLinesStep = createStep(
       const ruleIds = commissionLines.map((line) => line.rule_id);
 
       const { data: rules } = await query.graph({
-        entity: "commission_rule",
-        fields: ["*", "rate.*"],
+        entity: 'commission_rule',
+        fields: ['*', 'rate.*'],
         filters: {
-          id: ruleIds,
-        },
+          id: ruleIds
+        }
       });
 
       const { data: orders } = await query.graph({
-        entity: "order",
-        fields: ["*", "seller.id", "seller.name", "items.id"],
+        entity: 'order',
+        fields: ['*', 'seller.id', 'seller.name', 'items.id'],
         filters: {
           items: {
-            id: itemIds,
-          },
-        },
+            id: itemIds
+          }
+        }
       });
 
       const expandedLines = commissionLines.map((line) => {

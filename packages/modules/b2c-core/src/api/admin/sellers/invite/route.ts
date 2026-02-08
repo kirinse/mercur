@@ -1,7 +1,7 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 
-import { inviteSellerWorkflow } from '../../../../workflows/seller/workflows'
-import { AdminInviteSellerType } from '../validators'
+import { inviteSellerWorkflow } from '../../../../workflows/seller/workflows';
+import { AdminInviteSellerType } from '../validators';
 
 /**
  * @oas [post] /admin/sellers/invite
@@ -59,7 +59,7 @@ export async function POST(
   const { result: invitation } = await inviteSellerWorkflow.run({
     container: req.scope,
     input: req.validatedBody
-  })
+  });
 
-  res.status(201).json({ invitation })
+  res.status(201).json({ invitation });
 }

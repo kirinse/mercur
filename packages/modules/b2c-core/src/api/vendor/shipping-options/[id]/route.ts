@@ -1,13 +1,16 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
 import {
   deleteShippingOptionsWorkflow,
   updateShippingOptionsWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { VendorUpdateShippingOptionType } from '../validators'
+import { VendorUpdateShippingOptionType } from '../validators';
 
 /**
  * @oas [get] /vendor/shipping-options/{id}
@@ -42,7 +45,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [shippingOption]
@@ -53,10 +56,10 @@ export const GET = async (
       filters: { id: req.params.id }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
-  res.json({ shipping_option: shippingOption })
-}
+  res.json({ shipping_option: shippingOption });
+};
 
 /**
  * @oas [post] /vendor/shipping-options/{id}
@@ -96,17 +99,17 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateShippingOptionType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await updateShippingOptionsWorkflow(req.scope).run({
     input: [{ id: req.params.id, ...req.validatedBody }]
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.SHIPPING_OPTION_CHANGED,
     data: { id: req.params.id }
-  })
+  });
 
   const {
     data: [shippingOption]
@@ -117,10 +120,10 @@ export const POST = async (
       filters: { id: req.params.id }
     },
     { throwIfKeyNotFound: true }
-  )
+  );
 
-  res.json({ shipping_option: shippingOption })
-}
+  res.json({ shipping_option: shippingOption });
+};
 
 /**
  * @oas [delete] /vendor/shipping-options/{id}
@@ -164,18 +167,18 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
   await deleteShippingOptionsWorkflow(req.scope).run({
     input: {
       ids: [id]
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.SHIPPING_OPTION_CHANGED,
     data: { id }
-  })
+  });
 
-  res.json({ id, object: 'shipping_option', deleted: true })
-}
+  res.json({ id, object: 'shipping_option', deleted: true });
+};

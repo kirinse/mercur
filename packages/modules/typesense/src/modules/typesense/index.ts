@@ -1,9 +1,10 @@
 import { Module } from '@medusajs/framework/utils';
 
+import { TYPESENSE_MODULE } from '@mercurjs/framework';
+
 import TypesenseModuleService from './service';
 
-export const TYPESENSE_MODULE = 'algolia';
-export { defaultProductSettings, defaultReviewSettings } from './service';
+export { defaultProductSchema, defaultReviewSchema } from './service';
 export { TypesenseModuleService };
 
 export default Module(TYPESENSE_MODULE, {

@@ -1,5 +1,9 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework";
-import { listOrderCommissionLinesWorkflow } from "../../../../../workflows";
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+
+import { listOrderCommissionLinesWorkflow } from '../../../../../workflows';
 
 export const GET = async (
   req: AuthenticatedMedusaRequest,
@@ -11,8 +15,8 @@ export const GET = async (
     req.scope
   ).run({
     input: {
-      order_id: id,
-    },
+      order_id: id
+    }
   });
 
   res.json({ commission });

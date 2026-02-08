@@ -1,1 +1,1 @@
-export * from './configuration-rule'
+export * from './configuration-rule';

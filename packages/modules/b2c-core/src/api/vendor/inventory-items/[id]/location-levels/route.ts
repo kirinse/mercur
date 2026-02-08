@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils'
-import { createInventoryLevelsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { createInventoryLevelsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { VendorCreateInventoryLocationLevelType } from '../../validators'
+import { VendorCreateInventoryLocationLevelType } from '../../validators';
 
 /**
  * @oas [get] /vendor/inventory-items/{id}/location-levels
@@ -32,7 +35,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: location_levels } = await query.graph({
     entity: 'inventory_level',
@@ -40,12 +43,12 @@ export const GET = async (
     filters: {
       inventory_item_id: req.params.id
     }
-  })
+  });
 
   res.json({
     location_levels
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/inventory-items/{id}/location-levels
@@ -78,8 +81,8 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateInventoryLocationLevelType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   const { result } = await createInventoryLevelsWorkflow(req.scope).run({
     input: {
@@ -90,13 +93,13 @@ export const POST = async (
         }
       ]
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.INVENTORY_ITEM_CHANGED,
     data: { id }
-  })
+  });
 
   const {
     data: [location_level]
@@ -106,6 +109,6 @@ export const POST = async (
     filters: {
       inventory_item_id: result[0].id
     }
-  })
-  res.status(201).json({ location_level })
-}
+  });
+  res.status(201).json({ location_level });
+};

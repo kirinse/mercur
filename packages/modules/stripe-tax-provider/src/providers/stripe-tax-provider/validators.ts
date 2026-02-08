@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 const TaxBreakdownObject = z.object({
   amount: z.number(),
@@ -11,7 +11,7 @@ const TaxBreakdownObject = z.object({
       tax_type: z.string()
     })
   )
-})
+});
 
 export const StripeTaxCalculationResponseValidator = z.object({
   id: z.string(),
@@ -37,8 +37,8 @@ export const StripeTaxCalculationResponseValidator = z.object({
     tax_behavior: z.string(),
     tax_breakdown: z.array(TaxBreakdownObject)
   })
-})
+});
 
 export type StripeTaxCalculationResponse = z.infer<
   typeof StripeTaxCalculationResponseValidator
->
+>;

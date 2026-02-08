@@ -1,14 +1,17 @@
-import { MiddlewareRoute, validateAndTransformQuery } from '@medusajs/framework'
+import {
+  MiddlewareRoute,
+  validateAndTransformQuery
+} from '@medusajs/framework';
 
-import { filterBySellerId } from '../../../shared/infra/http/middlewares'
+import { filterBySellerId } from '../../../shared/infra/http/middlewares';
 import {
   vendorProductCategoryProductsQueryConfig,
   vendorProductCategoryQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   VendorGetProductCategoriesParams,
   VendorGetProductCategoriesProductsParams
-} from './validators'
+} from './validators';
 
 export const vendorProductCategoriesMiddlewares: MiddlewareRoute[] = [
   {
@@ -42,4 +45,4 @@ export const vendorProductCategoriesMiddlewares: MiddlewareRoute[] = [
       filterBySellerId()
     ]
   }
-]
+];

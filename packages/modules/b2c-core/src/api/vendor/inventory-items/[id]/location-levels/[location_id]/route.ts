@@ -1,11 +1,24 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys, Modules, MedusaError } from '@medusajs/framework/utils'
-import { updateInventoryLevelsWorkflow, deleteInventoryLevelsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import {
+  ContainerRegistrationKeys,
+  MedusaError,
+  Modules
+} from '@medusajs/framework/utils';
+import { refetchInventoryItem } from '@medusajs/medusa/api/admin/inventory-items/helpers';
+import {
+  deleteInventoryLevelsWorkflow,
+  updateInventoryLevelsWorkflow
+} from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { VendorUpdateInventoryLevelType, VendorInventoryLevelDeleteResponse } from '../../../validators'
-import { refetchInventoryItem } from '@medusajs/medusa/api/admin/inventory-items/helpers'
+import {
+  VendorInventoryLevelDeleteResponse,
+  VendorUpdateInventoryLevelType
+} from '../../../validators';
 
 /**
  * @oas [post] /vendor/inventory-items/{id}/location-levels/{location_id}
@@ -44,7 +57,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateInventoryLevelType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   await updateInventoryLevelsWorkflow.run({
     input: {
       updates: [
@@ -56,13 +69,13 @@ export const POST = async (
       ]
     },
     container: req.scope
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.INVENTORY_ITEM_CHANGED,
     data: { id: req.params.id }
-  })
+  });
 
   const {
     data: [location_level]
@@ -73,12 +86,12 @@ export const POST = async (
       inventory_item_id: req.params.id,
       location_id: req.params.location_id
     }
-  })
+  });
 
   res.json({
     location_level
-  })
-}
+  });
+};
 
 /**
  * @oas [get] /vendor/inventory-items/{id}/location-levels/{location_id}
@@ -112,7 +125,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [location_level]
@@ -123,12 +136,12 @@ export const GET = async (
       inventory_item_id: req.params.id,
       location_id: req.params.location_id
     }
-  })
+  });
 
   res.json({
     location_level
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /vendor/inventory-items/{id}/location-levels/{location_id}
@@ -163,45 +176,46 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse<VendorInventoryLevelDeleteResponse>
 ) => {
-  const { id, location_id } = req.params
+  const { id, location_id } = req.params;
 
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const result = await query.graph({
-    entity: "inventory_level",
-    filters: { inventory_item_id: id, location_id },
-    fields: ["id", "reserved_quantity"],
-  }, { throwIfKeyNotFound: true });
+  const result = await query.graph(
+    {
+      entity: 'inventory_level',
+      filters: { inventory_item_id: id, location_id },
+      fields: ['id', 'reserved_quantity']
+    },
+    { throwIfKeyNotFound: true }
+  );
 
-  const { id: levelId, reserved_quantity: reservedQuantity } = result.data[0]
+  const { id: levelId, reserved_quantity: reservedQuantity } = result.data[0];
 
   if (reservedQuantity > 0) {
     throw new MedusaError(
       MedusaError.Types.NOT_ALLOWED,
       `Cannot remove Inventory Level ${id} at Location ${location_id} because there are reservations at location`
-    )
+    );
   }
 
-  const deleteInventoryLevelWorkflow = deleteInventoryLevelsWorkflow(req.scope)
+  const deleteInventoryLevelWorkflow = deleteInventoryLevelsWorkflow(req.scope);
 
   await deleteInventoryLevelWorkflow.run({
     input: {
-      id: [levelId],
-    },
-  })
+      id: [levelId]
+    }
+  });
 
   const inventoryItem = await refetchInventoryItem(
     id,
     req.scope,
     req.queryConfig.fields
-  )
+  );
 
   res.status(200).json({
     id: levelId,
-    object: "inventory-level",
+    object: 'inventory-level',
     deleted: true,
-    parent: inventoryItem,
-  })
-}
-
-
+    parent: inventoryItem
+  });
+};

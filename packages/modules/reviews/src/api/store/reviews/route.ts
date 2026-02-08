@@ -1,12 +1,12 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import customerReview from "../../../links/customer-review";
-import { createReviewWorkflow } from "../../../workflows/review/workflows";
-import { StoreCreateReviewType, StoreGetReviewsParamsType } from "./validators";
+import customerReview from '../../../links/customer-review';
+import { createReviewWorkflow } from '../../../workflows/review/workflows';
+import { StoreCreateReviewType, StoreGetReviewsParamsType } from './validators';
 
 /**
  * @oas [post] /store/reviews
@@ -50,20 +50,20 @@ export const POST = async (
     container: req.scope,
     input: {
       ...req.validatedBody,
-      customer_id: req.auth_context.actor_id,
-    },
+      customer_id: req.auth_context.actor_id
+    }
   });
 
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [review],
+    data: [review]
   } = await query.graph({
-    entity: "review",
+    entity: 'review',
     fields: req.queryConfig.fields,
     filters: {
-      id: result.id,
-    },
+      id: result.id
+    }
   });
 
   res.status(201).json({ review });
@@ -131,15 +131,15 @@ export const GET = async (
     entity: customerReview.entryPoint,
     fields: req.queryConfig.fields.map((field) => `review.${field}`),
     filters: {
-      customer_id: req.auth_context.actor_id,
+      customer_id: req.auth_context.actor_id
     },
-    pagination: req.queryConfig.pagination,
+    pagination: req.queryConfig.pagination
   });
 
   res.json({
     reviews: reviews.map((relation) => relation.review),
     count: metadata?.count,
     offset: metadata?.skip,
-    limit: metadata?.take,
+    limit: metadata?.take
   });
 };

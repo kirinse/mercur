@@ -1,31 +1,31 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common'
+import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common';
 import {
   createFindParams,
   createSelectParams
-} from '@medusajs/medusa/api/utils/validators'
+} from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetProductTagParamsType = z.infer<
   typeof VendorGetProductTagParams
->
-export const VendorGetProductTagParams = createSelectParams()
+>;
+export const VendorGetProductTagParams = createSelectParams();
 
 export const VendorGetProductTagsParamsFields = z.object({
   q: z.string().optional(),
   id: z.union([z.string(), z.array(z.string())]).optional(),
   value: z.union([z.string(), z.array(z.string())]).optional()
-})
+});
 
 export type VendorGetProductTagsParamsType = z.infer<
   typeof VendorGetProductTagsParams
->
+>;
 export const VendorGetProductTagsParams = createFindParams({
   limit: 20,
   offset: 0
 })
   .merge(VendorGetProductTagsParamsFields)
-  .merge(applyAndAndOrOperators(VendorGetProductTagsParamsFields))
+  .merge(applyAndAndOrOperators(VendorGetProductTagsParamsFields));
 
 /**
  * @schema VendorCreateProductTag
@@ -40,10 +40,10 @@ export const VendorGetProductTagsParams = createFindParams({
  *     type: object
  *     description: Product tag metadata.
  */
-export type VendorCreateProductTagType = z.infer<typeof VendorCreateProductTag>
+export type VendorCreateProductTagType = z.infer<typeof VendorCreateProductTag>;
 export const VendorCreateProductTag = z
   .object({
     value: z.string(),
     metadata: z.record(z.unknown()).nullish()
   })
-  .strict()
+  .strict();

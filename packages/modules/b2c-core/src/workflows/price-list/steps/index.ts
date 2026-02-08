@@ -1,1 +1,1 @@
-export * from './validate-vendor-price-list-prices'
+export * from './validate-vendor-price-list-prices';

@@ -1,20 +1,20 @@
 import {
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
 import {
   adminCommissionLinesQueryConfig,
   adminCommissionRuleQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   AdminCommissionRuleParams,
   AdminCreateCommissionRule,
   AdminGetCommissionLinesParams,
   AdminUpdateCommissionRule,
   AdminUpsertDefaultCommissionRule
-} from './validators'
+} from './validators';
 
 export const commissionMiddlewares: MiddlewareRoute[] = [
   {
@@ -64,4 +64,4 @@ export const commissionMiddlewares: MiddlewareRoute[] = [
     matcher: '/admin/commission/default',
     middlewares: [validateAndTransformBody(AdminUpsertDefaultCommissionRule)]
   }
-]
+];

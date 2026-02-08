@@ -1,18 +1,19 @@
-import { LinkDefinition } from "@medusajs/framework/types";
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { LinkDefinition } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 import {
   CreateSplitOrderPaymentsDTO,
-  SplitOrderPaymentDTO,
-} from "@mercurjs/framework";
+  SplitOrderPaymentDTO
+} from '@mercurjs/framework';
+
 import {
   SPLIT_ORDER_PAYMENT_MODULE,
-  SplitOrderPaymentModuleService,
-} from "../../../modules/split-order-payment";
+  SplitOrderPaymentModuleService
+} from '../../../modules/split-order-payment';
 
 export const createSplitOrderPaymentsStep = createStep(
-  "create-split-order-payments",
+  'create-split-order-payments',
   async (input: CreateSplitOrderPaymentsDTO[], { container }) => {
     const service = container.resolve<SplitOrderPaymentModuleService>(
       SPLIT_ORDER_PAYMENT_MODULE
@@ -27,11 +28,11 @@ export const createSplitOrderPaymentsStep = createStep(
 
       links.push({
         [Modules.ORDER]: {
-          order_id: payment.order_id,
+          order_id: payment.order_id
         },
         [SPLIT_ORDER_PAYMENT_MODULE]: {
-          split_order_payment_id: result.id,
-        },
+          split_order_payment_id: result.id
+        }
       });
 
       payments.push(result);
@@ -41,7 +42,7 @@ export const createSplitOrderPaymentsStep = createStep(
 
     return new StepResponse(payments, {
       ids: payments.map((p) => p.id),
-      links,
+      links
     });
   },
   async (

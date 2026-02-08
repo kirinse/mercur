@@ -1,10 +1,11 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { AcceptMemberInviteDTO } from "@mercurjs/framework";
-import { SELLER_MODULE, SellerModuleService } from "../../../modules/seller";
+import { AcceptMemberInviteDTO } from '@mercurjs/framework';
+
+import { SELLER_MODULE, SellerModuleService } from '../../../modules/seller';
 
 export const validateMemberInviteStep = createStep(
-  "validate-member-invite",
+  'validate-member-invite',
   async (input: AcceptMemberInviteDTO, { container }) => {
     const service = container.resolve<SellerModuleService>(SELLER_MODULE);
 

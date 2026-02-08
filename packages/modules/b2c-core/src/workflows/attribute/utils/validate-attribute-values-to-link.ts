@@ -2,21 +2,22 @@ import {
   InferTypeOf,
   MedusaContainer,
   ProductCategoryDTO,
-  ProductDTO,
-} from "@medusajs/framework/types";
+  ProductDTO
+} from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   MedusaError,
-  MedusaErrorTypes,
-} from "@medusajs/framework/utils";
+  MedusaErrorTypes
+} from '@medusajs/framework/utils';
 
-import Attribute from "../../../modules/attribute/models/attribute";
-import { ProductAttributeValueDTO } from "@mercurjs/framework";
+import { ProductAttributeValueDTO } from '@mercurjs/framework';
+
+import Attribute from '../../../modules/attribute/models/attribute';
 
 export const validateAttributeValuesToLink = async ({
   attributeValues,
   products,
-  container,
+  container
 }: {
   attributeValues: ProductAttributeValueDTO[];
   products: ProductDTO[];
@@ -36,13 +37,13 @@ export const validateAttributeValuesToLink = async ({
 
     if (!attributeMap.get(id)) {
       const {
-        data: [attribute],
+        data: [attribute]
       } = await query.graph({
-        entity: "attribute",
-        fields: ["product_categories.*", "possible_values.*"],
+        entity: 'attribute',
+        fields: ['product_categories.*', 'possible_values.*'],
         filters: {
-          id,
-        },
+          id
+        }
       });
 
       attributeMap.set(id, attribute);
@@ -87,7 +88,7 @@ export const validateAttributeValuesToLink = async ({
   if (invalidProductIds.length) {
     throw new MedusaError(
       MedusaErrorTypes.INVALID_DATA,
-      `The following products aren't linked to any category from the requested attributes:\n${invalidProductIds.join(", ")}`
+      `The following products aren't linked to any category from the requested attributes:\n${invalidProductIds.join(', ')}`
     );
   }
 };

@@ -4,22 +4,22 @@ import type {
   ProductDTO,
   ProductVariantDTO,
   RegionDTO
-} from '@medusajs/framework/types'
+} from '@medusajs/framework/types';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
-import { StepResponse } from '@medusajs/framework/workflows-sdk'
-import { addOrderLineItemsWorkflow } from '@medusajs/medusa/core-flows'
+} from '@medusajs/framework/utils';
+import { StepResponse } from '@medusajs/framework/workflows-sdk';
+import { addOrderLineItemsWorkflow } from '@medusajs/medusa/core-flows';
 
 type VariantWithPricing = Pick<ProductVariantDTO, 'id' | 'title'> & {
-  product?: Pick<ProductDTO, 'title'>
+  product?: Pick<ProductDTO, 'title'>;
   price_set?: Pick<PriceSetDTO, 'id'> & {
-    prices?: Pick<PriceDTO, 'currency_code'>[]
-  }
-}
+    prices?: Pick<PriceDTO, 'currency_code'>[];
+  };
+};
 
-type RegionWithCurrency = Pick<RegionDTO, 'id' | 'currency_code'>
+type RegionWithCurrency = Pick<RegionDTO, 'id' | 'currency_code'>;
 
 /**
  * This hook provides the pricing context for adding line items to orders in RMA flows (claims, returns, exchanges).
@@ -32,12 +32,13 @@ type RegionWithCurrency = Pick<RegionDTO, 'id' | 'currency_code'>
  */
 addOrderLineItemsWorkflow.hooks.setPricingContext(
   async (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { order, variantIds, region, customerData, additional_data },
     { container }
   ) => {
-    const query = container.resolve(ContainerRegistrationKeys.QUERY)
+    const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
-    const currencyCode = order?.currency_code || region?.currency_code
+    const currencyCode = order?.currency_code || region?.currency_code;
 
     if (variantIds?.length && currencyCode) {
       const { data: variants } = await query.graph({
@@ -51,18 +52,18 @@ addOrderLineItemsWorkflow.hooks.setPricingContext(
         filters: {
           id: variantIds
         }
-      })
+      });
 
-      const variantsWithoutPrice: string[] = []
+      const variantsWithoutPrice: string[] = [];
 
       for (const variant of variants as VariantWithPricing[]) {
-        const prices = variant.price_set?.prices || []
-        const currencyCodes = prices.map((p) => p.currency_code)
+        const prices = variant.price_set?.prices || [];
+        const currencyCodes = prices.map((p) => p.currency_code);
 
         if (!currencyCodes.includes(currencyCode)) {
-          const productTitle = variant.product?.title || 'Unknown'
-          const variantTitle = variant.title || variant.id
-          variantsWithoutPrice.push(`${productTitle} - ${variantTitle}`)
+          const productTitle = variant.product?.title || 'Unknown';
+          const variantTitle = variant.title || variant.id;
+          variantsWithoutPrice.push(`${productTitle} - ${variantTitle}`);
         }
       }
 
@@ -71,7 +72,7 @@ addOrderLineItemsWorkflow.hooks.setPricingContext(
           MedusaError.Types.INVALID_DATA,
           `The following variants do not have a price in ${currencyCode.toUpperCase()}. ` +
             `Please ask the vendor to add prices for these products: ${variantsWithoutPrice.join(', ')}`
-        )
+        );
       }
     }
 
@@ -79,7 +80,7 @@ addOrderLineItemsWorkflow.hooks.setPricingContext(
       return new StepResponse({
         region_id: region.id,
         currency_code: region.currency_code
-      })
+      });
     }
 
     if (order?.region_id) {
@@ -89,24 +90,24 @@ addOrderLineItemsWorkflow.hooks.setPricingContext(
         filters: {
           id: order.region_id
         }
-      })
+      });
 
-      const orderRegion = (regions as RegionWithCurrency[])[0]
+      const orderRegion = (regions as RegionWithCurrency[])[0];
 
       if (orderRegion) {
         return new StepResponse({
           region_id: orderRegion.id,
           currency_code: orderRegion.currency_code
-        })
+        });
       }
     }
 
     if (order?.currency_code) {
       return new StepResponse({
         currency_code: order.currency_code
-      })
+      });
     }
 
-    return new StepResponse({})
+    return new StepResponse({});
   }
-)
+);

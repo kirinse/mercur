@@ -1,17 +1,17 @@
-import { OrderDTO, OrderDetailDTO } from '@medusajs/framework/types'
-import { deduplicate } from '@medusajs/framework/utils'
+import { OrderDTO, OrderDetailDTO } from '@medusajs/framework/types';
+import { deduplicate } from '@medusajs/framework/utils';
 import {
   WorkflowData,
   WorkflowResponse,
   createWorkflow,
   transform
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 import {
   GetOrdersListWorkflowInput,
   useRemoteQueryStep
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { getLastFulfillmentStatus } from '../utils/aggregate-status'
+import { getLastFulfillmentStatus } from '../utils/aggregate-status';
 
 export const getVendorOrdersListWorkflow = createWorkflow(
   'get-vendor-orders-list',
@@ -28,32 +28,33 @@ export const getVendorOrdersListWorkflow = createWorkflow(
         'fulfillments.delivered_at',
         'fulfillments.canceled_at',
         'split_order_payment.*'
-      ])
-    })
+      ]);
+    });
 
     const orders: OrderDTO[] = useRemoteQueryStep({
       entry_point: 'orders',
       fields,
       variables: input.variables,
       list: true
-    })
+    });
 
     const aggregatedOrders = transform({ orders }, ({ orders }) => {
-      const orders_ = orders as any
-      const data = orders_.rows ? orders_.rows : orders_
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const orders_ = orders as any;
+      const data = orders_.rows ? orders_.rows : orders_;
 
       for (const order of data) {
-        delete order.summary
+        delete order.summary;
 
-        order.payment_status = order.split_order_payment?.status
+        order.payment_status = order.split_order_payment?.status;
         order.fulfillment_status = getLastFulfillmentStatus(
           order
-        ) as OrderDetailDTO['fulfillment_status']
+        ) as OrderDetailDTO['fulfillment_status'];
       }
 
-      return orders
-    })
+      return orders;
+    });
 
-    return new WorkflowResponse(aggregatedOrders)
+    return new WorkflowResponse(aggregatedOrders);
   }
-)
+);

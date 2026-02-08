@@ -1,8 +1,8 @@
-import { validateAndTransformQuery } from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+import { validateAndTransformQuery } from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import { adminOrderSetQueryConfig } from './query-config'
-import { AdminOrderSetParams } from './validators'
+import { adminOrderSetQueryConfig } from './query-config';
+import { AdminOrderSetParams } from './validators';
 
 export const orderSetsMiddlewares: MiddlewareRoute[] = [
   {
@@ -25,4 +25,4 @@ export const orderSetsMiddlewares: MiddlewareRoute[] = [
       )
     ]
   }
-]
+];

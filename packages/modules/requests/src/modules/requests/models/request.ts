@@ -1,4 +1,4 @@
-import { model } from '@medusajs/framework/utils'
+import { model } from '@medusajs/framework/utils';
 
 export const Request = model.define('request', {
   id: model.id({ prefix: 'req' }).primaryKey(),
@@ -10,4 +10,4 @@ export const Request = model.define('request', {
   status: model
     .enum(['draft', 'pending', 'accepted', 'rejected'])
     .default('pending')
-})
+});

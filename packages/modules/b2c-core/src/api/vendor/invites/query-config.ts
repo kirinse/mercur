@@ -4,7 +4,7 @@ export const vendorMemberInviteFields = [
   'role',
   'expires_at',
   'accepted'
-]
+];
 
 export const vendorMemberInviteQueryConfig = {
   list: {
@@ -15,4 +15,4 @@ export const vendorMemberInviteQueryConfig = {
     defaults: vendorMemberInviteFields,
     isList: false
   }
-}
+};

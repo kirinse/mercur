@@ -18,7 +18,7 @@ export const vendorReturnFields = [
   'canceled_at',
   'requested_at',
   'received_at'
-]
+];
 
 export const vendorReturnsQueryConfig = {
   list: {
@@ -29,4 +29,4 @@ export const vendorReturnsQueryConfig = {
     defaults: vendorReturnFields,
     isList: false
   }
-}
+};

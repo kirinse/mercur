@@ -1,9 +1,9 @@
-import { markOrderFulfillmentAsDeliveredWorkflow } from '@medusajs/core-flows'
+import { markOrderFulfillmentAsDeliveredWorkflow } from '@medusajs/core-flows';
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [post] /vendor/orders/{id}/fulfillments/{fulfillment_id}/mark-as-delivered
@@ -44,12 +44,12 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   await markOrderFulfillmentAsDeliveredWorkflow.run({
     container: req.scope,
     input: { orderId: req.params.id, fulfillmentId: req.params.fulfillment_id }
-  })
+  });
 
   const {
     data: [order]
@@ -59,7 +59,7 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ order })
-}
+  res.json({ order });
+};

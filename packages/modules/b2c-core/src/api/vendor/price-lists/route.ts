@@ -1,10 +1,13 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys, omitDeep } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys, omitDeep } from '@medusajs/framework/utils';
 
-import sellerPriceList from '../../../links/seller-price-list'
-import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils'
-import { createVendorPriceListWorkflow } from '../../../workflows/price-list/workflows'
-import { VendorCreatePriceListType } from './validators'
+import sellerPriceList from '../../../links/seller-price-list';
+import { fetchSellerByAuthActorId } from '../../../shared/infra/http/utils';
+import { createVendorPriceListWorkflow } from '../../../workflows/price-list/workflows';
+import { VendorCreatePriceListType } from './validators';
 
 /**
  * @oas [get] /vendor/price-lists
@@ -59,12 +62,12 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const { data: sellerPriceLists } = await query.graph({
     entity: sellerPriceList.entryPoint,
@@ -73,9 +76,9 @@ export const GET = async (
       seller_id: seller.id,
       deleted_at: { $eq: null }
     }
-  })
+  });
 
-  const priceListIds = sellerPriceLists.map((rel) => rel.price_list_id)
+  const priceListIds = sellerPriceLists.map((rel) => rel.price_list_id);
 
   if (priceListIds.length === 0) {
     return res.json({
@@ -83,30 +86,30 @@ export const GET = async (
       count: 0,
       offset: req.queryConfig.pagination?.skip ?? 0,
       limit: req.queryConfig.pagination?.take ?? 50
-    })
+    });
   }
-  const filterableFields = omitDeep(req.filterableFields, ['seller_id'])
+  const filterableFields = omitDeep(req.filterableFields, ['seller_id']);
 
   const priceListFilters = {
     ...filterableFields,
     id: { $in: priceListIds },
     deleted_at: { $eq: null }
-  }
+  };
 
   const { data: price_lists, metadata } = await query.graph({
     entity: 'price_list',
     fields: req.queryConfig.fields,
     filters: priceListFilters,
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     price_lists,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/price-lists
@@ -149,14 +152,14 @@ export const POST = async (
   const seller = await fetchSellerByAuthActorId(
     req.auth_context.actor_id,
     req.scope
-  )
+  );
 
   const {
     result: [price_list]
   } = await createVendorPriceListWorkflow.run({
     container: req.scope,
     input: { price_lists_data: req.validatedBody, seller_id: seller.id }
-  })
+  });
 
-  res.status(201).json({ price_list })
-}
+  res.status(201).json({ price_list });
+};

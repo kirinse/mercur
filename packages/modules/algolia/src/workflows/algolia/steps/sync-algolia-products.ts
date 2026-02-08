@@ -1,34 +1,35 @@
-import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { ContainerRegistrationKeys, Modules } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
-import { ALGOLIA_MODULE, AlgoliaModuleService } from "../../../modules/algolia";
-import { AlgoliaEvents, IndexType } from "@mercurjs/framework";
+import { AlgoliaEvents, IndexType } from '@mercurjs/framework';
+
+import { ALGOLIA_MODULE, AlgoliaModuleService } from '../../../modules/algolia';
 
 const CHUNK_SIZE = 100;
 
 export const syncAlgoliaProductsStep = createStep(
-  "sync-algolia-products",
+  'sync-algolia-products',
   async (_: void, { container }) => {
     const query = container.resolve(ContainerRegistrationKeys.QUERY);
     const algolia = container.resolve<AlgoliaModuleService>(ALGOLIA_MODULE);
 
     const { data: productsToDelete } = await query.graph({
-      entity: "product",
+      entity: 'product',
       filters: {
         $or: [
           {
             deleted_at: {
-              $ne: null,
-            },
+              $ne: null
+            }
           },
           {
             status: {
-              $ne: "published",
-            },
-          },
-        ],
+              $ne: 'published'
+            }
+          }
+        ]
       },
-      fields: ["id"],
+      fields: ['id']
     });
 
     await algolia.batchDelete(
@@ -37,11 +38,11 @@ export const syncAlgoliaProductsStep = createStep(
     );
 
     const { data: publishedProducts } = await query.graph({
-      entity: "product",
+      entity: 'product',
       filters: {
-        status: "published",
+        status: 'published'
       },
-      fields: ["id"],
+      fields: ['id']
     });
 
     const productsToInsert = publishedProducts.map((p) => p.id);
@@ -55,8 +56,8 @@ export const syncAlgoliaProductsStep = createStep(
       await eventBus.emit({
         name: AlgoliaEvents.PRODUCTS_CHANGED,
         data: {
-          ids: chunk,
-        },
+          ids: chunk
+        }
       });
     }
 

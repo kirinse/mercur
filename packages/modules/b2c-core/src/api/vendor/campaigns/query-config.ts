@@ -10,7 +10,7 @@ export const vendorCampaignFields = [
   'created_at',
   'updated_at',
   'deleted_at'
-]
+];
 
 export const vendorCampaignQueryConfig = {
   list: {
@@ -21,4 +21,4 @@ export const vendorCampaignQueryConfig = {
     defaults: vendorCampaignFields,
     isList: true
   }
-}
+};

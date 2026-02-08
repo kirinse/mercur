@@ -1,1 +1,1 @@
-export * from './get-formatted-order-set-list'
+export * from './get-formatted-order-set-list';

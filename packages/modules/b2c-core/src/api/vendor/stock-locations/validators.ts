@@ -1,22 +1,22 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common'
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { applyAndAndOrOperators } from '@medusajs/medusa/api/utils/common-validators/common';
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetStockLocationParamsType = z.infer<
   typeof VendorGetStockLocationParams
->
+>;
 
 export const VendorGetStockLocationsParamsDirectFields = z.object({
   stock_location_id: z.union([z.string(), z.array(z.string())]).optional()
-})
+});
 
 export const VendorGetStockLocationParams = createFindParams({
   limit: 20,
   offset: 0
 })
   .merge(VendorGetStockLocationsParamsDirectFields)
-  .merge(applyAndAndOrOperators(VendorGetStockLocationsParamsDirectFields))
+  .merge(applyAndAndOrOperators(VendorGetStockLocationsParamsDirectFields));
 
 /**
  * @schema UpsertStockLocationAddress
@@ -65,11 +65,11 @@ export const UpsertStockLocationAddress = z.object({
   phone: z.string().nullish(),
   postal_code: z.string().nullish(),
   province: z.string().nullish()
-})
+});
 
 export type VendorCreateStockLocationType = z.infer<
   typeof VendorCreateStockLocation
->
+>;
 /**
  * @schema VendorCreateStockLocation
  * type: object
@@ -95,11 +95,11 @@ export const VendorCreateStockLocation = z.object({
   address: UpsertStockLocationAddress.optional(),
   address_id: z.string().nullish(),
   metadata: z.record(z.unknown()).nullish()
-})
+});
 
 export type VendorUpdateStockLocationType = z.infer<
   typeof VendorUpdateStockLocation
->
+>;
 /**
  * @schema VendorUpdateStockLocation
  * type: object
@@ -125,11 +125,11 @@ export const VendorUpdateStockLocation = z.object({
   address: UpsertStockLocationAddress.optional(),
   address_id: z.string().nullish(),
   metadata: z.record(z.unknown()).nullish()
-})
+});
 
 export type VendorCreateStockLocationFulfillmentSetType = z.infer<
   typeof VendorCreateStockLocationFulfillmentSet
->
+>;
 /**
  * @schema VendorCreateStockLocationFulfillmentSet
  * type: object
@@ -149,4 +149,4 @@ export const VendorCreateStockLocationFulfillmentSet = z
     name: z.string(),
     type: z.string()
   })
-  .strict()
+  .strict();

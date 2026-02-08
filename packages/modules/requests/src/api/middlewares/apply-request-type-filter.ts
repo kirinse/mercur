@@ -1,6 +1,6 @@
-import { NextFunction } from 'express'
+import { NextFunction } from 'express';
 
-import { MedusaRequest } from '@medusajs/framework/http'
+import { MedusaRequest } from '@medusajs/framework/http';
 
 /**
  * @desc Adds request type filterableFileds
@@ -8,8 +8,8 @@ import { MedusaRequest } from '@medusajs/framework/http'
 export function applyRequestsTypeFilter() {
   return async (req: MedusaRequest, _, next: NextFunction) => {
     if (req.validatedQuery.type) {
-      req.filterableFields.type = req.validatedQuery.type
+      req.filterableFields.type = req.validatedQuery.type;
     }
-    return next()
-  }
+    return next();
+  };
 }

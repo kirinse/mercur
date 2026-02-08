@@ -1,23 +1,24 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 import {
   SplitOrderPaymentDTO,
-  UpdateSplitOrderPaymentsDTO,
-} from "@mercurjs/framework";
+  UpdateSplitOrderPaymentsDTO
+} from '@mercurjs/framework';
+
 import {
   SPLIT_ORDER_PAYMENT_MODULE,
-  SplitOrderPaymentModuleService,
-} from "../../../modules/split-order-payment";
+  SplitOrderPaymentModuleService
+} from '../../../modules/split-order-payment';
 
 export const updateSplitOrderPaymentsStep = createStep(
-  "update-split-order-payments",
+  'update-split-order-payments',
   async (input: UpdateSplitOrderPaymentsDTO[], { container }) => {
     const service = container.resolve<SplitOrderPaymentModuleService>(
       SPLIT_ORDER_PAYMENT_MODULE
     );
 
     const previousData = await service.listSplitOrderPayments({
-      id: input.map((i) => i.id),
+      id: input.map((i) => i.id)
     });
 
     const updatedData = await service.updateSplitOrderPayments(input);

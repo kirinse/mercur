@@ -1,6 +1,6 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 
-import { getFormattedOrderSetListWorkflow } from '../../../../workflows/order-set/workflows'
+import { getFormattedOrderSetListWorkflow } from '../../../../workflows/order-set/workflows';
 
 /**
  * @oas [get] /admin/order-sets/{id}
@@ -58,7 +58,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       filters: { id: req.params.id },
       pagination: req.queryConfig.pagination
     }
-  })
+  });
 
-  res.json({ order_set })
-}
+  res.json({ order_set });
+};

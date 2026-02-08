@@ -2,19 +2,19 @@ import {
   MiddlewareRoute,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
+} from '@medusajs/framework';
 
-import sellerCustomerGroup from '../../../links/seller-customer-group'
+import sellerCustomerGroup from '../../../links/seller-customer-group';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { vendorCustomerGroupsQueryConfig } from './query-config'
+} from '../../../shared/infra/http/middlewares';
+import { vendorCustomerGroupsQueryConfig } from './query-config';
 import {
   VendorCreateCustomerGroup,
   VendorGetCustomerGroupsParams,
   VendorLinkCustomersToGroup
-} from './validators'
+} from './validators';
 
 export const vendorCustomerGroupsMiddlewares: MiddlewareRoute[] = [
   {
@@ -93,4 +93,4 @@ export const vendorCustomerGroupsMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

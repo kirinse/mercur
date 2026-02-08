@@ -1,28 +1,29 @@
-import { createStep } from "@medusajs/framework/workflows-sdk";
+import { createStep } from '@medusajs/framework/workflows-sdk';
+
+import { updateProductStatusWorkflow } from '@mercurjs/framework';
 
 import {
   REQUESTS_MODULE,
-  RequestsModuleService,
-} from "../../../modules/requests";
-import { updateProductStatusWorkflow } from "@mercurjs/framework";
+  RequestsModuleService
+} from '../../../modules/requests';
 
 export const updateRelatedProductStatusStep = createStep(
-  "update-related-product-status",
+  'update-related-product-status',
   async (id: string, { container }) => {
     const service = container.resolve<RequestsModuleService>(REQUESTS_MODULE);
 
     const request = await service.retrieveRequest(id);
 
     if (
-      ["product", "product_update"].includes(request.type) &&
-      request.status === "rejected"
+      ['product', 'product_update'].includes(request.type) &&
+      request.status === 'rejected'
     ) {
       await updateProductStatusWorkflow.run({
         container,
         input: {
           id: request.data.product_id,
-          status: "rejected",
-        },
+          status: 'rejected'
+        }
       });
     }
   }

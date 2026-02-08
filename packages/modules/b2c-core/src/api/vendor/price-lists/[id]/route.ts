@@ -1,11 +1,14 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 import {
   deletePriceListsWorkflow,
   updatePriceListsWorkflow
-} from '@medusajs/medusa/core-flows'
+} from '@medusajs/medusa/core-flows';
 
-import { VendorUpdatePriceListType } from '../validators'
+import { VendorUpdatePriceListType } from '../validators';
 
 /**
  * @oas [get] /vendor/price-lists/{id}
@@ -40,7 +43,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [price_list]
@@ -50,10 +53,10 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ price_list })
-}
+  res.json({ price_list });
+};
 
 /**
  * @oas [post] /vendor/price-lists/{id}
@@ -99,12 +102,12 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdatePriceListType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const id = req.params.id
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const id = req.params.id;
 
   await updatePriceListsWorkflow.run({
     input: { price_lists_data: [{ ...req.validatedBody, id }] }
-  })
+  });
 
   const {
     data: [price_list]
@@ -114,10 +117,10 @@ export const POST = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ price_list })
-}
+  res.json({ price_list });
+};
 
 /**
  * @oas [delete] /vendor/price-lists/{id}
@@ -165,11 +168,11 @@ export const DELETE = async (
     input: {
       ids: [req.params.id]
     }
-  })
+  });
 
   res.status(200).json({
     id: req.params.id,
     object: 'price_list',
     deleted: true
-  })
-}
+  });
+};

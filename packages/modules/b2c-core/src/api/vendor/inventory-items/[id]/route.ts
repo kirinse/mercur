@@ -1,10 +1,20 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys, MedusaError, Modules } from '@medusajs/framework/utils'
-import { deleteInventoryItemWorkflow, updateInventoryItemsWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import {
+  ContainerRegistrationKeys,
+  MedusaError,
+  Modules
+} from '@medusajs/framework/utils';
+import {
+  deleteInventoryItemWorkflow,
+  updateInventoryItemsWorkflow
+} from '@medusajs/medusa/core-flows';
 
-import { IntermediateEvents } from '@mercurjs/framework'
+import { IntermediateEvents } from '@mercurjs/framework';
 
-import { VendorUpdateInventoryItemType } from '../validators'
+import { VendorUpdateInventoryItemType } from '../validators';
 
 /**
  * @oas [get] /vendor/inventory-items/{id}
@@ -32,7 +42,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [inventory_item]
@@ -42,12 +52,12 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
   res.json({
     inventory_item
-  })
-}
+  });
+};
 
 /**
  * @oas [post] /vendor/inventory-items/{id}
@@ -80,20 +90,20 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateInventoryItemType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   await updateInventoryItemsWorkflow(req.scope).run({
     input: {
       updates: [{ id, ...req.validatedBody }]
     }
-  })
+  });
 
-  const eventBus = req.scope.resolve(Modules.EVENT_BUS)
+  const eventBus = req.scope.resolve(Modules.EVENT_BUS);
   await eventBus.emit({
     name: IntermediateEvents.INVENTORY_ITEM_CHANGED,
     data: { id }
-  })
+  });
 
   const {
     data: [inventory_item]
@@ -103,12 +113,12 @@ export const POST = async (
     filters: {
       id
     }
-  })
+  });
 
   res.json({
     inventory_item
-  })
-}
+  });
+};
 
 /**
  * @oas [delete] /vendor/inventory-items/{id}
@@ -136,8 +146,8 @@ export const DELETE = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-  const { id } = req.params
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+  const { id } = req.params;
 
   const {
     data: [inventory_item]
@@ -147,23 +157,23 @@ export const DELETE = async (
     filters: {
       id
     }
-  })
+  });
 
   if (!inventory_item) {
     throw new MedusaError(
       MedusaError.Types.NOT_FOUND,
       `Inventory item with id: ${id} was not found`
-    )
+    );
   }
 
   await deleteInventoryItemWorkflow(req.scope).run({
     input: [inventory_item.id]
-  })
+  });
 
   res.json({
     id,
-    object: "inventory_item",
+    object: 'inventory_item',
     deleted: true,
     inventory_item
-  })
-}
+  });
+};

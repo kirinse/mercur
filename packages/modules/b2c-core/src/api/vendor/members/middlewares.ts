@@ -1,15 +1,15 @@
 import {
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
-import { vendorMemberQueryConfig } from './query-config'
-import { VendorGetMemberParams, VendorUpdateMember } from './validators'
+} from '../../../shared/infra/http/middlewares';
+import { vendorMemberQueryConfig } from './query-config';
+import { VendorGetMemberParams, VendorUpdateMember } from './validators';
 
 export const vendorMembersMiddlewares: MiddlewareRoute[] = [
   {
@@ -59,4 +59,4 @@ export const vendorMembersMiddlewares: MiddlewareRoute[] = [
       })
     ]
   }
-]
+];

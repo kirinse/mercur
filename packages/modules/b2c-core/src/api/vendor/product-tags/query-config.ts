@@ -4,7 +4,7 @@ export const vendorProductTagFields = [
   'metadata',
   'created_at',
   'updated_at'
-]
+];
 
 export const vendorProductTagsQueryConfig = {
   list: {
@@ -15,4 +15,4 @@ export const vendorProductTagsQueryConfig = {
     defaults: vendorProductTagFields,
     isList: false
   }
-}
+};

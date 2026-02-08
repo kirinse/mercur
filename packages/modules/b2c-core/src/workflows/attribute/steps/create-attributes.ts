@@ -1,17 +1,18 @@
-import { MedusaError, toHandle } from "@medusajs/framework/utils";
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { MedusaError, toHandle } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { CreateAttributeDTO } from '@mercurjs/framework';
 
 import {
   ATTRIBUTE_MODULE,
-  AttributeModuleService,
-} from "../../../modules/attribute";
-import { CreateAttributeDTO } from "@mercurjs/framework";
+  AttributeModuleService
+} from '../../../modules/attribute';
 
-export const createAttributesStepId = "create-attributes";
+export const createAttributesStepId = 'create-attributes';
 
 type CreateAttributeStepInput = Omit<
   CreateAttributeDTO,
-  "product_category_ids"
+  'product_category_ids'
 >[];
 
 export const createAttributesStep = createStep(
@@ -20,20 +21,20 @@ export const createAttributesStep = createStep(
     const service = container.resolve<AttributeModuleService>(ATTRIBUTE_MODULE);
 
     const existingAttributes = await service.listAttributes({
-      name: data.map((attribute) => attribute.name),
+      name: data.map((attribute) => attribute.name)
     });
 
     if (existingAttributes.length) {
       throw new MedusaError(
         MedusaError.Types.CONFLICT,
-        `Attributes ${existingAttributes.map((attribute) => attribute.name).join(", ")} already exist`
+        `Attributes ${existingAttributes.map((attribute) => attribute.name).join(', ')} already exist`
       );
     }
 
     const validated = data.map((attribute) => {
       return {
         ...attribute,
-        handle: attribute.handle || toHandle(attribute.name),
+        handle: attribute.handle || toHandle(attribute.name)
       };
     });
 

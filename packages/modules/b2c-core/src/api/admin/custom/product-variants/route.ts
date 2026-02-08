@@ -1,24 +1,15 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework/http";
-import { HttpTypes } from "@medusajs/framework/types";
-import type { ProductVariantDTO } from "@medusajs/framework/types";
+  MedusaResponse
+} from '@medusajs/framework/http';
+import { HttpTypes, ProductVariantDTO } from '@medusajs/framework/types';
+import { remapKeysForVariant } from '@medusajs/medusa/api/admin/products/helpers';
+import { wrapVariantsWithTotalInventoryQuantity } from '@medusajs/medusa/api/utils/middlewares/products/variant-inventory-quantity';
 
-import {
-  remapKeysForVariant,
-} from "@medusajs/medusa/api/admin/products/helpers";
-import { wrapVariantsWithTotalInventoryQuantity } from "@medusajs/medusa/api/utils/middlewares/products/variant-inventory-quantity";
-
-import { attachManagedByToVariants } from "../../../../utils/stock-locations";
-import {
-  listFilteredProductVariantsWorkflow,
-} from "../../../../workflows/product-variants/workflows/list-filtered-product-variants";
-import type { AdminGetProductVariantsParamsType } from "./validators";
-import {
-  remapVariantWithManagedBy,
-  splitVariantFilters,
-} from "./utils";
+import { attachManagedByToVariants } from '../../../../utils/stock-locations';
+import { listFilteredProductVariantsWorkflow } from '../../../../workflows/product-variants/workflows/list-filtered-product-variants';
+import { remapVariantWithManagedBy, splitVariantFilters } from './utils';
+import type { AdminGetProductVariantsParamsType } from './validators';
 
 /**
  * @oas [get] /admin/custom/product-variants
@@ -121,12 +112,12 @@ export const GET = async (
   res: MedusaResponse<HttpTypes.AdminProductVariantListResponse>
 ) => {
   const withInventoryQuantity = !!req.queryConfig?.fields?.some((field) =>
-    field.includes("inventory_quantity")
+    field.includes('inventory_quantity')
   );
 
   if (withInventoryQuantity) {
     req.queryConfig.fields = (req.queryConfig.fields ?? []).filter(
-      (field) => !field.includes("inventory_quantity")
+      (field) => !field.includes('inventory_quantity')
     );
   }
 
@@ -137,8 +128,8 @@ export const GET = async (
       ...custom,
       fields: remapKeysForVariant(req.queryConfig.fields ?? []),
       filters,
-      pagination: req.queryConfig.pagination,
-    },
+      pagination: req.queryConfig.pagination
+    }
   });
 
   type WorkflowResult = {
@@ -161,6 +152,6 @@ export const GET = async (
     variants: filteredVariants.map(remapVariantWithManagedBy),
     count: workflowResult?.count ?? filteredVariants.length,
     offset: workflowResult?.offset ?? req.queryConfig.pagination?.skip ?? 0,
-    limit: workflowResult?.limit ?? req.queryConfig.pagination?.take ?? 50,
+    limit: workflowResult?.limit ?? req.queryConfig.pagination?.take ?? 50
   });
 };

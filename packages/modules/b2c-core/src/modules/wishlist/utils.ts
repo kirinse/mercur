@@ -1,23 +1,23 @@
-import { MedusaContainer } from "@medusajs/framework";
-import { IPricingModuleService } from "@medusajs/framework/types";
-import { Modules } from "@medusajs/framework/utils";
+import { MedusaContainer } from '@medusajs/framework';
+import { IPricingModuleService } from '@medusajs/framework/types';
+import { Modules } from '@medusajs/framework/utils';
 
-import { WishlistItem } from "@mercurjs/framework";
+import { WishlistItem } from '@mercurjs/framework';
 
 export async function getWishlistFromCustomerId(
   container: MedusaContainer,
   customerId: string
 ) {
-  const knex = container.resolve("__pg_connection__");
+  const knex = container.resolve('__pg_connection__');
 
-  const wishlist = await knex("wishlist")
-    .select("wishlist.id")
+  const wishlist = await knex('wishlist')
+    .select('wishlist.id')
     .join(
-      "customer_customer_wishlist_wishlist",
-      "wishlist.id",
-      "customer_customer_wishlist_wishlist.wishlist_id"
+      'customer_customer_wishlist_wishlist',
+      'wishlist.id',
+      'customer_customer_wishlist_wishlist.wishlist_id'
     )
-    .where("customer_customer_wishlist_wishlist.customer_id", customerId)
+    .where('customer_customer_wishlist_wishlist.customer_id', customerId)
     .first();
 
   return wishlist;
@@ -41,9 +41,9 @@ export async function calculateWishlistProductsPrice(
           ...productData,
           variant_id: variant?.id,
           price_set_id: price?.price_set_id,
-          currency_code: price?.currency_code,
+          currency_code: price?.currency_code
         };
-      }),
+      })
     };
   });
   const allProducts = formattedWishlists.flatMap(
@@ -60,7 +60,7 @@ export async function calculateWishlistProductsPrice(
 
   const calculatedPrices = await pricingModuleService.calculatePrices(
     { id: priceSetIds },
-    { context: { currency_code: allProducts[0]?.currency_code || "eur" } }
+    { context: { currency_code: allProducts[0]?.currency_code || 'eur' } }
   );
 
   const calculatedPriceMap = new Map(
@@ -72,7 +72,7 @@ export async function calculateWishlistProductsPrice(
     products: wishlist.products.map((product) => ({
       ...product,
       calculated_amount:
-        calculatedPriceMap.get(product.price_set_id as string) || null,
-    })),
+        calculatedPriceMap.get(product.price_set_id as string) || null
+    }))
   }));
 }

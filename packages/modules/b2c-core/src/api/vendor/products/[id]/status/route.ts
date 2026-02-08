@@ -1,20 +1,20 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
-  MedusaError,
-} from "@medusajs/framework/utils";
-import { updateProductsWorkflow } from "@medusajs/medusa/core-flows";
+  MedusaError
+} from '@medusajs/framework/utils';
+import { updateProductsWorkflow } from '@medusajs/medusa/core-flows';
 
-import { ConfigurationRuleType } from "@mercurjs/framework";
+import { ConfigurationRuleType } from '@mercurjs/framework';
+
 import {
   CONFIGURATION_MODULE,
-  ConfigurationModuleService,
-} from "../../../../../modules/configuration";
-
-import { VendorUpdateProductStatusType } from "../../validators";
+  ConfigurationModuleService
+} from '../../../../../modules/configuration';
+import { VendorUpdateProductStatusType } from '../../validators';
 
 /**
  * @oas [post] /vendor/products/{id}/status
@@ -65,31 +65,31 @@ export const POST = async (
     req.scope.resolve<ConfigurationModuleService>(CONFIGURATION_MODULE);
 
   if (
-    !["proposed", "draft"].includes(req.validatedBody.status) &&
+    !['proposed', 'draft'].includes(req.validatedBody.status) &&
     (await configuration.isRuleEnabled(
       ConfigurationRuleType.REQUIRE_PRODUCT_APPROVAL
     ))
   ) {
     throw new MedusaError(
       MedusaError.Types.NOT_ALLOWED,
-      "This feature is disabled!"
+      'This feature is disabled!'
     );
   }
 
   const { result } = await updateProductsWorkflow(req.scope).run({
     input: {
       update: req.validatedBody,
-      selector: { id: req.params.id },
-    },
+      selector: { id: req.params.id }
+    }
   });
 
   const {
-    data: [product],
+    data: [product]
   } = await query.graph(
     {
-      entity: "product",
+      entity: 'product',
       fields: req.queryConfig.fields,
-      filters: { id: result[0].id },
+      filters: { id: result[0].id }
     },
     { throwIfKeyNotFound: true }
   );

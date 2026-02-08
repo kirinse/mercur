@@ -1,21 +1,21 @@
 import {
   WorkflowResponse,
   createWorkflow
-} from '@medusajs/framework/workflows-sdk'
+} from '@medusajs/framework/workflows-sdk';
 
-import { UpdateAttributeValueDTO } from '@mercurjs/framework'
+import { UpdateAttributeValueDTO } from '@mercurjs/framework';
 
-import { updateAttributePossibleValueStep } from '../steps'
+import { updateAttributePossibleValueStep } from '../steps';
 
 export const updateAttributePossibleValueWorkflowId =
-  'update-attribute-possible-value'
+  'update-attribute-possible-value';
 
-type WorkflowInput = UpdateAttributeValueDTO
+type WorkflowInput = UpdateAttributeValueDTO;
 
 export const updateAttributePossibleValueWorkflow = createWorkflow(
   updateAttributePossibleValueWorkflowId,
   (input: WorkflowInput) => {
-    const updated = updateAttributePossibleValueStep(input)
-    return new WorkflowResponse(updated)
+    const updated = updateAttributePossibleValueStep(input);
+    return new WorkflowResponse(updated);
   }
-)
+);

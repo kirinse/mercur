@@ -1,18 +1,18 @@
-import { when } from '@medusajs/framework/workflows-sdk'
-import { createWorkflow } from '@medusajs/workflows-sdk'
+import { when } from '@medusajs/framework/workflows-sdk';
+import { createWorkflow } from '@medusajs/workflows-sdk';
 
 import {
   PayoutAccountStatus,
   PayoutWebhookAction,
   PayoutWebhookActionAndDataResponse
-} from '@mercurjs/framework'
+} from '@mercurjs/framework';
 
-import { updatePayoutAccountStep } from '../steps'
+import { updatePayoutAccountStep } from '../steps';
 
 type ProcessPayoutWebhookActionInput = {
-  action: PayoutWebhookActionAndDataResponse['action']
-  data: PayoutWebhookActionAndDataResponse['data']
-}
+  action: PayoutWebhookActionAndDataResponse['action'];
+  data: PayoutWebhookActionAndDataResponse['data'];
+};
 
 export const processPayoutWebhookActionWorkflow = createWorkflow(
   'process-payout-action',
@@ -29,7 +29,7 @@ export const processPayoutWebhookActionWorkflow = createWorkflow(
       updatePayoutAccountStep({
         id: input.data.account_id,
         status: PayoutAccountStatus.ACTIVE
-      })
-    })
+      });
+    });
   }
-)
+);

@@ -10,7 +10,7 @@ export const vendorStoreFields = [
   'metadata',
   'created_at',
   'updated_at'
-]
+];
 export const vendorStoresQueryConfig = {
   list: {
     defaults: vendorStoreFields,
@@ -20,4 +20,4 @@ export const vendorStoresQueryConfig = {
     defaults: vendorStoreFields,
     isList: false
   }
-}
+};

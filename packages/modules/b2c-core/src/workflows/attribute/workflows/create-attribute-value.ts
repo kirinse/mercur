@@ -1,17 +1,17 @@
-import { Modules } from "@medusajs/framework/utils";
+import { Modules } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
   createWorkflow,
-  transform,
-} from "@medusajs/framework/workflows-sdk";
-import { createRemoteLinkStep } from "@medusajs/medusa/core-flows";
+  transform
+} from '@medusajs/framework/workflows-sdk';
+import { createRemoteLinkStep } from '@medusajs/medusa/core-flows';
 
-import { ATTRIBUTE_MODULE } from "../../../modules/attribute";
-import { CreateProductAttributeValueDTO } from "@mercurjs/framework";
+import { CreateProductAttributeValueDTO } from '@mercurjs/framework';
 
-import { createAttributeValueStep, validateAttributeValueStep } from "../steps";
+import { ATTRIBUTE_MODULE } from '../../../modules/attribute';
+import { createAttributeValueStep, validateAttributeValueStep } from '../steps';
 
-export const createAttributeValueWorkflowId = "create-attribute-value";
+export const createAttributeValueWorkflowId = 'create-attribute-value';
 
 export const createAttributeValueWorkflow = createWorkflow(
   createAttributeValueWorkflowId,
@@ -21,7 +21,7 @@ export const createAttributeValueWorkflow = createWorkflow(
       ({ input }) => {
         return {
           attribute_id: input.attribute_id,
-          value: input.value,
+          value: input.value
         };
       }
     );
@@ -37,12 +37,12 @@ export const createAttributeValueWorkflow = createWorkflow(
       ({ input, attributeValue }) => [
         {
           [Modules.PRODUCT]: {
-            product_id: input.product_id,
+            product_id: input.product_id
           },
           [ATTRIBUTE_MODULE]: {
-            attribute_value_id: attributeValue.id,
-          },
-        },
+            attribute_value_id: attributeValue.id
+          }
+        }
       ]
     );
 

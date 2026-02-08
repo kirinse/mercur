@@ -1,11 +1,14 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError
-} from '@medusajs/framework/utils'
+} from '@medusajs/framework/utils';
 
-import { updateOrderReturnRequestWorkflow } from '../../../../workflows/order-return-request/workflows'
-import { VendorUpdateOrderReturnRequestType } from '../validators'
+import { updateOrderReturnRequestWorkflow } from '../../../../workflows/order-return-request/workflows';
+import { VendorUpdateOrderReturnRequestType } from '../validators';
 
 /**
  * @oas [get] /vendor/return-request/{id}
@@ -46,7 +49,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [order_return_request]
@@ -56,10 +59,10 @@ export const GET = async (
     filters: {
       id: req.params.id
     }
-  })
+  });
 
-  res.json({ order_return_request })
-}
+  res.json({ order_return_request });
+};
 
 /**
  * @oas [post] /vendor/return-request/{id}
@@ -99,7 +102,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorUpdateOrderReturnRequestType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
     data: [request]
@@ -110,13 +113,13 @@ export const POST = async (
       id: req.params.id,
       status: 'pending'
     }
-  })
+  });
 
   if (!request) {
     throw new MedusaError(
       MedusaError.Types.INVALID_ARGUMENT,
       'Request is not in pending state!'
-    )
+    );
   }
 
   const { result: order_return_request } =
@@ -128,7 +131,7 @@ export const POST = async (
         vendor_review_date: new Date()
       },
       container: req.scope
-    })
+    });
 
-  res.json({ order_return_request })
-}
+  res.json({ order_return_request });
+};

@@ -2,19 +2,19 @@ import {
   unlessPath,
   validateAndTransformBody,
   validateAndTransformQuery
-} from '@medusajs/framework'
-import { MiddlewareRoute } from '@medusajs/medusa'
+} from '@medusajs/framework';
+import { MiddlewareRoute } from '@medusajs/medusa';
 
-import sellerInventoryItem from '../../../links/seller-inventory-item'
-import sellerStockLocation from '../../../links/seller-stock-location'
+import sellerInventoryItem from '../../../links/seller-inventory-item';
+import sellerStockLocation from '../../../links/seller-stock-location';
 import {
   checkResourceOwnershipByResourceId,
   filterBySellerId
-} from '../../../shared/infra/http/middlewares'
+} from '../../../shared/infra/http/middlewares';
 import {
   vendorInventoryItemQueryConfig,
   vendorInventoryLevelQueryConfig
-} from './query-config'
+} from './query-config';
 import {
   VendorBatchInventoryItemLevels,
   VendorBatchInventoryItemLocationsLevel,
@@ -22,7 +22,7 @@ import {
   VendorGetInventoryItemsParams,
   VendorUpdateInventoryItem,
   VendorUpdateInventoryLevel
-} from './validators'
+} from './validators';
 
 export const vendorInventoryItemsMiddlewares: MiddlewareRoute[] = [
   {
@@ -181,13 +181,13 @@ export const vendorInventoryItemsMiddlewares: MiddlewareRoute[] = [
     ]
   },
   {
-    method: ["DELETE"],
-    matcher: "/vendor/inventory-items/:id/location-levels/:location_id",
+    method: ['DELETE'],
+    matcher: '/vendor/inventory-items/:id/location-levels/:location_id',
     middlewares: [
       validateAndTransformQuery(
         VendorGetInventoryItemsParams,
         vendorInventoryLevelQueryConfig.retrieve
-      ),
-    ],
-  },
-]
+      )
+    ]
+  }
+];

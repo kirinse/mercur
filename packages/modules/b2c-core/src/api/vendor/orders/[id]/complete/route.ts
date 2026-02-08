@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { completeOrderWorkflow } from '@medusajs/medusa/core-flows'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { completeOrderWorkflow } from '@medusajs/medusa/core-flows';
 
-import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows'
+import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows';
 
 /**
  * @oas [post] /vendor/orders/{id}/complete
@@ -36,13 +39,13 @@ export const POST = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   await completeOrderWorkflow(req.scope).run({
     input: {
       orderIds: [id]
     }
-  })
+  });
 
   const {
     result: [order]
@@ -55,7 +58,7 @@ export const POST = async (
         }
       }
     }
-  })
+  });
 
-  res.json({ order })
-}
+  res.json({ order });
+};

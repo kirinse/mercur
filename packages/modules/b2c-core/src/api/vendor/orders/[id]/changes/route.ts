@@ -1,8 +1,8 @@
 import {
   AuthenticatedMedusaRequest,
   MedusaResponse
-} from '@medusajs/framework/http'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+} from '@medusajs/framework/http';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 /**
  * @oas [get] /vendor/orders/{id}/changes
@@ -45,7 +45,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: order_changes } = await query.graph({
     entity: 'order_change',
@@ -53,7 +53,7 @@ export const GET = async (
     filters: {
       order_id: req.params.id
     }
-  })
+  });
 
-  res.json({ order_changes })
-}
+  res.json({ order_changes });
+};

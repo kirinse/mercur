@@ -11,7 +11,7 @@ export const vendorReturnOrderRequestFields = [
   'status',
   'line_items.*',
   'order.*'
-]
+];
 
 export const vendorReturnOrderRequestQueryConfig = {
   list: {
@@ -22,4 +22,4 @@ export const vendorReturnOrderRequestQueryConfig = {
     defaults: vendorReturnOrderRequestFields,
     isList: false
   }
-}
+};

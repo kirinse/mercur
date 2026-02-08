@@ -1,1 +1,1 @@
-export * from './create-vendor-campaign'
+export * from './create-vendor-campaign';

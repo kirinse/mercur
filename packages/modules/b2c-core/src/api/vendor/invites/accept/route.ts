@@ -1,11 +1,11 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { acceptMemberInvitesWorkflow } from "../../../../workflows/seller/workflows";
-import { VendorAcceptMemberInviteType } from "../validators";
+import { acceptMemberInvitesWorkflow } from '../../../../workflows/seller/workflows';
+import { VendorAcceptMemberInviteType } from '../validators';
 
 /**
  * @oas [post] /vendor/invites/{id}/accept
@@ -50,17 +50,17 @@ export const POST = async (
   const { result } = await acceptMemberInvitesWorkflow(req.scope).run({
     input: {
       invite: req.validatedBody,
-      authIdentityId: req.auth_context.auth_identity_id,
-    },
+      authIdentityId: req.auth_context.auth_identity_id
+    }
   });
 
   const {
-    data: [invite],
+    data: [invite]
   } = await query.graph(
     {
-      entity: "member_invite",
+      entity: 'member_invite',
       fields: req.queryConfig.fields,
-      filters: { id: result.id },
+      filters: { id: result.id }
     },
     { throwIfKeyNotFound: true }
   );

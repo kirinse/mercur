@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createSelectParams } from "@medusajs/medusa/api/utils/validators";
+import { createSelectParams } from '@medusajs/medusa/api/utils/validators';
 
 export type VendorGetSellerParamsType = z.infer<typeof VendorGetSellerParams>;
 export const VendorGetSellerParams = createSelectParams();
@@ -100,8 +100,8 @@ export const VendorCreateSeller = z
       email: z.string().email(),
       bio: z.string().nullish().optional(),
       phone: z.string().nullish().optional(),
-      photo: z.string().nullish().optional(),
-    }),
+      photo: z.string().nullish().optional()
+    })
   })
   .strict();
 
@@ -170,7 +170,7 @@ export const VendorUpdateSeller = z
     state: z.string().optional(),
     postal_code: z.string().optional(),
     country_code: z.string().optional(),
-    tax_id: z.string().optional(),
+    tax_id: z.string().optional()
   })
   .strict();
 

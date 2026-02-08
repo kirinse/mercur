@@ -1,7 +1,10 @@
-import { AuthenticatedMedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import {
+  AuthenticatedMedusaRequest,
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerReturn from '../../../links/seller-return'
+import sellerReturn from '../../../links/seller-return';
 
 /**
  * @oas [get] /vendor/returns
@@ -59,7 +62,7 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: returns, metadata } = await query.graph({
     entity: sellerReturn.entryPoint,
@@ -71,12 +74,12 @@ export const GET = async (
       }
     },
     pagination: req.queryConfig.pagination
-  })
+  });
 
   res.json({
     returns,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};

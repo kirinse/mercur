@@ -4,7 +4,7 @@ export const vendorProductTypeFields = [
   'metadata',
   'created_at',
   'updated_at'
-]
+];
 
 export const vendorProductTypeQueryConfig = {
   list: {
@@ -15,4 +15,4 @@ export const vendorProductTypeQueryConfig = {
     defaults: vendorProductTypeFields,
     isList: false
   }
-}
+};

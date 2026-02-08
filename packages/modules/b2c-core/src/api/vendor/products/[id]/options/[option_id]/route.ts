@@ -1,21 +1,22 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
+  MedusaResponse
+} from '@medusajs/framework';
 import {
   ContainerRegistrationKeys,
   MedusaError,
-  Modules,
-} from "@medusajs/framework/utils";
+  Modules
+} from '@medusajs/framework/utils';
 import {
   deleteProductOptionsWorkflow,
-  updateProductOptionsWorkflow,
-} from "@medusajs/medusa/core-flows";
+  updateProductOptionsWorkflow
+} from '@medusajs/medusa/core-flows';
 
-import { fetchSellerByAuthActorId } from "../../../../../../shared/infra/http/utils";
-import { fetchProductDetails } from "../../../../../../shared/infra/http/utils/products";
-import { UpdateProductOptionType } from "../../../validators";
-import { ProductUpdateRequestUpdatedEvent } from "@mercurjs/framework";
+import { ProductUpdateRequestUpdatedEvent } from '@mercurjs/framework';
+
+import { fetchSellerByAuthActorId } from '../../../../../../shared/infra/http/utils';
+import { fetchProductDetails } from '../../../../../../shared/infra/http/utils/products';
+import { UpdateProductOptionType } from '../../../validators';
 
 /**
  * @oas [delete] /vendor/products/{id}/options/{option_id}
@@ -69,31 +70,31 @@ export const DELETE = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [option],
+    data: [option]
   } = await query.graph({
-    entity: "product_option",
-    fields: ["product_id"],
+    entity: 'product_option',
+    fields: ['product_id'],
     filters: {
-      id: optionId,
-    },
+      id: optionId
+    }
   });
 
   if (productId !== option.product_id) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
-      "Invalid product option id!"
+      'Invalid product option id!'
     );
   }
 
   await deleteProductOptionsWorkflow.run({
     container: req.scope,
-    input: { ids: [optionId] },
+    input: { ids: [optionId] }
   });
 
   res.json({
     id: optionId,
-    object: "option",
-    deleted: true,
+    object: 'option',
+    deleted: true
   });
 };
 
@@ -155,12 +156,12 @@ export const POST = async (
     container: req.scope,
     input: {
       selector: { id: optionId, product_id: productId },
-      update: req.validatedBody,
-    },
+      update: req.validatedBody
+    }
   });
 
   const productDetails = await fetchProductDetails(req.params.id, req.scope);
-  if (!["draft", "proposed"].includes(productDetails.status)) {
+  if (!['draft', 'proposed'].includes(productDetails.status)) {
     const seller = await fetchSellerByAuthActorId(
       req.auth_context.actor_id,
       req.scope
@@ -172,20 +173,20 @@ export const POST = async (
         data: {
           data: { product_id: req.params.id, title: productDetails.title },
           submitter_id: req.auth_context.actor_id,
-          type: "product_update",
+          type: 'product_update'
         },
-        seller_id: seller.id,
-      },
+        seller_id: seller.id
+      }
     });
   }
 
   const {
-    data: [product],
+    data: [product]
   } = await query.graph(
     {
-      entity: "product",
+      entity: 'product',
       fields: req.queryConfig.fields,
-      filters: { id: productId },
+      filters: { id: productId }
     },
     { throwIfKeyNotFound: true }
   );

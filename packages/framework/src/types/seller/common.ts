@@ -1,7 +1,7 @@
 export enum StoreStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  SUSPENDED = "SUSPENDED",
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED'
 }
 
 export type SellerDTO = {
@@ -36,9 +36,9 @@ export type SellerWithPayoutAccountDTO = SellerDTO & {
 };
 
 export enum MemberRole {
-  OWNER = "owner",
-  ADMIN = "admin",
-  MEMBER = "member",
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  MEMBER = 'member'
 }
 
 export type MemberDTO = {

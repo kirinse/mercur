@@ -1,9 +1,13 @@
 import { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import { TypesenseEvents, TypesenseIndexType } from '@mercurjs/framework';
+import {
+  TYPESENSE_MODULE,
+  TypesenseEvents,
+  TypesenseIndexType
+} from '@mercurjs/framework';
 
-import { TYPESENSE_MODULE, TypesenseModuleService } from '../modules/typesense';
+import { TypesenseModuleService } from '../modules/typesense';
 import {
   filterProductsByStatus,
   findAndTransformAlgoliaProducts

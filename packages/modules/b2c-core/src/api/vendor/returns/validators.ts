@@ -1,12 +1,12 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-export type VendorGetReturnsParamsType = z.infer<typeof VendorGetReturnsParams>
+export type VendorGetReturnsParamsType = z.infer<typeof VendorGetReturnsParams>;
 export const VendorGetReturnsParams = createFindParams({
   offset: 0,
   limit: 50
-})
+});
 
 /**
  * @schema VendorReceiveReturn
@@ -27,12 +27,12 @@ export const VendorGetReturnsParams = createFindParams({
  */
 export type VendorReceiveReturnSchemaType = z.infer<
   typeof VendorReceiveReturnSchema
->
+>;
 export const VendorReceiveReturnSchema = z.object({
   internal_note: z.string().optional(),
   description: z.string().optional(),
   metadata: z.record(z.unknown()).nullish()
-})
+});
 
 /**
  * @schema VendorReceiveReturnItems
@@ -62,7 +62,7 @@ export const VendorReceiveReturnSchema = z.object({
  */
 export type VendorReceiveReturnItemsSchemaType = z.infer<
   typeof VendorReceiveReturnItemsSchema
->
+>;
 export const VendorReceiveReturnItemsSchema = z.object({
   items: z.array(
     z.object({
@@ -71,7 +71,7 @@ export const VendorReceiveReturnItemsSchema = z.object({
       internal_note: z.string().optional()
     })
   )
-})
+});
 
 /**
  * @schema VendorReturnsReceiveItemsAction
@@ -87,11 +87,11 @@ export const VendorReceiveReturnItemsSchema = z.object({
  */
 export type VendorReturnsReceiveItemsActionSchemaType = z.infer<
   typeof VendorReturnsReceiveItemsActionSchema
->
+>;
 export const VendorReturnsReceiveItemsActionSchema = z.object({
   quantity: z.number().optional(),
   internal_note: z.string().nullish().optional()
-})
+});
 
 /**
  * @schema VendorReturnsDismissItemsAction
@@ -107,8 +107,8 @@ export const VendorReturnsReceiveItemsActionSchema = z.object({
  */
 export type VendorReturnsDismissItemsActionSchemaType = z.infer<
   typeof VendorReturnsDismissItemsActionSchema
->
+>;
 export const VendorReturnsDismissItemsActionSchema = z.object({
   quantity: z.number().optional(),
   internal_note: z.string().nullish().optional()
-})
+});

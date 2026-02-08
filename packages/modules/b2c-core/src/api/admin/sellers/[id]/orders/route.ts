@@ -1,9 +1,9 @@
-import { MedusaRequest, MedusaResponse } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerOrder from '../../../../../links/seller-order'
-import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows'
-import { AdminGetSellerOrdersParamsType } from '../../validators'
+import sellerOrder from '../../../../../links/seller-order';
+import { getVendorOrdersListWorkflow } from '../../../../../workflows/order/workflows';
+import { AdminGetSellerOrdersParamsType } from '../../validators';
 
 /**
  * @oas [get] /admin/sellers/{id}/orders
@@ -79,7 +79,7 @@ export const GET = async (
   req: MedusaRequest<AdminGetSellerOrdersParamsType>,
   res: MedusaResponse
 ) => {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const { data: orderRelations } = await query.graph({
     entity: sellerOrder.entryPoint,
@@ -90,7 +90,7 @@ export const GET = async (
         $eq: null
       }
     }
-  })
+  });
 
   const { result } = await getVendorOrdersListWorkflow(req.scope).run({
     input: {
@@ -103,14 +103,15 @@ export const GET = async (
         ...req.queryConfig.pagination
       }
     }
-  })
+  });
 
-  const { rows, metadata } = result as any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { rows, metadata } = result as any;
 
   res.json({
     orders: rows,
     count: metadata?.count,
     offset: metadata?.skip,
     limit: metadata?.take
-  })
-}
+  });
+};

@@ -1,7 +1,7 @@
-import { MiddlewareRoute } from "@medusajs/framework";
+import { MiddlewareRoute } from '@medusajs/framework';
 
-import { adminProductVariantsFilteredMiddlewares } from "./product-variants/middlewares";
+import { adminProductVariantsFilteredMiddlewares } from './product-variants/middlewares';
 
 export const adminCustomMiddlewares: MiddlewareRoute[] = [
-  ...adminProductVariantsFilteredMiddlewares,
+  ...adminProductVariantsFilteredMiddlewares
 ];

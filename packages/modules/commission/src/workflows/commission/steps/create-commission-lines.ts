@@ -1,13 +1,14 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
+
+import { CreateCommissionLineDTO } from '@mercurjs/framework';
 
 import {
-  CommissionModuleService,
   COMMISSION_MODULE,
-} from "../../../modules/commission";
-import { CreateCommissionLineDTO } from "@mercurjs/framework";
+  CommissionModuleService
+} from '../../../modules/commission';
 
 export const createCommissionLinesStep = createStep(
-  "create-commission-lines",
+  'create-commission-lines',
   async (input: CreateCommissionLineDTO[], { container }) => {
     const service = container.resolve(
       COMMISSION_MODULE

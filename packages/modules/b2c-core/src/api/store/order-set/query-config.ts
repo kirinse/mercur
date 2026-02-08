@@ -33,7 +33,7 @@ export const defaultStoreRetrieveOrderSetFields = [
   'orders.items.*',
   'orders.seller.*',
   'orders.fulfillments.labels.*'
-]
+];
 
 export const orderSetQueryConfig = {
   retrieve: {
@@ -44,4 +44,4 @@ export const orderSetQueryConfig = {
     defaults: [],
     isList: true
   }
-}
+};

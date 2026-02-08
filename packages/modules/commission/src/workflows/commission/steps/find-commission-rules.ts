@@ -1,12 +1,12 @@
-import { MedusaContainer } from '@medusajs/framework'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
-import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk'
+import { MedusaContainer } from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 async function selectPriceSetPrices(
   container: MedusaContainer,
   price_set_id: string
 ) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const {
     data: [price]
   } = await query.graph({
@@ -15,7 +15,7 @@ async function selectPriceSetPrices(
     filters: {
       id: price_set_id
     }
-  })
+  });
 
   return price
     ? {
@@ -28,7 +28,7 @@ async function selectPriceSetPrices(
     : {
         id: null,
         prices: []
-      }
+      };
 }
 
 export const findCommissionRulesStep = createStep(
@@ -36,27 +36,27 @@ export const findCommissionRulesStep = createStep(
   async (
     input: {
       pagination?: {
-        skip: number
-        take?: number
-      }
-      ids?: string[]
+        skip: number;
+        take?: number;
+      };
+      ids?: string[];
     },
     { container }
   ) => {
-    const query = container.resolve(ContainerRegistrationKeys.QUERY)
+    const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
     const filters = input.ids
       ? { id: input.ids }
-      : { reference: { $ne: 'site' } }
+      : { reference: { $ne: 'site' } };
 
     const { data: commissions, metadata } = await query.graph({
       entity: 'commission_rule',
       fields: ['*', 'rate.*'],
       filters,
       pagination: input.pagination
-    })
+    });
 
-    const commission_rules: any[] = []
+    const commission_rules: any[] = [];
 
     for (const commission of commissions) {
       const aggregate = {
@@ -75,46 +75,46 @@ export const findCommissionRulesStep = createStep(
         max_price_set_id: null,
         max_price_set: [],
         fee_value: `${commission.rate.percentage_rate}%`
-      }
+      };
 
       if (commission.rate.min_price_set_id) {
         const minPrice = await selectPriceSetPrices(
           container,
           commission.rate.min_price_set_id
-        )
+        );
 
-        aggregate.min_price_set_id = minPrice.id
-        aggregate.min_price_set = minPrice.prices
+        aggregate.min_price_set_id = minPrice.id;
+        aggregate.min_price_set = minPrice.prices;
       }
 
       if (commission.rate.max_price_set_id) {
         const maxPrice = await selectPriceSetPrices(
           container,
           commission.rate.max_price_set_id
-        )
+        );
 
-        aggregate.max_price_set_id = maxPrice.id
-        aggregate.max_price_set = maxPrice.prices
+        aggregate.max_price_set_id = maxPrice.id;
+        aggregate.max_price_set = maxPrice.prices;
       }
 
       if (commission.rate.type === 'flat') {
         const price = await selectPriceSetPrices(
           container,
           commission.rate.price_set_id
-        )
+        );
 
-        aggregate.price_set_id = price.id
-        aggregate.price_set = price.prices
+        aggregate.price_set_id = price.id;
+        aggregate.price_set = price.prices;
 
         aggregate.fee_value =
           price.prices
             .map((p) => `${p.amount}${p.currency_code?.toUpperCase()}`)
-            .join('/') || '-'
+            .join('/') || '-';
       }
 
-      commission_rules.push(aggregate)
+      commission_rules.push(aggregate);
     }
 
-    return new StepResponse({ commission_rules, count: metadata?.count || 0 })
+    return new StepResponse({ commission_rules, count: metadata?.count || 0 });
   }
-)
+);

@@ -1,17 +1,18 @@
-import { StepResponse, createStep } from "@medusajs/framework/workflows-sdk";
+import { StepResponse, createStep } from '@medusajs/framework/workflows-sdk';
 
 import {
   AdminUpdateOrderReturnRequestDTO,
   OrderReturnRequestDTO,
-  VendorUpdateOrderReturnRequestDTO,
-} from "@mercurjs/framework";
+  VendorUpdateOrderReturnRequestDTO
+} from '@mercurjs/framework';
+
 import {
   ORDER_RETURN_MODULE,
-  OrderReturnModuleService,
-} from "../../../modules/order-return-request";
+  OrderReturnModuleService
+} from '../../../modules/order-return-request';
 
 export const updateOrderReturnRequestStep = createStep(
-  "update-order-return-request",
+  'update-order-return-request',
   async (
     input: VendorUpdateOrderReturnRequestDTO | AdminUpdateOrderReturnRequestDTO,
     { container }

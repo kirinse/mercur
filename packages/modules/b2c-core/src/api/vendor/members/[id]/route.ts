@@ -1,15 +1,14 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   deleteMemberWorkflow,
-  updateMemberWorkflow,
-} from "../../../../workflows/seller/workflows";
-
-import { VendorUpdateMemberType } from "../validators";
+  updateMemberWorkflow
+} from '../../../../workflows/seller/workflows';
+import { VendorUpdateMemberType } from '../validators';
 
 /**
  * @oas [post] /vendor/members/{id}
@@ -55,17 +54,17 @@ export const POST = async (
   await updateMemberWorkflow(req.scope).run({
     input: {
       id,
-      ...req.validatedBody,
-    },
+      ...req.validatedBody
+    }
   });
 
   const {
-    data: [member],
+    data: [member]
   } = await query.graph(
     {
-      entity: "member",
+      entity: 'member',
       fields: req.queryConfig.fields,
-      filters: { id },
+      filters: { id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -110,12 +109,12 @@ export const GET = async (
 
   const { id } = req.params;
   const {
-    data: [member],
+    data: [member]
   } = await query.graph(
     {
-      entity: "member",
+      entity: 'member',
       fields: req.queryConfig.fields,
-      filters: { id },
+      filters: { id }
     },
     { throwIfKeyNotFound: true }
   );
@@ -166,12 +165,12 @@ export const DELETE = async (
   const { id } = req.params;
 
   await deleteMemberWorkflow(req.scope).run({
-    input: id,
+    input: id
   });
 
   res.json({
     id,
-    object: "member",
-    deleted: true,
+    object: 'member',
+    deleted: true
   });
 };

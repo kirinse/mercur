@@ -1,10 +1,10 @@
 import {
   AuthenticatedMedusaRequest,
-  MedusaResponse,
-} from "@medusajs/framework";
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+  MedusaResponse
+} from '@medusajs/framework';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import categoryAttribute from "../../../../../links/category-attribute";
+import categoryAttribute from '../../../../../links/category-attribute';
 
 /**
  * @oas [get] /vendor/products/{id}/applicable-attributes
@@ -80,44 +80,44 @@ export const GET = async (
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
   const {
-    data: [product],
+    data: [product]
   } = await query.graph({
-    entity: "product",
-    fields: ["categories.id"],
+    entity: 'product',
+    fields: ['categories.id'],
     filters: {
-      id: req.params.id,
-    },
+      id: req.params.id
+    }
   });
   const categoryIds = product.categories.map((category) => category.id);
 
   const { data: attributes } = await query.graph({
     entity: categoryAttribute.entryPoint,
-    fields: ["attribute_id"],
+    fields: ['attribute_id']
   });
   const attributeIds = attributes.map((attribute) => attribute.attribute_id);
 
   const { data: globalAttributes } = await query.graph({
-    entity: "attribute",
+    entity: 'attribute',
     fields: req.queryConfig.fields,
     filters: {
       id: {
-        $nin: attributeIds,
-      },
-    },
+        $nin: attributeIds
+      }
+    }
   });
 
   const { data: categoryAttributes } = await query.graph({
     entity: categoryAttribute.entryPoint,
     fields: req.queryConfig.fields.map((field) => `attribute.${field}`),
     filters: {
-      product_category_id: categoryIds,
-    },
+      product_category_id: categoryIds
+    }
   });
 
   res.json({
     attributes: [
       ...globalAttributes,
-      ...categoryAttributes.map((rel) => rel.attribute),
-    ],
+      ...categoryAttributes.map((rel) => rel.attribute)
+    ]
   });
 };

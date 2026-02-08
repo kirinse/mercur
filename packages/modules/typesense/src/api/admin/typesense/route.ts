@@ -9,10 +9,10 @@ import {
 import { syncTypesenseWorkflow } from '../../../workflows/typesense/workflows/sync-typesense';
 
 /**
- * @oas [post] /admin/algolia
- * operationId: "AdminSyncAlgolia"
- * summary: "Sync Algolia"
- * description: "Initiates a synchronization process for Algolia indices."
+ * @oas [post] /admin/typesense
+ * operationId: "AdminSyncTypesense"
+ * summary: "Sync Typesense"
+ * description: "Initiates a synchronization process for Typesense collections."
  * x-authenticated: true
  * responses:
  *   "200":
@@ -27,7 +27,7 @@ import { syncTypesenseWorkflow } from '../../../workflows/typesense/workflows/sy
  *               description: Confirmation message that sync is in progress
  *               example: "Sync in progress"
  * tags:
- *   - Admin Algolia
+ *   - Admin Typesense
  * security:
  *   - api_token: []
  *   - cookie_auth: []
@@ -54,10 +54,6 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
  *         schema:
  *           type: object
  *           properties:
- *             appId:
- *               type: string
- *               description: The Typesense application ID
- *               example: "YOUR_TYPESENSE_APP_ID"
  *             productIndex:
  *               type: object
  *               description: The status of the product index
@@ -78,9 +74,8 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const typesenseService =
     req.scope.resolve<TypesenseModuleService>(TYPESENSE_MODULE);
 
-  const appId = typesenseService.getAppId();
   const productIndex = await typesenseService.checkIndex(
     TypesenseIndexType.PRODUCT
   );
-  res.status(200).json({ appId, productIndex });
+  res.status(200).json({ productIndex });
 };

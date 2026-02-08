@@ -1,2 +1,2 @@
-export * from "./link-entrypoints";
-export * from "./linkables";
+export * from './link-entrypoints';
+export * from './linkables';

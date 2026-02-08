@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { createFindParams } from '@medusajs/medusa/api/utils/validators'
+import { createFindParams } from '@medusajs/medusa/api/utils/validators';
 
-export type AdminGetRequestsParamsType = z.infer<typeof AdminGetRequestsParams>
+export type AdminGetRequestsParamsType = z.infer<typeof AdminGetRequestsParams>;
 export const AdminGetRequestsParams = createFindParams({
   offset: 0,
   limit: 50
@@ -22,7 +22,7 @@ export const AdminGetRequestsParams = createFindParams({
     ])
     .optional(),
   status: z.enum(['accepted', 'rejected', 'pending']).optional()
-})
+});
 
 /**
  * @schema AdminReviewRequest
@@ -39,8 +39,8 @@ export const AdminGetRequestsParams = createFindParams({
  *     enum: [accepted,rejected]
  *     description: A status of the request
  */
-export type AdminReviewRequestType = z.infer<typeof AdminReviewRequest>
+export type AdminReviewRequestType = z.infer<typeof AdminReviewRequest>;
 export const AdminReviewRequest = z.object({
   status: z.enum(['accepted', 'rejected']),
   reviewer_note: z.string()
-})
+});
