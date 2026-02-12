@@ -15,23 +15,23 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "status": {
-          "name": "status",
+        "store_status": {
+          "name": "store_status",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "'pending'",
+          "default": "'ACTIVE'",
           "enumItems": [
-            "pending",
-            "active",
-            "disabled"
+            "ACTIVE",
+            "INACTIVE",
+            "SUSPENDED"
           ],
           "mappedType": "enum"
         },
-        "reference_id": {
-          "name": "reference_id",
+        "name": {
+          "name": "name",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -39,23 +39,104 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
+        "handle": {
+          "name": "handle",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "json"
+          "mappedType": "text"
         },
-        "context": {
-          "name": "context",
-          "type": "jsonb",
+        "description": {
+          "name": "description",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "json"
+          "mappedType": "text"
+        },
+        "photo": {
+          "name": "photo",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "address_line": {
+          "name": "address_line",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "country_code": {
+          "name": "country_code",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "tax_id": {
+          "name": "tax_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         },
         "created_at": {
           "name": "created_at",
@@ -90,20 +171,29 @@
           "mappedType": "datetime"
         }
       },
-      "name": "payout_account",
+      "name": "seller",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "IDX_payout_account_deleted_at",
+          "keyName": "IDX_seller_handle_unique",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_payout_account_deleted_at\" ON \"payout_account\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_seller_handle_unique\" ON \"seller\" (\"handle\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "payout_account_pkey",
+          "keyName": "IDX_seller_deleted_at",
+          "columnNames": [],
+          "composite": false,
+          "constraint": false,
+          "primary": false,
+          "unique": false,
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_seller_deleted_at\" ON \"seller\" (\"deleted_at\") WHERE deleted_at IS NULL"
+        },
+        {
+          "keyName": "seller_pkey",
           "columnNames": [
             "id"
           ],
@@ -128,8 +218,8 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "currency_code": {
-          "name": "currency_code",
+        "email": {
+          "name": "email",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -137,26 +227,23 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "amount": {
-          "name": "amount",
-          "type": "numeric",
+        "role": {
+          "name": "role",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "decimal"
+          "default": "'owner'",
+          "enumItems": [
+            "owner",
+            "admin",
+            "member"
+          ],
+          "mappedType": "enum"
         },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "json"
-        },
-        "payout_account_id": {
-          "name": "payout_account_id",
+        "seller_id": {
+          "name": "seller_id",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -164,14 +251,34 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "raw_amount": {
-          "name": "raw_amount",
-          "type": "jsonb",
+        "token": {
+          "name": "token",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "json"
+          "mappedType": "text"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "accepted": {
+          "name": "accepted",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
         },
         "created_at": {
           "name": "created_at",
@@ -206,29 +313,29 @@
           "mappedType": "datetime"
         }
       },
-      "name": "payout",
+      "name": "member_invite",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "IDX_payout_payout_account_id",
+          "keyName": "IDX_member_invite_seller_id",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_payout_payout_account_id\" ON \"payout\" (payout_account_id) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_member_invite_seller_id\" ON \"member_invite\" (\"seller_id\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "IDX_payout_deleted_at",
+          "keyName": "IDX_member_invite_deleted_at",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_payout_deleted_at\" ON \"payout\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_member_invite_deleted_at\" ON \"member_invite\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "payout_pkey",
+          "keyName": "member_invite_pkey",
           "columnNames": [
             "id"
           ],
@@ -240,16 +347,16 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "payout_payout_account_id_foreign": {
-          "constraintName": "payout_payout_account_id_foreign",
+        "member_invite_seller_id_foreign": {
+          "constraintName": "member_invite_seller_id_foreign",
           "columnNames": [
-            "payout_account_id"
+            "seller_id"
           ],
-          "localTableName": "public.payout",
+          "localTableName": "public.member_invite",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.payout_account",
+          "referencedTableName": "public.seller",
           "updateRule": "cascade"
         }
       },
@@ -266,26 +373,68 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
+        "role": {
+          "name": "role",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'owner'",
+          "enumItems": [
+            "owner",
+            "admin",
+            "member"
+          ],
+          "mappedType": "enum"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "json"
+          "mappedType": "text"
         },
-        "context": {
-          "name": "context",
-          "type": "jsonb",
+        "bio": {
+          "name": "bio",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "json"
+          "mappedType": "text"
         },
-        "payout_account_id": {
-          "name": "payout_account_id",
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "photo": {
+          "name": "photo",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "seller_id": {
+          "name": "seller_id",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -326,29 +475,29 @@
           "mappedType": "datetime"
         }
       },
-      "name": "onboarding",
+      "name": "member",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "IDX_onboarding_payout_account_id_unique",
+          "keyName": "IDX_member_seller_id",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_onboarding_payout_account_id_unique\" ON \"onboarding\" (payout_account_id) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_member_seller_id\" ON \"member\" (\"seller_id\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "IDX_onboarding_deleted_at",
+          "keyName": "IDX_member_deleted_at",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_onboarding_deleted_at\" ON \"onboarding\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_member_deleted_at\" ON \"member\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "onboarding_pkey",
+          "keyName": "member_pkey",
           "columnNames": [
             "id"
           ],
@@ -360,16 +509,16 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "onboarding_payout_account_id_foreign": {
-          "constraintName": "onboarding_payout_account_id_foreign",
+        "member_seller_id_foreign": {
+          "constraintName": "member_seller_id_foreign",
           "columnNames": [
-            "payout_account_id"
+            "seller_id"
           ],
-          "localTableName": "public.onboarding",
+          "localTableName": "public.member",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.payout_account",
+          "referencedTableName": "public.seller",
           "updateRule": "cascade"
         }
       },
@@ -386,50 +535,54 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "currency_code": {
-          "name": "currency_code",
+        "store_information": {
+          "name": "store_information",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "stripe_connection": {
+          "name": "stripe_connection",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "locations_shipping": {
+          "name": "locations_shipping",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "products": {
+          "name": "products",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "seller_id": {
+          "name": "seller_id",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "mappedType": "text"
-        },
-        "amount": {
-          "name": "amount",
-          "type": "numeric",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "decimal"
-        },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "json"
-        },
-        "payout_id": {
-          "name": "payout_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "raw_amount": {
-          "name": "raw_amount",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "json"
         },
         "created_at": {
           "name": "created_at",
@@ -464,29 +617,29 @@
           "mappedType": "datetime"
         }
       },
-      "name": "payout_reversal",
+      "name": "seller_onboarding",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "IDX_payout_reversal_payout_id",
+          "keyName": "IDX_seller_onboarding_seller_id_unique",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_payout_reversal_payout_id\" ON \"payout_reversal\" (payout_id) WHERE deleted_at IS NULL"
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_seller_onboarding_seller_id_unique\" ON \"seller_onboarding\" (\"seller_id\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "IDX_payout_reversal_deleted_at",
+          "keyName": "IDX_seller_onboarding_deleted_at",
           "columnNames": [],
           "composite": false,
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_payout_reversal_deleted_at\" ON \"payout_reversal\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_seller_onboarding_deleted_at\" ON \"seller_onboarding\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
-          "keyName": "payout_reversal_pkey",
+          "keyName": "seller_onboarding_pkey",
           "columnNames": [
             "id"
           ],
@@ -498,16 +651,16 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "payout_reversal_payout_id_foreign": {
-          "constraintName": "payout_reversal_payout_id_foreign",
+        "seller_onboarding_seller_id_foreign": {
+          "constraintName": "seller_onboarding_seller_id_foreign",
           "columnNames": [
-            "payout_id"
+            "seller_id"
           ],
-          "localTableName": "public.payout_reversal",
+          "localTableName": "public.seller_onboarding",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.payout",
+          "referencedTableName": "public.seller",
           "updateRule": "cascade"
         }
       },

@@ -82,7 +82,7 @@
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_configuration_rule_rule_type_unique\" ON \"configuration_rule\" (rule_type) WHERE deleted_at IS NULL"
+          "expression": "CREATE UNIQUE INDEX IF NOT EXISTS \"IDX_configuration_rule_rule_type_unique\" ON \"configuration_rule\" (\"rule_type\") WHERE deleted_at IS NULL"
         },
         {
           "keyName": "IDX_configuration_rule_deleted_at",
@@ -91,7 +91,7 @@
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_configuration_rule_deleted_at\" ON \"configuration_rule\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_configuration_rule_deleted_at\" ON \"configuration_rule\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
           "keyName": "configuration_rule_pkey",

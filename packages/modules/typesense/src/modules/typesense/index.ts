@@ -10,3 +10,5 @@ export { TypesenseModuleService };
 export default Module(TYPESENSE_MODULE, {
   service: TypesenseModuleService
 });
+
+export {TYPESENSE_MODULE}

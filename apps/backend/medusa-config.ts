@@ -3,21 +3,12 @@ import { defineConfig, loadEnv } from '@medusajs/framework/utils';
 loadEnv(process.env.NODE_ENV || 'development', process.cwd());
 
 module.exports = defineConfig({
-  admin: {
-    disable: true // Disable built-in admin - using separate admin-panel container
-  },
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
-    databaseDriverOptions:
-      process.env.NODE_ENV === 'production'
-        ? {
-            connection: {
-              ssl: {
-                rejectUnauthorized: false
-              }
-            }
-          }
-        : undefined,
+    databaseDriverOptions: {
+      ssl: false,
+      sslmode: 'disable'
+    },
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -120,7 +111,33 @@ module.exports = defineConfig({
       }
     },
     {
+      resolve: '@medusajs/medusa/translation'
+    },
+    {
       resolve: '@medusajs/index'
     }
-  ]
+  ],
+  featureFlags: {
+    translation: true
+  },
+  admin: {
+    // disable: true, // Disable built-in admin - using separate admin-panel container
+    vite: (_config) => {
+      return {
+        server: {
+          host: '0.0.0.0',
+          port: 9000,
+          // Allow all hosts when running in Docker (development mode)
+          // In production, this should be more restrictive
+          allowedHosts: ['localhost', '.localhost', '127.0.0.1'],
+          hmr: {
+            // HMR websocket port inside container
+            port: 5173,
+            // Port browser connects to (exposed in docker-compose.yml)
+            clientPort: 5173
+          }
+        }
+      };
+    }
+  }
 });

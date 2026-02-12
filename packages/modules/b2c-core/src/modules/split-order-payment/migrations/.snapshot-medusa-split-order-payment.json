@@ -49,6 +49,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "decimal"
         },
         "refunded_amount": {
@@ -58,6 +59,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "decimal"
         },
         "payment_collection_id": {
@@ -85,6 +87,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "'{\"value\":\"0\",\"precision\":20}'",
           "mappedType": "json"
         },
         "raw_refunded_amount": {
@@ -94,6 +97,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "'{\"value\":\"0\",\"precision\":20}'",
           "mappedType": "json"
         },
         "created_at": {
@@ -139,7 +143,7 @@
           "constraint": false,
           "primary": false,
           "unique": false,
-          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_split_order_payment_deleted_at\" ON \"split_order_payment\" (deleted_at) WHERE deleted_at IS NULL"
+          "expression": "CREATE INDEX IF NOT EXISTS \"IDX_split_order_payment_deleted_at\" ON \"split_order_payment\" (\"deleted_at\") WHERE deleted_at IS NULL"
         },
         {
           "keyName": "split_order_payment_pkey",
