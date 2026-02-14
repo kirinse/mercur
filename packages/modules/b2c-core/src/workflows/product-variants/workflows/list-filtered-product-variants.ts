@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { deduplicate } from '@medusajs/framework/utils';
 import {
   WorkflowResponse,
@@ -50,6 +51,7 @@ export const listFilteredProductVariantsWorkflow = createWorkflow(
     });
 
     const filterResult = when(
+      'variant-filter-result',
       { hasFilters },
       ({ hasFilters }) => hasFilters
     ).then(() => {
@@ -102,86 +104,87 @@ export const listFilteredProductVariantsWorkflow = createWorkflow(
       }
     );
 
-    const emptyResponse = when({ isEmpty }, ({ isEmpty }) => isEmpty).then(
-      () => {
-        return transform(
-          { pagination: input.pagination },
-          ({ pagination }) => ({
-            variants: [],
-            count: 0,
-            offset: pagination?.skip || 0,
-            limit: pagination?.take || 50
-          })
-        );
-      }
-    );
+    const emptyResponse = when(
+      'variant-filter-result-empty',
+      { isEmpty },
+      ({ isEmpty }) => isEmpty
+    ).then(() => {
+      return transform({ pagination: input.pagination }, ({ pagination }) => ({
+        variants: [],
+        count: 0,
+        offset: pagination?.skip || 0,
+        limit: pagination?.take || 50
+      }));
+    });
 
-    const dataResponse = when({ isEmpty }, ({ isEmpty }) => !isEmpty).then(
-      () => {
-        const finalFilters = transform(
-          { input, finalVariantIdsAfterIntersection },
-          ({ input, finalVariantIdsAfterIntersection }) => {
-            const filters: Record<string, unknown> = {
-              ...(input.filters ?? {})
-            };
+    const dataResponse = when(
+      'variant-filter-result-not-empty',
+      { isEmpty },
+      ({ isEmpty }) => !isEmpty
+    ).then(() => {
+      const finalFilters = transform(
+        { input, finalVariantIdsAfterIntersection },
+        ({ input, finalVariantIdsAfterIntersection }) => {
+          const filters: Record<string, unknown> = {
+            ...(input.filters ?? {})
+          };
 
-            if (finalVariantIdsAfterIntersection !== null) {
-              filters.id = finalVariantIdsAfterIntersection;
-            }
-
-            const q = typeof input.q === 'string' ? input.q.trim() : '';
-            if (q) {
-              const searchOr = [
-                { title: { $ilike: `%${q}%` } },
-                { sku: { $ilike: `%${q}%` } }
-              ];
-
-              // Don't overwrite existing $or/$and from validated filters – instead, AND the search in.
-              const existingAnd = (filters as any).$and;
-              if (Array.isArray(existingAnd)) {
-                (filters as any).$and = [...existingAnd, { $or: searchOr }];
-              } else if ((filters as any).$or) {
-                (filters as any).$and = [
-                  { $or: (filters as any).$or },
-                  { $or: searchOr }
-                ];
-                delete (filters as any).$or;
-              } else {
-                (filters as any).$or = searchOr;
-              }
-            }
-
-            return filters;
+          if (finalVariantIdsAfterIntersection !== null) {
+            filters.id = finalVariantIdsAfterIntersection;
           }
-        );
 
-        const fields = transform({ input }, ({ input }) => {
-          return deduplicate([
-            ...(input.fields ?? []),
-            'id',
-            'title',
-            'sku',
-            'product_id',
-            'created_at',
-            'updated_at'
-          ]);
-        });
+          const q = typeof input.q === 'string' ? input.q.trim() : '';
+          if (q) {
+            const searchOr = [
+              { title: { $ilike: `%${q}%` } },
+              { sku: { $ilike: `%${q}%` } }
+            ];
 
-        const { data: variants, metadata } = useQueryGraphStep({
-          entity: 'product_variant',
-          fields,
-          filters: finalFilters,
-          pagination: input.pagination
-        });
+            // Don't overwrite existing $or/$and from validated filters – instead, AND the search in.
+            const existingAnd = (filters as any).$and;
+            if (Array.isArray(existingAnd)) {
+              (filters as any).$and = [...existingAnd, { $or: searchOr }];
+            } else if ((filters as any).$or) {
+              (filters as any).$and = [
+                { $or: (filters as any).$or },
+                { $or: searchOr }
+              ];
+              delete (filters as any).$or;
+            } else {
+              (filters as any).$or = searchOr;
+            }
+          }
 
-        return transform({ variants, metadata }, ({ variants, metadata }) => ({
-          variants,
-          count: metadata?.count || 0,
-          offset: metadata?.skip || 0,
-          limit: metadata?.take || 50
-        }));
-      }
-    );
+          return filters;
+        }
+      );
+
+      const fields = transform({ input }, ({ input }) => {
+        return deduplicate([
+          ...(input.fields ?? []),
+          'id',
+          'title',
+          'sku',
+          'product_id',
+          'created_at',
+          'updated_at'
+        ]);
+      });
+
+      const { data: variants, metadata } = useQueryGraphStep({
+        entity: 'product_variant',
+        fields,
+        filters: finalFilters,
+        pagination: input.pagination
+      });
+
+      return transform({ variants, metadata }, ({ variants, metadata }) => ({
+        variants,
+        count: metadata?.count || 0,
+        offset: metadata?.skip || 0,
+        limit: metadata?.take || 50
+      }));
+    });
 
     const result = transform(
       { emptyResponse, dataResponse },

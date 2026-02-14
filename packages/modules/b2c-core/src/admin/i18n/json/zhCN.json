@@ -1,0 +1,32 @@
+{
+  "seller": {
+    "domain": "卖家",
+    "actions": {
+      "invite": {
+        "title": "邀请",
+        "header": "邀请卖家",
+        "description": "邀请卖家进驻"
+      },
+      "activate": {
+        "title": "激活",
+        "description": "您确定要激活这个卖家吗？"
+      },
+      "suspend": {
+        "title": "暂停",
+        "description": "您确定要暂停这个卖家的账号吗？"
+      }
+    },
+    "fields": {
+      "store_status": "店铺状态",
+      "addressLine": "地址"
+    },
+    "edit": {
+      "header": "修改卖家店铺",
+      "successToast": "卖家店铺 {{name}} 成功更新。"
+    }
+  },
+  "general": {
+    "typeToConfirm1": "请输入",
+    "typeToConfirm2": "以确认:"
+  }
+}

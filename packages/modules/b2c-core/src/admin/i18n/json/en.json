@@ -1,0 +1,32 @@
+{
+  "seller": {
+    "domain": "Seller",
+    "actions": {
+      "invite": {
+        "title": "Invite",
+        "header": "Invite Seller",
+        "description": "Invite a new seller to join"
+      },
+      "activate": {
+        "title": "Activate",
+        "description": "Are you sure you want to activate this seller?"
+      },
+      "suspend": {
+        "title": "Suspend",
+        "description": "Are you sure you want to suspend this seller?"
+      }
+    },
+    "fields": {
+      "store_status": "Status",
+      "addressLine": "Address"
+    },
+    "edit": {
+      "header": "Edit Seller",
+      "successToast": "Seller {{name}} was successfully updated."
+    }
+  },
+  "general": {
+    "typeToConfirm1": "Please type",
+    "typeToConfirm2": "to confirm:"
+  }
+}
