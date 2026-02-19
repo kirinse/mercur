@@ -5,7 +5,8 @@
       "invite": {
         "title": "Invite",
         "header": "Invite Seller",
-        "description": "Invite a new seller to join"
+        "description": "Invite a new seller to join",
+        "success": "Invitation sent successfully."
       },
       "activate": {
         "title": "Activate",
@@ -23,10 +24,41 @@
     "edit": {
       "header": "Edit Seller",
       "successToast": "Seller {{name}} was successfully updated."
+    },
+    "list": {
+      "empty": {
+        "heading": "No sellers found",
+        "description": "Once a seller has been added, they will appear here."
+      },
+      "filtered": {
+        "heading": "No results",
+        "description": "No sellers match the current filter criteria."
+      }
+    },
+    "orders": {
+      "list": {
+        "empty": {
+          "heading": "No orders found",
+          "description": "Once a order has been places, they will appear here."
+        },
+        "filtered": {
+          "heading": "No results",
+          "description": "No orders match the current filter criteria."
+        }
+      }
+    },
+    "products": {
+      "list": {
+        "empty": {
+          "heading": "No products found",
+          "description": "Once a product has been added, they will appear here."
+        },
+        "filtered": {
+          "heading": "No results",
+          "description": "No products match the current filter criteria."
+        }
+      }
     }
   },
-  "general": {
-    "typeToConfirm1": "Please type",
-    "typeToConfirm2": "to confirm:"
-  }
+  "attribute": {}
 }

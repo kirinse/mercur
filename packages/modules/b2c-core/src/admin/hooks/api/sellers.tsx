@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AdminCustomerGroupListResponse, AdminOrder, HttpTypes } from '@medusajs/types';
 import {
   QueryKey,
   UseQueryOptions,
@@ -6,9 +8,6 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query';
-
-import { AdminCustomerGroup, AdminOrder, AdminProduct } from '@medusajs/types';
-
 import { sdk } from '../../../../../../../node_modules/@medusajs/dashboard/src/lib/client';
 import { queryKeysFactory } from '../../../../../../../node_modules/@medusajs/dashboard/src/lib/query-key-factory';
 import { OrderSet } from '../../types/order-set';
@@ -121,7 +120,7 @@ const sortCustomerGroups = (customerGroups: any[], order: string) => {
 };
 
 export const useSellers = (
-  query?: Record<string, string | number | string[] | undefined>,
+  query?: Record<string, any>,
   options?: Omit<
     UseQueryOptions<
       { sellers: VendorSeller[]; count?: number },
@@ -174,8 +173,7 @@ export const useSeller = (id: string) => {
 
 export const useSellerOrders = (
   id: string,
-  query?: Record<string, string | number>,
-  filters?: any
+  query?: Record<string, unknown>,
 ) => {
   const { data, isLoading } = useQuery({
     queryKey: ['seller-orders', id, query],
@@ -193,100 +191,96 @@ export const useSellerOrders = (
     return { data, isLoading };
   }
 
-  let processedOrders = [...data.orders];
+  // let processedOrders = [...data.orders];
 
-  // Apply search filter if present
-  if (filters?.q) {
-    const searchTerm = String(filters.q).toLowerCase();
-    processedOrders = processedOrders.filter(
-      (order) =>
-        order.customer?.first_name?.toLowerCase().includes(searchTerm) ||
-        order.customer?.last_name?.toLowerCase().includes(searchTerm) ||
-        order.customer?.email?.toLowerCase().includes(searchTerm)
-    );
-  }
+  // // Apply search filter if present
+  // if (filters?.q) {
+  //   const searchTerm = String(filters.q).toLowerCase();
+  //   processedOrders = processedOrders.filter(
+  //     (order) =>
+  //       order.customer?.first_name?.toLowerCase().includes(searchTerm) ||
+  //       order.customer?.last_name?.toLowerCase().includes(searchTerm) ||
+  //       order.customer?.email?.toLowerCase().includes(searchTerm)
+  //   );
+  // }
 
-  // Filter by region_id
-  if (filters?.region_id && Array.isArray(filters.region_id)) {
-    processedOrders = processedOrders.filter(
-      (order) => order.region_id && filters.region_id.includes(order.region_id)
-    );
-  }
+  // // Filter by region_id
+  // if (filters?.region_id && Array.isArray(filters.region_id)) {
+  //   processedOrders = processedOrders.filter(
+  //     (order) => order.region_id && filters.region_id.includes(order.region_id)
+  //   );
+  // }
 
-  // Filter by sales_channel_id
-  if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
-    processedOrders = processedOrders.filter(
-      (order) =>
-        order.sales_channel_id &&
-        filters.sales_channel_id.includes(order.sales_channel_id)
-    );
-  }
+  // // Filter by sales_channel_id
+  // if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
+  //   processedOrders = processedOrders.filter(
+  //     (order) =>
+  //       order.sales_channel_id &&
+  //       filters.sales_channel_id.includes(order.sales_channel_id)
+  //   );
+  // }
 
-  // Filter by created_at date ranges
-  if (filters?.created_at) {
-    const dateFilter = filters.created_at as any;
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedOrders = processedOrders.filter((order) => {
-        const orderCreatedAt = new Date(order.created_at || '');
-        return orderCreatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedOrders = processedOrders.filter((order) => {
-        const orderCreatedAt = new Date(order.created_at || '');
-        return orderCreatedAt <= filterDate;
-      });
-    }
-  }
+  // // Filter by created_at date ranges
+  // if (filters?.created_at) {
+  //   const dateFilter = filters.created_at as any;
+  //   if (dateFilter.$gte) {
+  //     const filterDate = new Date(dateFilter.$gte);
+  //     processedOrders = processedOrders.filter((order) => {
+  //       const orderCreatedAt = new Date(order.created_at || '');
+  //       return orderCreatedAt >= filterDate;
+  //     });
+  //   }
+  //   if (dateFilter.$lte) {
+  //     const filterDate = new Date(dateFilter.$lte);
+  //     processedOrders = processedOrders.filter((order) => {
+  //       const orderCreatedAt = new Date(order.created_at || '');
+  //       return orderCreatedAt <= filterDate;
+  //     });
+  //   }
+  // }
 
-  // Filter by updated_at date ranges
-  if (filters?.updated_at) {
-    const dateFilter = filters.updated_at as any;
+  // // Filter by updated_at date ranges
+  // if (filters?.updated_at) {
+  //   const dateFilter = filters.updated_at as any;
 
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedOrders = processedOrders.filter((order) => {
-        const orderUpdatedAt = new Date(order.updated_at || '');
-        return orderUpdatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedOrders = processedOrders.filter((order) => {
-        const orderUpdatedAt = new Date(order.updated_at || '');
-        return orderUpdatedAt <= filterDate;
-      });
-    }
-  }
+  //   if (dateFilter.$gte) {
+  //     const filterDate = new Date(dateFilter.$gte);
+  //     processedOrders = processedOrders.filter((order) => {
+  //       const orderUpdatedAt = new Date(order.updated_at || '');
+  //       return orderUpdatedAt >= filterDate;
+  //     });
+  //   }
+  //   if (dateFilter.$lte) {
+  //     const filterDate = new Date(dateFilter.$lte);
+  //     processedOrders = processedOrders.filter((order) => {
+  //       const orderUpdatedAt = new Date(order.updated_at || '');
+  //       return orderUpdatedAt <= filterDate;
+  //     });
+  //   }
+  // }
 
-  // Apply sorting if present
-  if (filters?.order) {
-    const order = String(filters.order);
-    const validOrders = [
-      'display_id',
-      '-display_id',
-      'created_at',
-      '-created_at',
-      'updated_at',
-      '-updated_at'
-    ] as const;
+  // // Apply sorting if present
+  // if (filters?.order) {
+  //   const order = String(filters.order);
+  //   const validOrders = [
+  //     'display_id',
+  //     '-display_id',
+  //     'created_at',
+  //     '-created_at',
+  //     'updated_at',
+  //     '-updated_at'
+  //   ] as const;
 
-    if (validOrders.includes(order as (typeof validOrders)[number])) {
-      processedOrders = sortOrders(processedOrders, order);
-    }
-  }
+  //   if (validOrders.includes(order as (typeof validOrders)[number])) {
+  //     processedOrders = sortOrders(processedOrders, order);
+  //   }
+  // }
 
-  const offset = Number(filters.offset) || 0;
-  const limit = Number(filters.limit) || 10;
+  // const offset = Number(filters.offset) || 0;
+  // const limit = Number(filters.limit) || 10;
 
   return {
-    data: {
-      ...data,
-      orders: processedOrders.slice(offset, offset + limit),
-      count: processedOrders.length
-    },
+    data,
     isLoading
   };
 };
@@ -306,13 +300,26 @@ export const useUpdateSeller = () => {
 
 export const useSellerProducts = (
   id: string,
-  query?: Record<string, string | number>,
-  filters?: any
+  query?: Record<string, unknown>,
 ) => {
-  const { data, isLoading, refetch } = useQuery<
-    { products: AdminProduct[] },
+  // HACK: for stupid DataTable component from @medusajs/dashboard
+  if (query) {
+    query = Object.fromEntries(
+      Object.entries(query).map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return [key, value.map((v) => v.replace(/[\[\]\"]/gi, ''))];
+        }
+        return [key, value];
+      })
+    );
+    if (query.sales_channel_id && Array.isArray(query.sales_channel_id)) {
+      query.sales_channel_id = query.sales_channel_id[0];
+    }
+  }
+
+  const { data, isLoading, refetch } = useQuery<HttpTypes.AdminProductListResponse,
     Error,
-    { products: AdminProduct[] }
+    HttpTypes.AdminProductListResponse
   >({
     queryKey: ['seller-products', id, query],
     queryFn: () =>
@@ -326,111 +333,107 @@ export const useSellerProducts = (
     return { data, isLoading, refetch };
   }
 
-  let processedProducts = [...data.products];
+  // const processedProducts = [...data.products];
 
   // Apply search filter if present
-  if (filters?.q) {
-    const searchTerm = String(filters.q).toLowerCase();
-    processedProducts = processedProducts.filter((product) =>
-      product.title?.toLowerCase().includes(searchTerm)
-    );
-  }
+  // if (filters?.q) {
+  //   const searchTerm = String(filters.q).toLowerCase();
+  //   processedProducts = processedProducts.filter((product) =>
+  //     product.title?.toLowerCase().includes(searchTerm)
+  //   );
+  // }
 
   // Filter by tag_id
-  if (filters?.tag_id && Array.isArray(filters.tag_id)) {
-    processedProducts = processedProducts.filter((product) =>
-      product.tags?.some((tag: any) => filters.tag_id.includes(tag.id))
-    );
-  }
+  // if (filters?.tag_id && Array.isArray(filters.tag_id)) {
+  //   processedProducts = processedProducts.filter((product) =>
+  //     product.tags?.some((tag: any) => filters.tag_id.includes(tag.id))
+  //   );
+  // }
 
   // Filter by type_id
-  if (filters?.type_id && Array.isArray(filters.type_id)) {
-    processedProducts = processedProducts.filter((product) =>
-      filters.type_id.includes(product.type_id)
-    );
-  }
+  // if (filters?.type_id && Array.isArray(filters.type_id)) {
+  //   processedProducts = processedProducts.filter((product) =>
+  //     filters.type_id.includes(product.type_id)
+  //   );
+  // }
 
   // Filter by sales_channel_id
-  if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
-    processedProducts = processedProducts.filter((product) =>
-      product.sales_channels?.some((channel: any) =>
-        filters.sales_channel_id.includes(channel.id)
-      )
-    );
-  }
+  // if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
+  //   processedProducts = processedProducts.filter((product) =>
+  //     product.sales_channels?.some((channel: any) =>
+  //       filters.sales_channel_id.includes(channel.id)
+  //     )
+  //   );
+  // }
 
   // Filter by status
-  if (filters?.status && Array.isArray(filters.status)) {
-    processedProducts = processedProducts.filter((product) =>
-      filters.status.includes(product.status)
-    );
-  }
+  // if (filters?.status && Array.isArray(filters.status)) {
+  //   processedProducts = processedProducts.filter((product) =>
+  //     filters.status.includes(product.status)
+  //   );
+  // }
 
   // Filter by created_at date ranges
-  if (filters?.created_at) {
-    const dateFilter = filters.created_at as any;
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedProducts = processedProducts.filter((product) => {
-        const productCreatedAt = new Date(product.created_at || '');
-        return productCreatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedProducts = processedProducts.filter((product) => {
-        const productCreatedAt = new Date(product.created_at || '');
-        return productCreatedAt <= filterDate;
-      });
-    }
-  }
+  // if (filters?.created_at) {
+  //   const dateFilter = filters.created_at as any;
+  //   if (dateFilter.$gte) {
+  //     const filterDate = new Date(dateFilter.$gte);
+  //     processedProducts = processedProducts.filter((product) => {
+  //       const productCreatedAt = new Date(product.created_at || '');
+  //       return productCreatedAt >= filterDate;
+  //     });
+  //   }
+  //   if (dateFilter.$lte) {
+  //     const filterDate = new Date(dateFilter.$lte);
+  //     processedProducts = processedProducts.filter((product) => {
+  //       const productCreatedAt = new Date(product.created_at || '');
+  //       return productCreatedAt <= filterDate;
+  //     });
+  //   }
+  // }
 
   // Filter by updated_at date ranges
-  if (filters?.updated_at) {
-    const dateFilter = filters.updated_at as any;
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedProducts = processedProducts.filter((product) => {
-        const productUpdatedAt = new Date(product.updated_at || '');
-        return productUpdatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedProducts = processedProducts.filter((product) => {
-        const productUpdatedAt = new Date(product.updated_at || '');
-        return productUpdatedAt <= filterDate;
-      });
-    }
-  }
+  // if (filters?.updated_at) {
+  //   const dateFilter = filters.updated_at as any;
+  //   if (dateFilter.$gte) {
+  //     const filterDate = new Date(dateFilter.$gte);
+  //     processedProducts = processedProducts.filter((product) => {
+  //       const productUpdatedAt = new Date(product.updated_at || '');
+  //       return productUpdatedAt >= filterDate;
+  //     });
+  //   }
+  //   if (dateFilter.$lte) {
+  //     const filterDate = new Date(dateFilter.$lte);
+  //     processedProducts = processedProducts.filter((product) => {
+  //       const productUpdatedAt = new Date(product.updated_at || '');
+  //       return productUpdatedAt <= filterDate;
+  //     });
+  //   }
+  // }
 
   // Apply sorting if present
-  if (filters?.order) {
-    const order = String(filters.order);
-    const validOrders = [
-      'title',
-      '-title',
-      'created_at',
-      '-created_at',
-      'updated_at',
-      '-updated_at'
-    ] as const;
+  // if (filters?.order) {
+  //   const order = String(filters.order);
+  //   const validOrders = [
+  //     'title',
+  //     '-title',
+  //     'created_at',
+  //     '-created_at',
+  //     'updated_at',
+  //     '-updated_at'
+  //   ] as const;
 
-    if (validOrders.includes(order as (typeof validOrders)[number])) {
-      processedProducts = sortProducts(processedProducts, order);
-    }
-  }
+  //   if (validOrders.includes(order as (typeof validOrders)[number])) {
+  //     processedProducts = sortProducts(processedProducts, order);
+  //   }
+  // }
 
   // Apply pagination
-  const offset = Number(filters?.offset) || 0;
-  const limit = Number(filters?.limit) || 10;
+  // const offset = Number(filters?.offset) || 0;
+  // const limit = Number(filters?.limit) || 10;
 
   return {
-    data: {
-      ...data,
-      products: processedProducts.slice(offset, offset + limit),
-      count: processedProducts.length
-    },
+    data,
     isLoading,
     refetch
   };
@@ -438,13 +441,12 @@ export const useSellerProducts = (
 
 export const useSellerCustomerGroups = (
   id: string,
-  query?: Record<string, string | number>,
-  filters?: Record<string, string | number>
+  query?: Record<string, unknown>,
 ) => {
   const { data, isLoading, refetch } = useQuery<
-    { customer_groups: AdminCustomerGroup[] },
+    AdminCustomerGroupListResponse,
     Error,
-    { customer_groups: AdminCustomerGroup[] }
+    AdminCustomerGroupListResponse
   >({
     queryKey: ['seller-customer-groups', id, query],
     queryFn: () =>
@@ -462,86 +464,8 @@ export const useSellerCustomerGroups = (
     };
   }
 
-  let processedCustomerGroups = [
-    ...data.customer_groups.filter((group: any) => !!group)
-  ];
-
-  // Apply search filter if present
-  if (filters?.q) {
-    const searchTerm = String(filters.q).toLowerCase();
-    processedCustomerGroups = processedCustomerGroups.filter((group) =>
-      group.name?.toLowerCase().includes(searchTerm)
-    );
-  }
-
-  // Filter by created_at date ranges
-  if (filters?.created_at) {
-    const dateFilter = filters.created_at as any;
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedCustomerGroups = processedCustomerGroups.filter((group) => {
-        const groupCreatedAt = new Date(group.created_at || '');
-        return groupCreatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedCustomerGroups = processedCustomerGroups.filter((group) => {
-        const groupCreatedAt = new Date(group.created_at || '');
-        return groupCreatedAt <= filterDate;
-      });
-    }
-  }
-
-  // Filter by updated_at date ranges
-  if (filters?.updated_at) {
-    const dateFilter = filters.updated_at as any;
-    if (dateFilter.$gte) {
-      const filterDate = new Date(dateFilter.$gte);
-      processedCustomerGroups = processedCustomerGroups.filter((group) => {
-        const groupUpdatedAt = new Date(group.updated_at || '');
-        return groupUpdatedAt >= filterDate;
-      });
-    }
-    if (dateFilter.$lte) {
-      const filterDate = new Date(dateFilter.$lte);
-      processedCustomerGroups = processedCustomerGroups.filter((group) => {
-        const groupUpdatedAt = new Date(group.updated_at || '');
-        return groupUpdatedAt <= filterDate;
-      });
-    }
-  }
-
-  // Apply sorting if present
-  if (filters?.order) {
-    const order = String(filters.order);
-    const validOrders = [
-      'name',
-      '-name',
-      'created_at',
-      '-created_at',
-      'updated_at',
-      '-updated_at'
-    ] as const;
-
-    if (validOrders.includes(order as (typeof validOrders)[number])) {
-      processedCustomerGroups = sortCustomerGroups(
-        processedCustomerGroups,
-        order
-      );
-    }
-  }
-
-  const offset = Number(filters?.offset) || 0;
-  const limit = Number(filters?.limit) || 10;
-
   return {
-    data: {
-      ...data,
-      customer_groups: processedCustomerGroups.slice(offset, offset + limit),
-      count: processedCustomerGroups.length
-    },
-    count: processedCustomerGroups.length,
+    data,
     isLoading,
     refetch
   };

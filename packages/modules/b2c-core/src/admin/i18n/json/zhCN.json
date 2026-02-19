@@ -5,7 +5,8 @@
       "invite": {
         "title": "邀请",
         "header": "邀请卖家",
-        "description": "邀请卖家进驻"
+        "description": "邀请卖家进驻",
+        "success": "邀请已成功发送。"
       },
       "activate": {
         "title": "激活",
@@ -23,10 +24,41 @@
     "edit": {
       "header": "修改卖家店铺",
       "successToast": "卖家店铺 {{name}} 成功更新。"
+    },
+    "list": {
+      "empty": {
+        "heading": "未找到卖家",
+        "description": "一旦卖家提交申请，他们就会出现在这里。"
+      },
+      "filtered": {
+        "heading": "没有找到结果",
+        "description": "没有卖家符合当前的筛选条件。"
+      }
+    },
+    "orders": {
+      "list": {
+        "empty": {
+          "heading": "未找到订单",
+          "description": "一旦订单下达，它们就会出现在这里。"
+        },
+        "filtered": {
+          "heading": "没有找到结果",
+          "description": "没有订单符合当前的筛选条件。"
+        }
+      }
+    },
+    "products": {
+      "list": {
+        "empty": {
+          "heading": "未找到商品",
+          "description": "一旦商品添加，它们就会出现在这里。"
+        },
+        "filtered": {
+          "heading": "没有找到结果",
+          "description": "没有商品符合当前的筛选条件。"
+        }
+      }
     }
   },
-  "general": {
-    "typeToConfirm1": "请输入",
-    "typeToConfirm2": "以确认:"
-  }
+  "attribute": {}
 }

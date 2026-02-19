@@ -2,8 +2,8 @@ import { MemberRole, StoreStatus } from '@mercurjs/framework';
 
 export interface VendorSeller {
   id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   name: string;
   description?: string | null;
   store_status: StoreStatus;
@@ -22,8 +22,8 @@ export interface VendorSeller {
 
 export interface VendorMember {
   id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   role: MemberRole;
   email: string;
   name?: string | null;

@@ -1,5 +1,10 @@
 import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
+import {
+  ContainerRegistrationKeys,
+  remoteQueryObjectFromString
+} from '@medusajs/framework/utils';
+
+import { AdminSellerParamsType } from './validators';
 
 /**
  * @oas [get] /admin/sellers
@@ -14,6 +19,12 @@ import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
  *       type: number
  *     required: false
  *     description: The number of items to skip before starting to collect the result set.
+ *   - name: q
+ *     in: query
+ *     schema:
+ *       type: string
+ *     required: false
+ *     description: search keyword.
  *   - name: limit
  *     in: query
  *     schema:
@@ -54,16 +65,26 @@ import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
  *   - cookie_auth: []
  */
 export async function GET(
-  req: MedusaRequest,
+  req: MedusaRequest<AdminSellerParamsType>,
   res: MedusaResponse
 ): Promise<void> {
-  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
-
-  const { data: sellers, metadata } = await query.graph({
-    entity: 'seller',
-    fields: req.queryConfig.fields,
-    pagination: req.queryConfig.pagination
+  const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY);
+  const query = remoteQueryObjectFromString({
+    entryPoint: 'seller',
+    variables: {
+      filters: req.filterableFields,
+      ...req.queryConfig.pagination
+    },
+    fields: req.queryConfig.fields
   });
+
+  const { rows: sellers, metadata } = await remoteQuery(query);
+
+  // const { data: sellers, metadata } = await query.graph({
+  //   entity: 'seller',
+  //   fields: req.queryConfig.fields,
+  //   pagination: req.queryConfig.pagination
+  // });
 
   res.json({
     sellers,

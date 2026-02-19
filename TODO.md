@@ -1,9 +1,9 @@
 # TODO
 
 - [ ] add `modules/b2c-core/admin/routes` from `admin-panel`
-  - [ ] `attribute` -> settings
-  - [ ] `seller` -> /
-  - [ ] `wishlist` -> /
+  - [ ] `attribute` -> `modules/b2c-core/admin/routes/settings/attribute`
+  - [ ] `seller` -> `modules/b2c-core/admin/routes/sellers`
+  - [ ] `wishlist` -> / (**?**)
 - [ ] `modules/algolia/admin/routes`
 - [ ] `modules/commission/admin/routes`
 - [ ] `modules/requests/admin/routes`

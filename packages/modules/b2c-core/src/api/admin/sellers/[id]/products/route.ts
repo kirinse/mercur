@@ -1,7 +1,10 @@
 import { MedusaRequest, MedusaResponse } from '@medusajs/framework';
 import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
-import sellerProduct from '../../../../../links/seller-product';
+import {
+  OrderObject,
+  filterProductsBySeller
+} from '../../../../vendor/products/utils';
 import { AdminGetSellerProductsParamsType } from '../../validators';
 
 /**
@@ -78,24 +81,37 @@ export const GET = async (
   req: MedusaRequest<AdminGetSellerProductsParamsType>,
   res: MedusaResponse
 ) => {
+  const skip = req.queryConfig.pagination.skip || 0;
+  const take = req.queryConfig.pagination.take || 10;
+
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
-  const { data: sellerProducts, metadata } = await query.graph({
-    entity: sellerProduct.entryPoint,
-    fields: req.queryConfig.fields.map((field) => `product.${field}`),
+  const { productIds, count } = await filterProductsBySeller(
+    req.scope,
+    req.params.id,
+    skip,
+    take,
+    req.filterableFields.sales_channel_id as string,
+    req.queryConfig.pagination?.order as OrderObject | undefined,
+    req.filterableFields
+  );
+
+  const { data: sellerProducts } = await query.graph({
+    entity: 'product',
+    fields: req.queryConfig.fields,
     filters: {
-      seller_id: req.params.id,
-      deleted_at: {
-        $eq: null
-      }
+      id: { $in: productIds }
     },
-    pagination: req.queryConfig.pagination
+    pagination: {
+      order: req.queryConfig.pagination?.order
+    }
   });
 
   res.json({
-    products: sellerProducts.map((product) => product.product),
-    count: metadata!.count,
-    offset: metadata!.skip,
-    limit: metadata!.take
+    products: sellerProducts,
+    count,
+    offset: skip,
+    limit: take,
+    order: req.queryConfig.pagination?.order
   });
 };

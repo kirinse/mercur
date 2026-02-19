@@ -9,6 +9,7 @@ module.exports = defineConfig({
       ssl: false,
       sslmode: 'disable'
     },
+    databaseLogging: true,
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -118,7 +119,10 @@ module.exports = defineConfig({
     }
   ],
   featureFlags: {
-    translation: true
+    translation: true,
+    backend_hmr: true,
+    rbac: false,
+    view_configurations: false
   },
   admin: {
     // disable: true, // Disable built-in admin - using separate admin-panel container

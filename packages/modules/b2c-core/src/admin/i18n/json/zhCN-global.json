@@ -1,0 +1,262 @@
+{
+  "general": {
+    "fullList": "全部",
+    "original": "原始",
+    "selectAll": "全选",
+    "unselectAll": "取消全选",
+    "remaining": "剩下",
+    "noRecordsMessageFiltered": "没有记录符合当前的筛选条件。",
+    "typeToConfirm1": "请输入",
+    "typeToConfirm2": "以确认:"
+  },
+  "actions": {
+    "saveChanges": "保存修改",
+    "saveAndClose": "保存并关闭",
+    "editVariantImages": "修改变体图片",
+    "editImages": "修改图片"
+  },
+  "filters": {
+    "collapse": ""
+  },
+  "products": {
+    "variantMedia": {
+      "label": "Variant Media",
+      "manageVariants": "Manage variants",
+      "addToMultipleVariants": "Add to multiple variants",
+      "manageVariantsDescription": "Manage associated variants for the image",
+      "successToast": "Image variants successfully updated.",
+      "emptyState": {
+        "header": "No media yet",
+        "description": "Add media to the variant to showcase it in your storefront.",
+        "action": "Add media"
+      }
+    },
+    "columns": {
+      "product_display": "Product",
+      "variants_count": "Variants",
+      "sales_channels_display": "Sales Channels",
+      "collection": "Collection",
+      "status": "Status",
+      "thumbnail": "Thumbnail",
+      "title": "Title",
+      "handle": "Handle",
+      "created_at": "Created",
+      "updated_at": "Updated"
+    }
+  },
+  "inventory": {
+    "levelDeleted": "Inventory level deleted successfully."
+  },
+  "orders": {
+    "giftCardsStoreCreditLines": "Gift cards & credit lines",
+    "creditLines": {
+      "title": "Credit lines",
+      "total": "Sum of all credit lines",
+      "creditOrDebit": "Credit / Debit",
+      "createCreditLine": "Create credit line",
+      "createCreditLineSuccess": "Credit line created successfully",
+      "createCreditLineError": "Error creating credit line",
+      "createCreditLineDescription": "Create a credit line for amount {{amount}}",
+      "operation": "Operation",
+      "credit": "Credit",
+      "creditDescription": "Adds a positive sum to the order",
+      "debit": "Debit",
+      "debitDescription": "Subtracts a negative sum from the order"
+    },
+    "balanceSettlement": {
+      "title": "Balance settlement",
+      "settlementType": "Settlement type",
+      "settlementTypes": {
+        "paymentMethod": "Payment method",
+        "paymentMethodDescription": "Refund amount to the payment method",
+        "creditLine": "Store credit",
+        "creditLineDescription": "Refund amount as store credit"
+      }
+    },
+    "export": {
+      "header": "Export Order List",
+      "description": "Export the order list to a CSV file.",
+      "success": {
+        "title": "Export started",
+        "description": "You will be notified when the export is ready."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "The following filters will be applied to the export."
+      }
+    },
+    "summary": {
+      "totalAfterDiscount": "Total After Discount"
+    },
+    "payment": {
+      "totalStoreCreditRefunds": "Total store credit refunds"
+    },
+    "exchanges": {
+      "carryOverPromotion": "Carry over promotions",
+      "carryOverPromotionHint": "Apply the order's promotions to the exchange items",
+      "carryOverPromotionTooltip": "Only fixed type promotions with EACH allocation and percentage type promotions with EACH or ACROSS allocation can be carried over to outbound exchange items."
+    },
+    "allocateItems": {
+      "toast": {
+        "error": "Failed to allocate following items: {{items}}"
+      }
+    },
+    "shipment": {
+      "trackingUrl": "Tracking URL",
+      "labelUrl": "Label URL"
+    }
+  },
+  "stockLocations": {
+    "list": {
+      "noRecordsMessage": "No records",
+      "noRecordsMessageEmpty": "No locations found",
+      "noRecordsMessageFiltered": "No locations found matching the filters"
+    },
+    "delete": {
+      "successToast": "Location \"{{name}}\" was successfully deleted."
+    },
+    "sidebar": {
+      "shippingOptionTypes": {
+        "label": "Shipping Option Types",
+        "description": "Group shipping options by types"
+      }
+    }
+  },
+  "promotions": {
+    "fields": {
+      "allocationTooltip": "Each enforces the quantity limit per item, while Once enforces the quantity limit across the entire cart",
+      "taxInclusive": "Tax Inclusive",
+      "usageLimit": "Usage Limit",
+      "usage": "Usage",
+      "conditions": {
+        "target-rules": {
+          "order": {
+            "title": "What items will the promotion be applied to?",
+            "description": "The promotion will be applied to items that match the following conditions."
+          },
+          "shipping_methods": {
+            "title": "What shipping methods will the promotion be applied to?",
+            "description": "The promotion will be applied to shipping methods that match the following conditions."
+          },
+          "items": {
+            "title": "What items will the promotion be applied to?",
+            "description": "The promotion will be applied to items that match the following conditions."
+          }
+        }
+      }
+    },
+    "form": {
+      "taxInclusive": {
+        "title": "Does promotion include taxes?",
+        "description": "Enable this field to apply the promotion after taxes"
+      },
+      "limit": {
+        "title": "Usage Limit",
+        "description": "Maximum number of times this promotion can be used across all orders. Leave empty for unlimited usage."
+      },
+      "allocation": {
+        "once": {
+          "title": "Once",
+          "description": "Applies value to a limited number of items"
+        }
+      },
+      "value": {
+        "invalid": "Invalid promotion value"
+      }
+    }
+  },
+  "campaigns": {
+    "fields": {
+      "totalUsedByAttribute": "Total used"
+    },
+    "budget": {
+      "fields": {
+        "budgetAttribute": "Limit usage per",
+        "budgetAttributeTooltip": "Define how many times the promotion can be used by each customer or email.",
+        "totalUsedByAttribute": "Budget limit per: {{attribute}}",
+        "totalUsedByAttributeCustomerId": "Budget limit per customer",
+        "totalUsedByAttributeEmail": "Budget limit per email"
+      },
+      "type": {
+        "useByAttribute": {
+          "title": "Usage by attribute (customer id, email, etc.)",
+          "titleCustomerId": "Usage per customer",
+          "titleEmail": "Usage per email",
+          "description": "Set a limit on how many times the promotion can be used by a specific attribute value."
+        }
+      }
+    }
+  },
+  "store": {
+    "defaultLocale": "Default locale",
+    "locales": "Locales",
+    "removeLocaleWarning_one": "You are about to remove {{count}} locale from your store. Any translation using this locale will be removed.",
+    "removeLocaleWarning_other": "You are about to remove {{count}} locales from your store. Any translation using these locales will be removed.",
+    "localeAlreadyAdded": "The locale has already been added to your store.",
+    "toast": {
+      "localesUpdated": "Locales updated successfully",
+      "localesRemoved": "Removed locales from the store successfully"
+    }
+  },
+  "login": {
+    "title": "欢迎使用"
+  },
+  "invite": {
+    "title": "欢迎使用"
+  },
+  "workflowExecutions": {
+    "subtitle": "查看和跟踪您的商店应用程序中的工作流执行情况。"
+  },
+  "labels": {
+    "selectValue": "Select Value",
+    "selectValues": "Select Values"
+  },
+  "fields": {
+    "reference": "Reference",
+    "reference_id": "Reference ID",
+    "enabledInStore": "Enabled in store",
+    "isReturn": "Is return",
+    "promotionCode": "Promotion code",
+    "serviceZone": "Service Zone",
+    "creditTotal": "Credit Lines Total"
+  },
+  "translations": {
+    "domain": "翻译",
+    "settings": {
+      "header": "管理翻译实体",
+      "successToast": "设置更新成功"
+    },
+    "actions": {
+      "manage": "管理翻译",
+      "manageEntities": "管理实体",
+      "manageLocales": "管理语言"
+    },
+    "subtitle": "在系统中管理您的数据的翻译工作",
+    "list": {
+      "metrics": "{{translated}}/共 {{total}} 翻译"
+    },
+    "edit": {
+      "successToast": "翻译更新成功",
+      "unsavedChanges": {
+        "title": "未保存翻译",
+        "description": "别丢失你的工作内容。您有一些尚未保存的更改。"
+      }
+    },
+    "bulk": {
+      "header": "翻译批量编辑器",
+      "mainColumn": "语言"
+    },
+    "activeLocales": {
+      "heading": "语言",
+      "subtitle": "激活翻译",
+      "noLocalesTip": "至少配置一种语言，以便开始对您的数据进行翻译。",
+      "noLocalesTipConfigureAction": "配置"
+    },
+    "completion": {
+      "heading": "已翻译字段",
+      "translated": "已翻译",
+      "toTranslate": "缺少",
+      "footer": "语言"
+    }
+  }
+}

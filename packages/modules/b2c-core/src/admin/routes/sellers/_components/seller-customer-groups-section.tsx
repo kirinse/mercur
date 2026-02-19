@@ -1,70 +1,80 @@
-import { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-
 import { PencilSquare, Trash } from '@medusajs/icons';
 import type {
-  AdminCustomerGroup,
-  AdminCustomerGroupListResponse
+  AdminCustomerGroup
 } from '@medusajs/types';
 import {
   Container,
-  Divider,
-  Heading,
   createDataTableColumnHelper,
   toast,
   usePrompt
 } from '@medusajs/ui';
-
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { DataTable } from '../../../../../../../../node_modules/@medusajs/dashboard/src/components/data-table';
+import { useDataTableDateColumns } from "../../../../../../../../node_modules/@medusajs/dashboard/src/components/data-table/helpers/general/use-data-table-date-columns";
+import { useDataTableDateFilters } from "../../../../../../../../node_modules/@medusajs/dashboard/src/components/data-table/helpers/general/use-data-table-date-filters";
 import { sdk } from '../../../../../../../../node_modules/@medusajs/dashboard/src/lib/client';
-import { formatDate } from '../../../lib/date';
+import { useSellerCustomerGroups } from '../../../hooks/api/sellers';
+import { useCustomerGroupTableQuery } from '../../../hooks/table/query';
 
 const PAGE_SIZE = 10;
+const PREFIX = 'scg';
 
 export const SellerCustomerGroupsSection = ({
-  seller_customer_groups,
-  refetch
+  id,
 }: {
-  seller_customer_groups: AdminCustomerGroupListResponse;
-  refetch: () => void;
+  id: string,
 }) => {
-  const { customer_groups, count } = seller_customer_groups as {
-    customer_groups: AdminCustomerGroup[];
-    count: number;
-  };
+  const { t } = useTranslation('b2c');
+  const { searchParams } = useCustomerGroupTableQuery(
+    {
+      pageSize: PAGE_SIZE,
+      prefix: PREFIX
+    }
+  );
 
+  const {
+    data,
+    isLoading,
+    refetch
+  } = useSellerCustomerGroups(
+    id!,
+    {
+      fields: 'id,name,description,created_at,updated_at,*customers',
+      ...searchParams
+    },
+  );
   const columns = useColumns(refetch);
-  // const filters = useCustomerGroupTableFilters();
+  const filters = useFilters();
+
   return (
     <Container
       className="mt-2 px-0"
       data-testid="seller-customer-groups-section"
     >
-      <div
-        className="px-8 pb-4"
-        data-testid="seller-customer-groups-section-header"
-      >
-        <Heading data-testid="seller-customer-groups-section-heading">
-          Customer Groups
-        </Heading>
-      </div>
-      <Divider />
       <DataTable
-        data={customer_groups}
-        // filters={filters}
-        // table={table}
+        data={data?.customer_groups}
+        filters={filters}
         getRowId={(row) => row.id}
         columns={columns}
-        rowCount={count}
+        rowCount={data?.count}
         pageSize={PAGE_SIZE}
-        isLoading={false}
-        // navigateTo={(row) => `/customer-groups/${row.id}`}
-        // orderBy={[
-        //   { key: "name", label: "Name" },
-        //   { key: "created_at", label: "Created" },
-        //   { key: "updated_at", label: "Updated" },
-        // ]}
+        isLoading={isLoading}
+        heading={t('customerGroups.domain')}
+        rowHref={(row) => `/customer-groups/${row.id}`}
+        emptyState={{
+          empty: {
+            heading: t("customerGroups.list.empty.heading"),
+            description: t("customerGroups.list.empty.description"),
+          },
+          filtered: {
+            heading: t("customerGroups.list.filtered.heading"),
+            description: t("customerGroups.list.filtered.description"),
+          },
+        }}
+        enableFilterMenu={false}
+        prefix={PREFIX}
       />
     </Container>
   );
@@ -106,6 +116,7 @@ const useColumns = (refetch: () => void) => {
     },
     []
   );
+  const dateColumns = useDataTableDateColumns<AdminCustomerGroup>()
 
   return useMemo(
     () => [
@@ -129,12 +140,7 @@ const useColumns = (refetch: () => void) => {
           return `${customers} ${suffix}`;
         }
       }),
-      columnHelper.accessor('created_at', {
-        cell: ({ row }) => formatDate(row.original.created_at, 'MMM d, yyyy')
-      }),
-      columnHelper.accessor('updated_at', {
-        cell: ({ row }) => formatDate(row.original.updated_at, 'MMM d, yyyy')
-      }),
+      ...dateColumns,
       columnHelper.action({
         actions: (ctx) => [
           {
@@ -151,6 +157,14 @@ const useColumns = (refetch: () => void) => {
         ]
       })
     ],
-    [t]
+    [t, handleDelete, dateColumns]
   );
 };
+
+const useFilters = () => {
+  const dateFilters = useDataTableDateFilters()
+
+  return useMemo(() => {
+    return dateFilters
+  }, [dateFilters])
+}

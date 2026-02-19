@@ -1,17 +1,13 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-
 import { PencilSquare, User } from '@medusajs/icons';
 import { Container, Divider, Heading, Text, usePrompt } from '@medusajs/ui';
-
-import { ActionMenu } from '../../../../../../../../node_modules/@medusajs/dashboard/src/components/common/action-menu/action-menu.tsx';
-import { useUpdateSeller } from '../../../hooks/api/sellers';
+import { useTranslation } from 'react-i18next';
+import { ActionMenu } from '../../../../../../../../node_modules/@medusajs/dashboard/src/components/common/action-menu';
+import { useSeller, useUpdateSeller } from '../../../hooks/api/sellers';
 import { VendorSeller } from '../../../types/seller';
-import { SellerStatusBadge } from './seller-status-badge.tsx';
+import { SellerStatusBadge } from './seller-status-badge';
 
 export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
   const { t } = useTranslation('b2c');
-  const navigate = useNavigate();
   const { mutateAsync: suspendSeller } = useUpdateSeller();
 
   const dialog = usePrompt();
@@ -45,7 +41,9 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
       });
     }
   };
+  const { data, isLoading } = useSeller(seller.id)
 
+  const display_data = !isLoading && data?.seller || seller;
   return (
     <>
       <Container className="mb-2" data-testid="seller-general-section-header">
@@ -65,7 +63,8 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                   actions: [
                     {
                       label: t('actions.edit'),
-                      onClick: () => navigate(`/sellers/${seller.id}/edit`),
+                      to: 'edit',
+                      // onClick: () => navigate(`/sellers/${seller.id}/edit`),
                       icon: <PencilSquare />
                     },
                     {
@@ -73,7 +72,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                         seller.store_status === 'SUSPENDED'
                           ? t('seller.actions.activate.title')
                           : t('seller.actions.suspend.title'),
-                      onClick: () => handleSuspend(),
+                      onClick: handleSuspend,
                       icon: <User />
                     }
                   ]
@@ -108,7 +107,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-store-name-value"
               >
-                {seller.name}
+                {display_data.name}
               </Text>
             </div>
             <Divider />
@@ -126,7 +125,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-store-email-value"
               >
-                {seller.email}
+                {display_data.email}
               </Text>
             </div>
             <Divider />
@@ -144,7 +143,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-store-phone-value"
               >
-                {seller.phone}
+                {display_data.phone}
               </Text>
             </div>
             <Divider />
@@ -162,7 +161,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-store-description-value"
               >
-                {seller.description}
+                {display_data.description}
               </Text>
             </div>
           </div>
@@ -194,7 +193,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-address-line-value"
               >
-                {seller.address_line}
+                {display_data.address_line}
               </Text>
             </div>
             <Divider />
@@ -212,7 +211,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-postal-code-value"
               >
-                {seller.postal_code}
+                {display_data.postal_code}
               </Text>
             </div>
             <Divider />
@@ -230,7 +229,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-city-value"
               >
-                {seller.city}
+                {display_data.city}
               </Text>
             </div>
             <Divider />
@@ -248,7 +247,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-country-value"
               >
-                {seller.country_code}
+                {display_data.country_code}
               </Text>
             </div>
             <Divider />
@@ -266,7 +265,7 @@ export const SellerGeneralSection = ({ seller }: { seller: VendorSeller }) => {
                 className="w-1/2"
                 data-testid="seller-general-section-tax-id-value"
               >
-                {seller.tax_id}
+                {display_data.tax_id}
               </Text>
             </div>
           </div>

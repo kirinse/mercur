@@ -1,12 +1,7 @@
+import { createDataTableColumnHelper } from '@medusajs/ui';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { createDataTableColumnHelper } from '@medusajs/ui';
-
-import {
-  DateCell,
-  DateHeader
-} from '../../../../../../../../node_modules/@medusajs/dashboard/src/components/table/table-cells/common/date-cell';
+import { useDataTableDateColumns } from "../../../../../../../../node_modules/@medusajs/dashboard/src/components/data-table/helpers/general/use-data-table-date-columns";
 import { SellerStatusBadge } from '../../../routes/sellers/_components/seller-status-badge';
 import { VendorSeller } from '../../../types/seller';
 
@@ -14,6 +9,7 @@ const columnHelper = createDataTableColumnHelper<VendorSeller>();
 
 export const useSellersTableColumns = () => {
   const { t } = useTranslation('b2c');
+  const dateColumns = useDataTableDateColumns<VendorSeller>()
 
   return useMemo(
     () => [
@@ -32,10 +28,7 @@ export const useSellersTableColumns = () => {
           />
         )
       }),
-      columnHelper.accessor('created_at', {
-        header: () => <DateHeader />,
-        cell: ({ row }) => <DateCell date={new Date(row.original.created_at)} />
-      })
+      ...dateColumns,
     ],
     [t, columnHelper]
   );
